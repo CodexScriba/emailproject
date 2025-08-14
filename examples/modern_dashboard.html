@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard | Email Response Metrics</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            /* Modern Color Palette */
+            --primary: #0F172A;
+            --primary-light: #1E293B;
+            --accent: #3B82F6;
+            --accent-dark: #2563EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8FAFC;
+            --bg-tertiary: #F1F5F9;
+            --border: #E2E8F0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 24px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            color: #94A3B8;
+            font-weight: 400;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .header-stat {
+            text-align: right;
+        }
+
+        .header-stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .header-stat-label {
+            font-size: 11px;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        /* Grid System */
+        .grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.2px;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        /* KPI Cards */
+        .kpi-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .kpi-card.success::before { background: var(--success); }
+        .kpi-card.warning::before { background: var(--warning); }
+        .kpi-card.danger::before { background: var(--danger); }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .kpi-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .kpi-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 12px;
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .kpi-change.positive { color: var(--success); background: #10B98120; }
+        .kpi-change.negative { color: var(--danger); background: #EF444420; }
+
+        /* Status Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-success {
+            background: #10B98115;
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: #F59E0B15;
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: #EF444415;
+            color: var(--danger);
+        }
+
+        .badge-info {
+            background: #3B82F615;
+            color: var(--accent);
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .table-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            padding: 12px 24px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px 24px;
+            font-size: 13px;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+
+        tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-metric {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Progress Bars */
+        .progress-container {
+            margin-top: 16px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .progress-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .progress-fill.success { background: var(--success); }
+        .progress-fill.warning { background: var(--warning); }
+        .progress-fill.danger { background: var(--danger); }
+
+        /* Distribution Cards */
+        .distribution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .distribution-card {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .distribution-card:hover {
+            background: var(--bg-tertiary);
+            transform: translateX(4px);
+        }
+
+        .distribution-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .distribution-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .distribution-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .distribution-percentage {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+        }
+
+        /* Insights Box */
+        .insights-box {
+            background: linear-gradient(135deg, #3B82F610 0%, #3B82F605 100%);
+            border: 1px solid #3B82F620;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+
+        .insights-box.warning {
+            background: linear-gradient(135deg, #F59E0B10 0%, #F59E0B05 100%);
+            border-color: #F59E0B20;
+        }
+
+        .insights-box.danger {
+            background: linear-gradient(135deg, #EF444410 0%, #EF444405 100%);
+            border-color: #EF444420;
+        }
+
+        .insights-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .insights-list {
+            list-style: none;
+        }
+
+        .insights-list li {
+            padding: 8px 0;
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .insights-list li::before {
+            content: '→';
+            color: var(--accent);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* Section Headers */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .section-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary);
+            color: var(--text-muted);
+            text-align: center;
+            padding: 32px;
+            margin-top: 64px;
+            font-size: 12px;
+        }
+
+        .footer-content {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 24px;
+            }
+
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .grid-4, .grid-3, .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                padding: 20px;
+            }
+
+            .header-left h1 {
+                font-size: 20px;
+            }
+
+            th, td {
+                padding: 12px 16px;
+            }
+
+            .kpi-value {
+                font-size: 28px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Utility Classes */
+        .text-success { color: var(--success); }
+        .text-warning { color: var(--warning); }
+        .text-danger { color: var(--danger); }
+        .text-muted { color: var(--text-muted); }
+        .font-mono { font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>Email Analytics Dashboard</h1>
+                <div class="header-subtitle">Real-time Performance Monitoring & SLA Compliance</div>
+            </div>
+            <div class="header-right">
+                <div class="header-stat">
+                    <div class="header-stat-value">975</div>
+                    <div class="header-stat-label">Total Emails</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value">66.8%</div>
+                    <div class="header-stat-label">SLA Compliance</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value">132.6m</div>
+                    <div class="header-stat-label">Avg Response</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Executive KPIs -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Executive Overview</h2>
+                <p class="section-description">Key performance indicators for July 22 - August 5, 2024</p>
+            </div>
+            
+            <div class="grid grid-4">
+                <div class="card kpi-card">
+                    <div class="kpi-value">975</div>
+                    <div class="kpi-label">Emails Processed</div>
+                    <div class="kpi-change positive">↑ 12% from last period</div>
+                </div>
+                
+                <div class="card kpi-card danger">
+                    <div class="kpi-value">66.8%</div>
+                    <div class="kpi-label">SLA Compliance Rate</div>
+                    <div class="kpi-change negative">↓ 33% below target</div>
+                </div>
+                
+                <div class="card kpi-card success">
+                    <div class="kpi-value">27.5</div>
+                    <div class="kpi-label">Avg Unread Count</div>
+                    <div class="kpi-change positive">↓ Below 30 target</div>
+                </div>
+                
+                <div class="card kpi-card">
+                    <div class="kpi-value">23.7m</div>
+                    <div class="kpi-label">Recent Response Time</div>
+                    <div class="kpi-change positive">↓ 15% improvement</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLA Performance Dashboard -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">SLA Performance Analysis</h2>
+                <p class="section-description">Target: ≤30 unread emails per hour | Current compliance: 66.8%</p>
+            </div>
+
+            <div class="grid grid-3">
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Daily Best</div>
+                            <div class="card-subtitle">July 20, 2025</div>
+                        </div>
+                    </div>
+                    <div class="kpi-value text-success">100%</div>
+                    <div class="kpi-label">Compliance Rate</div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill success" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Current Status</div>
+                            <div class="card-subtitle">July 25, 2025</div>
+                        </div>
+                    </div>
+                    <div class="kpi-value text-danger">66.8%</div>
+                    <div class="kpi-label">Compliance Rate</div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill danger" style="width: 66.8%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Peak Violation</div>
+                            <div class="card-subtitle">July 24, 2025</div>
+                        </div>
+                    </div>
+                    <div class="kpi-value text-danger">44.3</div>
+                    <div class="kpi-label">Unread Emails</div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill danger" style="width: 100%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLA Performance Table -->
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Recent Daily Performance</h3>
+                    <span class="badge badge-info">Last 8 Days</span>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>SLA Compliance</th>
+                            <th>Avg Unread</th>
+                            <th>Emails Completed</th>
+                            <th>Avg Response</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-mono">2025-07-27</td>
+                            <td><span class="table-metric text-success">80%</span></td>
+                            <td>19.9</td>
+                            <td>14</td>
+                            <td>0.0h</td>
+                            <td><span class="badge badge-success">Good</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono">2025-07-26</td>
+                            <td><span class="table-metric text-success">81%</span></td>
+                            <td>27.8</td>
+                            <td>0</td>
+                            <td>0.0h</td>
+                            <td><span class="badge badge-success">Good</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono">2025-07-25</td>
+                            <td><span class="table-metric text-danger">66.8%</span></td>
+                            <td>27.5</td>
+                            <td>78</td>
+                            <td>0.39h</td>
+                            <td><span class="badge badge-danger">Poor</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono">2025-07-24</td>
+                            <td><span class="table-metric text-danger">27%</span></td>
+                            <td class="text-danger">44.3</td>
+                            <td>86</td>
+                            <td>0.58h</td>
+                            <td><span class="badge badge-danger">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono">2025-07-23</td>
+                            <td><span class="table-metric text-danger">13%</span></td>
+                            <td class="text-danger">40.9</td>
+                            <td>70</td>
+                            <td>0.4h</td>
+                            <td><span class="badge badge-danger">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono">2025-07-22</td>
+                            <td><span class="table-metric text-danger">0%</span></td>
+                            <td class="text-danger">42.5</td>
+                            <td>91</td>
+                            <td>0.65h</td>
+                            <td><span class="badge badge-danger">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono">2025-07-21</td>
+                            <td><span class="table-metric text-warning">44%</span></td>
+                            <td>33.2</td>
+                            <td>96</td>
+                            <td>1.36h</td>
+                            <td><span class="badge badge-warning">Poor</span></td>
+                        </tr>
+                        <tr>
+                            <td class="font-mono">2025-07-20</td>
+                            <td><span class="table-metric text-success">100%</span></td>
+                            <td>15.7</td>
+                            <td>13</td>
+                            <td>0.72h</td>
+                            <td><span class="badge badge-success">Excellent</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Response Time Distribution -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Response Time Analytics</h2>
+                <p class="section-description">Statistical analysis of 975 email responses</p>
+            </div>
+
+            <div class="grid grid-4">
+                <div class="card">
+                    <div class="card-title">Mean Response</div>
+                    <div class="kpi-value">132.6<span style="font-size: 16px; font-weight: 400;">min</span></div>
+                    <div class="kpi-label">Average Time</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Median Response</div>
+                    <div class="kpi-value">40.0<span style="font-size: 16px; font-weight: 400;">min</span></div>
+                    <div class="kpi-label">Middle Value</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">95th Percentile</div>
+                    <div class="kpi-value">225.7<span style="font-size: 16px; font-weight: 400;">min</span></div>
+                    <div class="kpi-label">3.76 Hours</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Standard Dev</div>
+                    <div class="kpi-value">77.4<span style="font-size: 16px; font-weight: 400;">min</span></div>
+                    <div class="kpi-label">Variability</div>
+                </div>
+            </div>
+
+            <!-- Response Time Categories -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">Response Time Distribution</div>
+                        <div class="card-subtitle">Categorized by response speed</div>
+                    </div>
+                </div>
+                
+                <div class="distribution-grid">
+                    <div class="distribution-card">
+                        <div class="distribution-header">
+                            <span class="distribution-label">Very Fast</span>
+                            <span class="badge badge-success">≤15m</span>
+                        </div>
+                        <div class="distribution-value">697</div>
+                        <div class="distribution-percentage">24.0% of total</div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill success" style="width: 24%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-card">
+                        <div class="distribution-header">
+                            <span class="distribution-label">Fast</span>
+                            <span class="badge badge-info">16-60m</span>
+                        </div>
+                        <div class="distribution-value">1,097</div>
+                        <div class="distribution-percentage">37.7% of total</div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 37.7%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-card">
+                        <div class="distribution-header">
+                            <span class="distribution-label">Moderate</span>
+                            <span class="badge badge-warning">1-4h</span>
+                        </div>
+                        <div class="distribution-value">991</div>
+                        <div class="distribution-percentage">34.1% of total</div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill warning" style="width: 34.1%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-card">
+                        <div class="distribution-header">
+                            <span class="distribution-label">Slow</span>
+                            <span class="badge badge-danger">4-8h</span>
+                        </div>
+                        <div class="distribution-value">119</div>
+                        <div class="distribution-percentage">4.1% of total</div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill danger" style="width: 4.1%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-card">
+                        <div class="distribution-header">
+                            <span class="distribution-label">Very Slow</span>
+                            <span class="badge badge-danger">8-24h</span>
+                        </div>
+                        <div class="distribution-value">3</div>
+                        <div class="distribution-percentage">0.1% of total</div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill danger" style="width: 0.1%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hourly Performance Patterns -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Temporal Performance Patterns</h2>
+                <p class="section-description">Analysis by hour of day and day of week</p>
+            </div>
+
+            <div class="grid grid-2">
+                <!-- Business Hours Performance -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Business Hours Analysis</div>
+                            <div class="card-subtitle">SLA compliance by time period</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="progress-label">Morning (7AM-12PM)</span>
+                            <span class="progress-value text-success">85%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill success" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="progress-label">Afternoon (12PM-5PM)</span>
+                            <span class="progress-value text-danger">45%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill danger" style="width: 45%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="progress-label">Evening (5PM-8PM)</span>
+                            <span class="progress-value text-warning">65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill warning" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span class="progress-label">Off-Hours (8PM-7AM)</span>
+                            <span class="progress-value text-success">90%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill success" style="width: 90%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Peak Hours Analysis -->
+                <div class="card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title">Peak Volume Hours</div>
+                            <div class="card-subtitle">Email volume and response times</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between; padding: 12px; background: var(--bg-secondary); border-radius: 8px;">
+                            <div>
+                                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">10:00 AM</div>
+                                <div style="font-size: 16px; font-weight: 600;">610 emails</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 11px; color: var(--text-muted);">Avg Response</div>
+                                <div style="font-size: 14px; font-weight: 500; color: var(--accent);">65.5 min</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; padding: 12px; background: var(--bg-secondary); border-radius: 8px;">
+                            <div>
+                                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">11:00 AM</div>
+                                <div style="font-size: 16px; font-weight: 600;">597 emails</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 11px; color: var(--text-muted);">Avg Response</div>
+                                <div style="font-size: 14px; font-weight: 500; color: var(--accent);">62.2 min</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; padding: 12px; background: var(--bg-secondary); border-radius: 8px;">
+                            <div>
+                                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">9:00 AM</div>
+                                <div style="font-size: 16px; font-weight: 600;">557 emails</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 11px; color: var(--text-muted);">Avg Response</div>
+                                <div style="font-size: 14px; font-weight: 500; color: var(--accent);">72.5 min</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; padding: 12px; background: var(--bg-secondary); border-radius: 8px;">
+                            <div>
+                                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">12:00 PM</div>
+                                <div style="font-size: 16px; font-weight: 600;">363 emails</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 11px; color: var(--text-muted);">Avg Response</div>
+                                <div style="font-size: 14px; font-weight: 500; color: var(--success);">56.9 min</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Subject Line Analysis -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Email Category Performance</h2>
+                <p class="section-description">Response times by email type and priority</p>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Subject Line Categories</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Volume</th>
+                            <th>Avg Response</th>
+                            <th>Median</th>
+                            <th>Range</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="badge badge-danger">Urgent Requests</span></td>
+                            <td class="table-metric">56</td>
+                            <td class="text-success">34.7 min</td>
+                            <td>19.0 min</td>
+                            <td>0-221 min</td>
+                            <td>
+                                <div class="progress-bar" style="width: 100px; height: 6px;">
+                                    <div class="progress-fill success" style="width: 90%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-info">Interpreter Requests</span></td>
+                            <td class="table-metric">1,401</td>
+                            <td>65.5 min</td>
+                            <td>38.0 min</td>
+                            <td>0-501 min</td>
+                            <td>
+                                <div class="progress-bar" style="width: 100px; height: 6px;">
+                                    <div class="progress-fill" style="width: 70%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-warning">Job Assignments</span></td>
+                            <td class="table-metric">239</td>
+                            <td class="text-warning">96.3 min</td>
+                            <td>64.0 min</td>
+                            <td>0-459 min</td>
+                            <td>
+                                <div class="progress-bar" style="width: 100px; height: 6px;">
+                                    <div class="progress-fill warning" style="width: 50%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="badge badge-success">Regular Emails</span></td>
+                            <td class="table-metric">1,241</td>
+                            <td>70.0 min</td>
+                            <td>38.0 min</td>
+                            <td>0-548 min</td>
+                            <td>
+                                <div class="progress-bar" style="width: 100px; height: 6px;">
+                                    <div class="progress-fill" style="width: 65%"></div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Critical Insights -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Performance Insights & Recommendations</h2>
+                <p class="section-description">Key findings and action items for improvement</p>
+            </div>
+
+            <div class="insights-box danger">
+                <h3 class="insights-title">⚠️ Critical SLA Issues Requiring Immediate Attention</h3>
+                <ul class="insights-list">
+                    <li><strong>66.8% SLA compliance</strong> is critically below the 80% target - immediate intervention required</li>
+                    <li><strong>Afternoon crisis (1-6 PM):</strong> Only 45% compliance during peak hours - staff augmentation needed</li>
+                    <li><strong>Peak violations:</strong> Unread counts reaching 86 emails (nearly 3x the SLA limit)</li>
+                    <li><strong>Consecutive failures:</strong> July 22-24 showed 0%, 13%, and 27% compliance respectively</li>
+                </ul>
+            </div>
+
+            <div class="insights-box warning">
+                <h3 class="insights-title">📊 Operational Recommendations</h3>
+                <ul class="insights-list">
+                    <li>Deploy additional resources during 12-6 PM critical period</li>
+                    <li>Implement real-time monitoring with alerts at 25+ unread emails</li>
+                    <li>Replicate morning success model (85% compliance) throughout the day</li>
+                    <li>Review email routing algorithms for better load distribution</li>
+                    <li>Establish escalation procedures for SLA breach scenarios</li>
+                </ul>
+            </div>
+
+            <div class="insights-box">
+                <h3 class="insights-title">✅ Positive Performance Indicators</h3>
+                <ul class="insights-list">
+                    <li><strong>71.8% of emails</strong> are responded to within 1 hour</li>
+                    <li><strong>Morning performance (7AM-12PM)</strong> consistently achieves 85% SLA compliance</li>
+                    <li><strong>Recent improvement:</strong> August 5 showed 80% compliance, indicating recovery potential</li>
+                    <li><strong>Urgent requests</strong> are handled efficiently with 34.7 min average response</li>
+                    <li><strong>Off-hours performance</strong> maintains 90% SLA compliance</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Outlier Analysis Summary -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">Outlier Analysis</h2>
+                <p class="section-description">Extreme response times requiring investigation</p>
+            </div>
+
+            <div class="grid grid-4">
+                <div class="card">
+                    <div class="card-title">Total Outliers</div>
+                    <div class="kpi-value">156</div>
+                    <div class="kpi-label">5.4% of emails</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Fastest Outlier</div>
+                    <div class="kpi-value">222<span style="font-size: 16px; font-weight: 400;">min</span></div>
+                    <div class="kpi-label">3.7 hours</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Slowest Response</div>
+                    <div class="kpi-value text-danger">548<span style="font-size: 16px; font-weight: 400;">min</span></div>
+                    <div class="kpi-label">9.1 hours</div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">Avg Outlier Time</div>
+                    <div class="kpi-value">300.7<span style="font-size: 16px; font-weight: 400;">min</span></div>
+                    <div class="kpi-label">5.0 hours</div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div style="margin-bottom: 8px; font-weight: 500;">Email Analytics Dashboard v2.0</div>
+            <div>Analysis Period: July 22 - August 5, 2024 | Data Sources: 975 processed emails | SLA Target: ≤30 unread/hour</div>
+            <div style="margin-top: 8px; opacity: 0.7;">Last Updated: July 28, 2025 00:00 UTC</div>
+        </div>
+    </footer>
+</body>
+</html>

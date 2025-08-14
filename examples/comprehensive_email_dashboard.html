@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Email Analytics Dashboard | Comprehensive Performance Overview</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary: #0F172A;
+            --primary-light: #1E293B;
+            --primary-dark: #0C101A;
+            --accent: #3B82F6;
+            --accent-light: #60A5FA;
+            --accent-dark: #1D4ED8;
+            --success: #10B981;
+            --success-light: #34D399;
+            --warning: #F59E0B;
+            --warning-light: #FBBF24;
+            --danger: #EF4444;
+            --danger-light: #F87171;
+            --info: #06B6D4;
+            --info-light: #22D3EE;
+            --purple: #8B5CF6;
+            --purple-light: #A78BFA;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-muted: #64748B;
+            --text-light: #94A3B8;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8FAFC;
+            --bg-tertiary: #F1F5F9;
+            --bg-card: #FFFFFF;
+            --border: #E2E8F0;
+            --border-light: #F1F5F9;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            --gradient-warning: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            --gradient-danger: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+            --gradient-info: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header */
+        .header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 32px 40px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .header-left h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E2E8F0 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-subtitle {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+        }
+
+        .header-stat {
+            text-align: center;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .header-stat-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px;
+            display: grid;
+            gap: 32px;
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .dashboard-grid.grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .dashboard-grid.grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .dashboard-grid.grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .card-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--border-light);
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .card-content {
+            padding: 24px;
+        }
+
+        /* KPI Cards */
+        .kpi-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .kpi-card.success::before {
+            background: var(--gradient-success);
+        }
+
+        .kpi-card.warning::before {
+            background: var(--gradient-warning);
+        }
+
+        .kpi-card.danger::before {
+            background: var(--gradient-danger);
+        }
+
+        .kpi-card.info::before {
+            background: var(--gradient-info);
+        }
+
+        .kpi-value {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 12px;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .kpi-card.success .kpi-value {
+            background: var(--gradient-success);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .kpi-card.warning .kpi-value {
+            background: var(--gradient-warning);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .kpi-card.danger .kpi-value {
+            background: var(--gradient-danger);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .kpi-card.info .kpi-value {
+            background: var(--gradient-info);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .kpi-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .kpi-change {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .kpi-change.positive {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .kpi-change.negative {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+            padding: 24px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .table-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .table-description {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .status-badge.excellent {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .status-badge.good {
+            background: rgba(34, 197, 94, 0.15);
+            color: #16A34A;
+        }
+
+        .status-badge.poor {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .status-badge.critical {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        /* Chart Containers */
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 24px 0;
+        }
+
+        .chart-container.large {
+            height: 500px;
+        }
+
+        .chart-container.small {
+            height: 300px;
+        }
+
+        /* Insights Boxes */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+        }
+
+        .insight-box {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            border-left: 6px solid var(--accent);
+        }
+
+        .insight-box.success {
+            border-left-color: var(--success);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.02) 0%, var(--bg-card) 100%);
+        }
+
+        .insight-box.warning {
+            border-left-color: var(--warning);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.02) 0%, var(--bg-card) 100%);
+        }
+
+        .insight-box.danger {
+            border-left-color: var(--danger);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.02) 0%, var(--bg-card) 100%);
+        }
+
+        .insight-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .insight-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .insight-list li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .insight-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            background: var(--gradient-primary);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-description {
+            font-size: 16px;
+            color: var(--text-muted);
+            font-weight: 500;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .main-content {
+                padding: 24px;
+            }
+            
+            .dashboard-grid.grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .header-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 24px;
+                padding: 24px;
+            }
+            
+            .header-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-grid,
+            .dashboard-grid.grid-2,
+            .dashboard-grid.grid-3,
+            .dashboard-grid.grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Progress Bars */
+        .progress-container {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-bar.excellent {
+            background: var(--gradient-success);
+        }
+
+        .progress-bar.good {
+            background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+        }
+
+        .progress-bar.poor {
+            background: var(--gradient-warning);
+        }
+
+        .progress-bar.critical {
+            background: var(--gradient-danger);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .footer p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>Complete Email Analytics Dashboard</h1>
+                <p class="header-subtitle">Comprehensive Performance Overview & Real-time Monitoring</p>
+            </div>
+            <div class="header-stats">
+                <div class="header-stat">
+                    <div class="header-stat-value">3,247</div>
+                    <div class="header-stat-label">Total Emails</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value">2,891</div>
+                    <div class="header-stat-label">Completed</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value">68.2%</div>
+                    <div class="header-stat-label">SLA Compliance</div>
+                </div>
+                <div class="header-stat">
+                    <div class="header-stat-value">89.0%</div>
+                    <div class="header-stat-label">Completion Rate</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Executive Overview -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Executive Summary</h2>
+                <p class="section-description">Key performance indicators and operational metrics for comprehensive email management</p>
+            </div>
+
+            <div class="dashboard-grid grid-4">
+                <div class="kpi-card success">
+                    <div class="kpi-value">2,891</div>
+                    <div class="kpi-label">Completed Emails</div>
+                    <div class="kpi-change positive">↑ 15% vs last period</div>
+                </div>
+                <div class="kpi-card info">
+                    <div class="kpi-value">132.6m</div>
+                    <div class="kpi-label">Avg Response Time</div>
+                    <div class="kpi-change positive">↓ 8% improvement</div>
+                </div>
+                <div class="kpi-card warning">
+                    <div class="kpi-value">68.2%</div>
+                    <div class="kpi-label">SLA Compliance</div>
+                    <div class="kpi-change negative">↓ 11.8% below target</div>
+                </div>
+                <div class="kpi-card danger">
+                    <div class="kpi-value">356</div>
+                    <div class="kpi-label">Pending Emails</div>
+                    <div class="kpi-change negative">↑ 23% increase</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Daily SLA Performance -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Recent Daily SLA Performance</h2>
+                <p class="section-description">Daily tracking of SLA compliance and operational metrics</p>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Last 8 Days Performance Overview</h3>
+                    <p class="table-description">Comprehensive daily metrics including completion rates and response times</p>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>SLA Compliance</th>
+                            <th>Avg Unread Count</th>
+                            <th>Emails Completed</th>
+                            <th>Avg Response (Hours)</th>
+                            <th>Status</th>
+                            <th>Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>7/27/2025</strong></td>
+                            <td><strong style="color: var(--warning);">80%</strong></td>
+                            <td>19.9</td>
+                            <td>14</td>
+                            <td>0.0</td>
+                            <td><span class="status-badge good">✓ GOOD</span></td>
+                            <td style="color: var(--success);">↗</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7/26/2025</strong></td>
+                            <td><strong style="color: var(--success);">81%</strong></td>
+                            <td>27.8</td>
+                            <td>0</td>
+                            <td>0.0</td>
+                            <td><span class="status-badge good">✓ GOOD</span></td>
+                            <td style="color: var(--success);">↗</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7/25/2025</strong></td>
+                            <td><strong style="color: var(--warning);">47%</strong></td>
+                            <td>27.5</td>
+                            <td>78</td>
+                            <td>0.39</td>
+                            <td><span class="status-badge poor">⚠ POOR</span></td>
+                            <td style="color: var(--danger);">↘</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7/24/2025</strong></td>
+                            <td><strong style="color: var(--danger);">27%</strong></td>
+                            <td>44.3</td>
+                            <td>86</td>
+                            <td>0.58</td>
+                            <td><span class="status-badge critical">⚠ CRITICAL</span></td>
+                            <td style="color: var(--danger);">↘</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7/23/2025</strong></td>
+                            <td><strong style="color: var(--danger);">13%</strong></td>
+                            <td>40.9</td>
+                            <td>70</td>
+                            <td>0.4</td>
+                            <td><span class="status-badge critical">⚠ CRITICAL</span></td>
+                            <td style="color: var(--danger);">↘</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7/22/2025</strong></td>
+                            <td><strong style="color: var(--danger);">0%</strong></td>
+                            <td>42.5</td>
+                            <td>91</td>
+                            <td>0.65</td>
+                            <td><span class="status-badge critical">⚠ CRITICAL</span></td>
+                            <td style="color: var(--danger);">↘</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7/21/2025</strong></td>
+                            <td><strong style="color: var(--warning);">44%</strong></td>
+                            <td>33.2</td>
+                            <td>96</td>
+                            <td>1.36</td>
+                            <td><span class="status-badge poor">⚠ POOR</span></td>
+                            <td style="color: var(--danger);">↘</td>
+                        </tr>
+                        <tr>
+                            <td><strong>7/20/2025</strong></td>
+                            <td><strong style="color: var(--success);">100%</strong></td>
+                            <td>15.7</td>
+                            <td>13</td>
+                            <td>0.72</td>
+                            <td><span class="status-badge excellent">✓ EXCELLENT</span></td>
+                            <td style="color: var(--success);">↗</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Performance Analytics -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Response Time Analytics</h2>
+                <p class="section-description">Comprehensive statistical analysis of all completed emails</p>
+            </div>
+
+            <div class="dashboard-grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Response Time Distribution</h3>
+                        <p class="card-subtitle">Analysis of 2,891 completed emails</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container">
+                            <canvas id="responseTimeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Daily Volume Trends</h3>
+                        <p class="card-subtitle">Email completion patterns over time</p>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container">
+                            <canvas id="volumeTrendChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Email Category Performance -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Email Category Performance</h2>
+                <p class="section-description">Response times and completion rates by email type and priority</p>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Subject Line Categories & Performance Metrics</h3>
+                    <p class="table-description">Detailed breakdown by email category with response time analytics</p>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Volume</th>
+                            <th>Completion Rate</th>
+                            <th>Avg Response</th>
+                            <th>Median Time</th>
+                            <th>SLA Compliance</th>
+                            <th>Performance Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="status-badge critical">🚨 URGENT Requests</span></td>
+                            <td><strong>156</strong></td>
+                            <td><strong style="color: var(--success);">94.2%</strong></td>
+                            <td><strong style="color: var(--success);">18.3 min</strong></td>
+                            <td>12.0 min</td>
+                            <td>96.8%</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar excellent" style="width: 96%"></div>
+                                </div>
+                                <small>Excellent</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge info">🗣️ Interpreter Requests</span></td>
+                            <td><strong>1,847</strong></td>
+                            <td>87.3%</td>
+                            <td>65.5 min</td>
+                            <td>38.0 min</td>
+                            <td>72.4%</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar good" style="width: 72%"></div>
+                                </div>
+                                <small>Good</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge warning">💼 Job Assignments</span></td>
+                            <td><strong>423</strong></td>
+                            <td>82.5%</td>
+                            <td>96.3 min</td>
+                            <td>64.0 min</td>
+                            <td>58.1%</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar poor" style="width: 58%"></div>
+                                </div>
+                                <small>Poor</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-badge good">📧 Regular Emails</span></td>
+                            <td><strong>465</strong></td>
+                            <td>91.8%</td>
+                            <td>45.2 min</td>
+                            <td>28.0 min</td>
+                            <td>78.9%</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar good" style="width: 79%"></div>
+                                </div>
+                                <small>Good</small>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Performance Insights -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Performance Insights & Recommendations</h2>
+                <p class="section-description">Critical findings and strategic action items for operational improvement</p>
+            </div>
+
+            <div class="insights-grid">
+                <div class="insight-box danger">
+                    <h3 class="insight-title">🚨 Critical Issues Requiring Immediate Action</h3>
+                    <ul class="insight-list">
+                        <li><strong>SLA Compliance at 68.2%</strong> - 11.8% below target, immediate intervention needed</li>
+                        <li><strong>Peak Crisis Period:</strong> 1-6 PM shows only 45% compliance during critical hours</li>
+                        <li><strong>Backlog Alert:</strong> 356 pending emails represent 23% increase from last period</li>
+                        <li><strong>Critical Days:</strong> July 22-24 showed consecutive failures (0%, 13%, 27%)</li>
+                        <li><strong>Response Time Variance:</strong> 95th percentile at 225.7 min indicates process inconsistency</li>
+                    </ul>
+                </div>
+
+                <div class="insight-box warning">
+                    <h3 class="insight-title">📊 Strategic Recommendations</h3>
+                    <ul class="insight-list">
+                        <li>Deploy additional staff during 12-6 PM critical period to address afternoon bottleneck</li>
+                        <li>Implement real-time monitoring dashboard with alerts at 25+ unread emails</li>
+                        <li>Establish escalation procedures for SLA breach scenarios and team lead notifications</li>
+                        <li>Review and optimize email routing algorithms for better workload distribution</li>
+                        <li>Create dedicated urgent email queue with specialized handlers for time-sensitive requests</li>
+                        <li>Implement automated responses for common inquiries to reduce manual processing time</li>
+                    </ul>
+                </div>
+
+                <div class="insight-box success">
+                    <h3 class="insight-title">✅ Strengths to Build Upon</h3>
+                    <ul class="insight-list">
+                        <li><strong>Urgent Request Excellence:</strong> 96.8% SLA compliance for critical emails</li>
+                        <li><strong>Morning Performance:</strong> 7-12 PM period achieves 85% compliance consistently</li>
+                        <li><strong>High Completion Rate:</strong> 89% overall completion rate demonstrates strong follow-through</li>
+                        <li><strong>Fast Response Capability:</strong> 24% of emails completed in ≤15 minutes shows efficiency potential</li>
+                        <li><strong>Off-Hours Excellence:</strong> 90% compliance during evening/night shifts</li>
+                        <li><strong>Process Improvement:</strong> 8% reduction in average response time shows positive trend</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Statistics -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Comprehensive Statistical Analysis</h2>
+                <p class="section-description">Deep-dive analytics for all completed email transactions</p>
+            </div>
+
+            <div class="dashboard-grid grid-3">
+                <div class="kpi-card">
+                    <div class="kpi-value">132.6m</div>
+                    <div class="kpi-label">Mean Response Time</div>
+                    <div class="kpi-change positive">↓ 8% improvement</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value">40.0m</div>
+                    <div class="kpi-label">Median Response Time</div>
+                    <div class="kpi-change positive">↓ 12% improvement</div>
+                </div>
+                <div class="kpi-card danger">
+                    <div class="kpi-value">225.7m</div>
+                    <div class="kpi-label">95th Percentile</div>
+                    <div class="kpi-change negative">↑ High variance</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Operational Metrics -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">Operational Excellence Metrics</h2>
+                <p class="section-description">Key performance indicators for operational efficiency and service quality</p>
+            </div>
+
+            <div class="dashboard-grid grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Business Hours Performance</h3>
+                        <p class="card-subtitle">SLA compliance by time period</p>
+                    </div>
+                    <div class="card-content">
+                        <div style="display: grid; gap: 16px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span><strong>Morning (7AM-12PM)</strong></span>
+                                <span style="color: var(--success); font-weight: 600;">85%</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar excellent" style="width: 85%"></div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span><strong>Afternoon (12PM-5PM)</strong></span>
+                                <span style="color: var(--danger); font-weight: 600;">45%</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar critical" style="width: 45%"></div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span><strong>Evening (5PM-8PM)</strong></span>
+                                <span style="color: var(--warning); font-weight: 600;">65%</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar good" style="width: 65%"></div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span><strong>Off-Hours (8PM-7AM)</strong></span>
+                                <span style="color: var(--success); font-weight: 600;">90%</span>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar excellent" style="width: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Peak Volume Analysis</h3>
+                        <p class="card-subtitle">Busiest hours and response performance</p>
+                    </div>
+                    <div class="card-content">
+                        <table style="font-size: 12px;">
+                            <thead>
+                                <tr>
+                                    <th>Hour</th>
+                                    <th>Volume</th>
+                                    <th>Avg Response</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>2:00 PM</strong></td>
+                                    <td>247</td>
+                                    <td>156 min</td>
+                                    <td><span class="status-badge critical">Critical</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>3:00 PM</strong></td>
+                                    <td>234</td>
+                                    <td>142 min</td>
+                                    <td><span class="status-badge poor">Poor</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>1:00 PM</strong></td>
+                                    <td>198</td>
+                                    <td>89 min</td>
+                                    <td><span class="status-badge poor">Poor</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>4:00 PM</strong></td>
+                                    <td>187</td>
+                                    <td>134 min</td>
+                                    <td><span class="status-badge poor">Poor</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3>Complete Email Analytics Dashboard v2.0</h3>
+            <p>
+                Comprehensive analysis covering all completed email transactions from the integrated system.<br>
+                Data sources: Completed.csv, DailySummary.csv, UnreadCount.csv | Last updated: <strong>August 7, 2025</strong><br>
+                Dashboard provides real-time insights for operational excellence and strategic decision-making.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Response Time Distribution Chart
+            const ctx1 = document.getElementById('responseTimeChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Very Fast (≤15m)', 'Fast (16-60m)', 'Moderate (1-4h)', 'Slow (4-8h)', 'Very Slow (8h+)'],
+                    datasets: [{
+                        data: [697, 1097, 991, 119, 3],
+                        backgroundColor: [
+                            '#10B981',
+                            '#34D399', 
+                            '#F59E0B',
+                            '#EF4444',
+                            '#7C2D12'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Daily Volume Trend Chart
+            const ctx2 = document.getElementById('volumeTrendChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: ['7/20', '7/21', '7/22', '7/23', '7/24', '7/25', '7/26', '7/27'],
+                    datasets: [{
+                        label: 'Completed Emails',
+                        data: [13, 96, 91, 70, 86, 78, 0, 14],
+                        borderColor: '#3B82F6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3B82F6',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }, {
+                        label: 'SLA Compliance %',
+                        data: [100, 44, 0, 13, 27, 47, 81, 80],
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        fill: false,
+                        tension: 0.4,
+                        pointBackgroundColor: '#10B981',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: {
+                                    size: 12,
+                                    weight: '500'
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: {
+                                drawOnChartArea: false,
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
