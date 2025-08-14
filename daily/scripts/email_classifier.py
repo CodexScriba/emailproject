@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class EmailClassifier:
     """Main class for processing and classifying email data."""
     
-    def __init__(self, csv_file_path='../data/Complete_List_Raw.csv'):
+    def __init__(self, csv_file_path='../../data/Complete_List_Raw.csv'):
         """Initialize the classifier with data file path."""
         self.csv_file_path = csv_file_path
         self.df = None
@@ -283,7 +283,7 @@ class EmailClassifier:
         
         return hourly_response_stats
     
-    def save_results(self, results_df, summary_stats, output_file='../results/Email_Classification_Results.csv'):
+    def save_results(self, results_df, summary_stats, output_file='../outputs/Email_Classification_Results.csv'):
         """Save the classification results and summary to files."""
         logger.info(f"Saving results to {output_file}")
         
@@ -327,13 +327,13 @@ class EmailClassifier:
         
         # Save hourly distribution
         if hourly_distribution is not None:
-            hourly_output_file = '../results/Hourly_Email_Distribution.csv'
+            hourly_output_file = '../outputs/Hourly_Email_Distribution.csv'
             hourly_distribution.to_csv(hourly_output_file, index=False)
             logger.info(f"Hourly distribution saved to {hourly_output_file}")
         
         # Save hourly response times
         if hourly_response_times is not None:
-            response_time_output_file = '../results/Hourly_Response_Times.csv'
+            response_time_output_file = '../outputs/Hourly_Response_Times.csv'
             hourly_response_times.to_csv(response_time_output_file, index=False)
             logger.info(f"Hourly response times saved to {response_time_output_file}")
         

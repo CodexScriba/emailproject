@@ -51,17 +51,20 @@ emailproject/
 │   ├── UnreadCount.csv         # Hourly SLA compliance data  
 │   ├── DailySummary.csv        # Daily volume and performance summaries
 │   └── Reserve.csv             # Sample data for validation
-├── scripts/                    # Python processing scripts
-│   └── email_classifier.py     # Main email classification and analysis script
-├── results/                    # Generated analysis outputs
-│   ├── Email_Classification_Results.csv        # Detailed email classifications
-│   ├── Email_Classification_Results_Summary.csv # Summary statistics
-│   └── Hourly_Email_Distribution.csv           # Email volume by hour
+├── daily/                      # Daily processing pipeline
+│   ├── scripts/               # Daily analysis Python scripts
+│   │   └── email_classifier.py # Main email classification and analysis script
+│   └── outputs/               # Daily analysis outputs
+│       ├── Email_Classification_Results.csv        # Detailed email classifications
+│       ├── Email_Classification_Results_Summary.csv # Summary statistics
+│       ├── Hourly_Email_Distribution.csv           # Email volume by hour
+│       └── Hourly_Response_Times.csv               # Response time analysis by hour
 ├── documentation/
 │   ├── architecture.md         # System architecture (this document)
 │   ├── tasks.md                # Implementation tasks and progress
 │   ├── todos.md                # Development todos
 │   └── chat/                   # Conversation logs and decisions
+├── examples/                   # HTML dashboard examples and templates
 ├── venv/                       # Python virtual environment (gitignored)
 ├── requirements.txt            # Python dependencies
 ├── .gitignore                  # Git ignore configuration
@@ -142,9 +145,11 @@ Based on available data analysis, the dashboard will focus on:
 - **No JavaScript** - Purely static sites constraint
 
 ### Project Organization
-- **scripts/** - All Python processing scripts and modules
-- **results/** - Generated analysis outputs and processed data
+- **daily/** - Daily processing pipeline with focused scope
+  - **daily/scripts/** - Daily analysis Python scripts and modules
+  - **daily/outputs/** - Daily analysis results and processed data
 - **data/** - Source CSV files and raw data (read-only)
+- **examples/** - HTML dashboard templates and prototypes
 - **venv/** - Isolated Python environment with managed dependencies
 - **.gitignore** - Comprehensive ignore rules for Python development
 
