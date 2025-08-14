@@ -14,6 +14,22 @@ This project addresses a data recovery and analytics challenge where tracking sy
   - Tracking window: 7 AM to 9 PM hourly measurements
   - Messages Received column: Currently empty/unused
 
+- **Complete_List_Raw.csv** (data/Complete_List_Raw.csv)
+  - Date range: 8/13/2025 (single day sample)
+  - Columns: Conversation-Id, Subject, Emails, EventType, TimeStamp, MessageId
+  - EventType: "Inbox" events (email arrivals)
+  - Volume: 100+ emails in 7.5 hours
+  - Peak periods: Morning (8-10 AM) and midday (11 AM-1 PM)
+  - Missing: "Replied" and "Completed" events in this sample
+
+- **DailySummary.csv** (data/DailySummary.csv)
+  - Date range: 5/18/2025 to 8/13/2025 (3 months)
+  - Columns: Date, InboxTotal, SentTotal, CompletedTotal, AvgResponseInMinutes, AvgResponseInHours, Within SLA, Average Unread
+  - Daily volumes: 200-350 emails on weekdays, 10-30 on weekends
+  - Response time data: Only available for 2 days (5/23 & 5/24/2025)
+  - SLA performance: 22-29% compliance when measured
+  - Average response times: 125-158 minutes (2+ hours)
+
 ### SLA Definition
 - **Unread SLA Threshold: 30 emails**
 - SLA MET: TotalUnread ≤ 30
@@ -31,10 +47,13 @@ This project addresses a data recovery and analytics challenge where tracking sy
 ```
 emailproject/
 ├── data/
-│   └── UnreadCount.csv        # Primary data source analyzed
+│   ├── UnreadCount.csv        # Hourly SLA compliance data
+│   ├── Complete_List_Raw.csv  # Email lifecycle events
+│   └── DailySummary.csv       # Daily volume and performance summaries
 ├── documentation/
 │   ├── chat/                  # Conversation logs and decisions
-│   └── architecture.md        # This document
+│   ├── architecture.md        # This document
+│   └── llm_instructions.md    # Agent role definitions
 └── .windsurf/
     └── workflows/
         └── spark.md           # Agent workflow guidance
@@ -51,18 +70,22 @@ emailproject/
 - No client-side interactivity - pure static HTML/CSS only
 
 ### Data Limitations
-- Single data source: CSV exports from SharePoint
+- CSV exports from SharePoint with significant gaps
 - Manual data refresh required
-- Potential data gaps from original tracking system errors
-- Messages Received data not captured
+- **Critical tracking system failure**: Response time data missing for 95% of days
+- Messages Received data not captured in UnreadCount.csv
+- Email lifecycle events incomplete (missing "Replied" and "Completed" events)
+- Only 2 days of response time measurements out of 3+ months
 
 ## Current Objectives
 
 Based on available data analysis, the dashboard will focus on:
-- **SLA Compliance Tracking**: Hourly compliance rates over time
-- **Unread Email Volume**: Trends and patterns by hour/day
+- **SLA Compliance Tracking**: Hourly unread count compliance (30 email threshold)
+- **Daily Volume Analysis**: Email intake patterns and trends over 3 months
 - **Peak Load Identification**: Time periods with highest email volumes
-- **Leadership Visibility**: Executive summary of email handling performance
+- **Response Time Analysis**: Limited to 2 days of available data
+- **Performance Trends**: Daily completion rates and patterns
+- **Leadership Visibility**: Executive summary highlighting tracking system gaps
 
 ## Technology Stack
 
@@ -78,14 +101,15 @@ Based on available data analysis, the dashboard will focus on:
 
 ## Key Obstacles
 
-1. **Limited Data Scope**: Only unread count data available so far
-2. **No Response Time Data**: Cannot measure actual response times without additional CSV files
-3. **Missing Volume Data**: Messages Received column is empty
-4. **Static Generation**: Dashboard must be manually regenerated for updates
-5. **No Historical Context**: Unknown baseline for "normal" email volumes
+1. **Severe Data Loss**: 95% of response time data missing due to tracking system failure
+2. **Incomplete Email Lifecycle**: Missing "Replied" and "Completed" events in available samples
+3. **Poor SLA Performance**: 22-29% compliance rate reveals operational issues
+4. **High Email Volume**: 200-350 daily emails with limited response capacity
+5. **Static Generation**: Dashboard must be manually regenerated for updates
 6. **No JavaScript**: All visualizations must be generated as static HTML/CSS by Python
+7. **Data Quality Issues**: Multiple empty columns and inconsistent event tracking
 
 ---
 
 *Last Updated: 2025-08-14*
-*Status: Data Discovery Phase - 1 CSV file analyzed*
+*Status: Data Discovery Phase - 3 CSV files analyzed*
