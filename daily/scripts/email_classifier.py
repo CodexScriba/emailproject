@@ -15,6 +15,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import logging
+import json
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -283,20 +284,81 @@ class EmailClassifier:
         
         return hourly_response_stats
     
-    def save_results(self, results_df, summary_stats, output_file='../outputs/Email_Classification_Results.csv'):
-        """Save the classification results and summary to files."""
-        logger.info(f"Saving results to {output_file}")
+    def save_to_unified_json(self, results_df, summary_stats, hourly_distribution, hourly_response_times, 
+                            json_file='../../email_database.json'):
+        """Save data to unified multi-day JSON database."""
+        logger.info(f"Saving to unified database: {json_file}")
         
-        # Save detailed results
-        results_df.to_csv(output_file, index=False)
+        # Extract the date from the data (assuming single day for now)
+        date_str = "2025-08-13"  # From Complete_List_Raw.csv
         
-        # Save summary statistics
-        summary_file = output_file.replace('.csv', '_Summary.csv')
-        summary_df = pd.DataFrame([summary_stats])
-        summary_df.to_csv(summary_file, index=False)
+        # Merge hourly distribution with response times
+        hourly_data = []
+        hourly_dist_dict = {}
+        hourly_response_dict = {}
         
-        logger.info(f"Results saved to {output_file}")
-        logger.info(f"Summary saved to {summary_file}")
+        # Convert hourly distribution to dict by hour
+        if hourly_distribution is not None:
+            for row in hourly_distribution.to_dict('records'):
+                hourly_dist_dict[row['Hour']] = row
+        
+        # Convert hourly response times to dict by hour
+        if hourly_response_times is not None:
+            for row in hourly_response_times.to_dict('records'):
+                hourly_response_dict[row['Hour']] = row
+        
+        # Create unified hourly data (0-23 hours)
+        for hour in range(24):
+            dist_data = hourly_dist_dict.get(hour, {})
+            response_data = hourly_response_dict.get(hour, {})
+            
+            # Count replied emails for this hour
+            emails_replied = 0
+            if hour in hourly_response_dict:
+                emails_replied = response_data.get('Email_Count', 0)
+            
+            hourly_entry = {
+                "hour": hour,
+                "unread_count": None,  # Will be populated when SLA data is added
+                "sla_met": None,      # Will be populated when SLA data is added
+                "emails_received": dist_data.get('Email_Count', 0),
+                "emails_replied": emails_replied,
+                "avg_response_time": response_data.get('Avg_Response_Time_Minutes') if response_data.get('Avg_Response_Time_Minutes', 0) > 0 else None
+            }
+            hourly_data.append(hourly_entry)
+        
+        # Create unified database structure
+        database = {
+            "metadata": {
+                "last_updated": datetime.now().isoformat(),
+                "total_days_processed": 1,
+                "data_sources": ["Complete_List_Raw.csv"],
+                "earliest_date": date_str,
+                "latest_date": date_str
+            },
+            "days": {
+                date_str: {
+                    "date": date_str,
+                    "has_sla_data": False,
+                    "has_email_data": True,
+                    "daily_summary": {
+                        "sla_compliance_rate": None,
+                        "avg_unread_count": None,
+                        "total_emails": summary_stats['Total_Inbox_Emails'],
+                        "reply_rate_percent": summary_stats['Reply_Rate_Percent'],
+                        "avg_response_time_minutes": summary_stats['Avg_Response_Time_Minutes'],
+                        "median_response_time_minutes": summary_stats['Median_Response_Time_Minutes']
+                    },
+                    "hourly_data": hourly_data
+                }
+            }
+        }
+        
+        # Save to JSON
+        with open(json_file, 'w') as f:
+            json.dump(database, f, indent=2, default=str)
+        
+        logger.info(f"Unified database saved to {json_file}")
         
         # Log summary to console
         logger.info("=== CLASSIFICATION SUMMARY ===")
@@ -322,20 +384,8 @@ class EmailClassifier:
         # Analyze response times by hour
         hourly_response_times = self.analyze_response_time_by_hour(results_df)
         
-        # Save results
-        self.save_results(results_df, summary_stats)
-        
-        # Save hourly distribution
-        if hourly_distribution is not None:
-            hourly_output_file = '../outputs/Hourly_Email_Distribution.csv'
-            hourly_distribution.to_csv(hourly_output_file, index=False)
-            logger.info(f"Hourly distribution saved to {hourly_output_file}")
-        
-        # Save hourly response times
-        if hourly_response_times is not None:
-            response_time_output_file = '../outputs/Hourly_Response_Times.csv'
-            hourly_response_times.to_csv(response_time_output_file, index=False)
-            logger.info(f"Hourly response times saved to {response_time_output_file}")
+        # Save all data to unified multi-day JSON database
+        self.save_to_unified_json(results_df, summary_stats, hourly_distribution, hourly_response_times)
         
         logger.info("Email classification process completed successfully!")
         
