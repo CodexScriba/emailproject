@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
 """
-Email Classification and Response Time Calculator
+Email Classification and SLA Compliance Calculator
 
-This script processes the Complete_List_Raw.csv file to:
-1. Match Inbox emails with their corresponding Replied or Completed events
-2. Calculate response times in business minutes
-3. Classify emails as Replied, Completed, or Pending
-4. Generate a comprehensive output file with all classifications
+This script processes two data sources to create a unified JSON database:
+1. Complete_List_Raw.csv: Email lifecycle events and response time analysis
+2. UnreadCount.csv: SLA compliance data with hourly unread counts
+
+Features:
+- Email classification (Replied, Completed, Pending)
+- Business hours response time calculations (7 AM - 6 PM, Monday-Friday)
+- Daily SLA compliance rate calculations (≤30 emails = SLA MET)
+- Multi-day unified JSON database with both email and SLA metrics
+- Dashboard-ready data structure for KPI generation
 
 Business Hours: Monday-Friday, 7:00 AM - 6:00 PM
+SLA Threshold: 30 unread emails
 """
 
 import pandas as pd
@@ -24,10 +30,12 @@ logger = logging.getLogger(__name__)
 class EmailClassifier:
     """Main class for processing and classifying email data."""
     
-    def __init__(self, csv_file_path='../../data/Complete_List_Raw.csv'):
-        """Initialize the classifier with data file path."""
+    def __init__(self, csv_file_path='../../data/Complete_List_Raw.csv', sla_file_path='../../data/UnreadCount.csv'):
+        """Initialize the classifier with data file paths."""
         self.csv_file_path = csv_file_path
+        self.sla_file_path = sla_file_path
         self.df = None
+        self.sla_df = None
         
         # Business hours configuration
         self.business_start_hour = 7  # 7 AM
@@ -284,61 +292,215 @@ class EmailClassifier:
         
         return hourly_response_stats
     
+    def load_sla_data(self):
+        """Load and preprocess the SLA data from UnreadCount.csv."""
+        logger.info(f"Loading SLA data from {self.sla_file_path}")
+        
+        try:
+            self.sla_df = pd.read_csv(self.sla_file_path)
+            logger.info(f"Loaded {len(self.sla_df)} SLA records")
+            
+            # Convert date to datetime
+            self.sla_df['Date'] = pd.to_datetime(self.sla_df['Date'])
+            
+            # Convert Hour to integer
+            self.sla_df['Hour of the Day'] = pd.to_numeric(self.sla_df['Hour of the Day'])
+            
+            # Convert TotalUnread to integer
+            self.sla_df['TotalUnread'] = pd.to_numeric(self.sla_df['TotalUnread'])
+            
+            # Add SLA status as boolean (True = SLA MET, False = SLA NOT MET)
+            self.sla_df['SLA_Met'] = self.sla_df['Title'] == 'SLA MET'
+            
+            # Sort by date and hour
+            self.sla_df = self.sla_df.sort_values(['Date', 'Hour of the Day'])
+            
+            logger.info("SLA data preprocessing completed")
+            
+        except Exception as e:
+            logger.error(f"Error loading SLA data: {e}")
+            raise
+    
+    def calculate_daily_sla_rates(self):
+        """Calculate daily SLA compliance rates from hourly data."""
+        if self.sla_df is None:
+            logger.error("SLA data not loaded. Call load_sla_data() first.")
+            return None
+            
+        logger.info("Calculating daily SLA compliance rates...")
+        
+        # Group by date and calculate SLA compliance rate
+        daily_sla = self.sla_df.groupby(self.sla_df['Date'].dt.date).agg({
+            'SLA_Met': 'mean',  # Percentage of hours that met SLA
+            'TotalUnread': 'mean',  # Average unread count for the day
+            'Hour of the Day': 'count'  # Number of measurements per day
+        }).reset_index()
+        
+        # Convert to percentage and round
+        daily_sla['SLA_Compliance_Rate'] = round(daily_sla['SLA_Met'] * 100, 2)
+        daily_sla['Avg_Unread_Count'] = round(daily_sla['TotalUnread'], 1)
+        
+        # Rename columns for clarity
+        daily_sla = daily_sla.rename(columns={
+            'Date': 'date',
+            'Hour of the Day': 'hourly_measurements'
+        })
+        
+        logger.info(f"Calculated SLA rates for {len(daily_sla)} days")
+        return daily_sla
+    
+    def process_sla_hourly_data(self, target_date):
+        """Process hourly SLA data for a specific date."""
+        if self.sla_df is None:
+            return None
+            
+        # Filter data for the target date
+        target_date_obj = pd.to_datetime(target_date).date()
+        day_sla_data = self.sla_df[self.sla_df['Date'].dt.date == target_date_obj]
+        
+        if day_sla_data.empty:
+            return None
+            
+        # Create hourly data structure
+        hourly_sla_data = {}
+        for _, row in day_sla_data.iterrows():
+            hour = int(row['Hour of the Day'])
+            hourly_sla_data[hour] = {
+                'unread_count': int(row['TotalUnread']),
+                'sla_met': bool(row['SLA_Met'])
+            }
+            
+        return hourly_sla_data
+    
     def save_to_unified_json(self, results_df, summary_stats, hourly_distribution, hourly_response_times, 
-                            json_file='../../email_database.json'):
-        """Save data to unified multi-day JSON database."""
+                            daily_sla_rates, json_file='../../email_database.json'):
+        """Save data to unified multi-day JSON database with both email and SLA data."""
         logger.info(f"Saving to unified database: {json_file}")
         
-        # Extract the date from the data (assuming single day for now)
-        date_str = "2025-08-13"  # From Complete_List_Raw.csv
+        # Collect all data sources
+        data_sources = []
+        if self.sla_df is not None:
+            data_sources.append("UnreadCount.csv")
+        if results_df is not None:
+            data_sources.append("Complete_List_Raw.csv")
         
-        # Merge hourly distribution with response times
-        hourly_data = []
-        hourly_dist_dict = {}
-        hourly_response_dict = {}
+        # Initialize days dictionary
+        days = {}
+        earliest_date = None
+        latest_date = None
         
-        # Convert hourly distribution to dict by hour
-        if hourly_distribution is not None:
-            for row in hourly_distribution.to_dict('records'):
-                hourly_dist_dict[row['Hour']] = row
-        
-        # Convert hourly response times to dict by hour
-        if hourly_response_times is not None:
-            for row in hourly_response_times.to_dict('records'):
-                hourly_response_dict[row['Hour']] = row
-        
-        # Create unified hourly data (0-23 hours)
-        for hour in range(24):
-            dist_data = hourly_dist_dict.get(hour, {})
-            response_data = hourly_response_dict.get(hour, {})
-            
-            # Count replied emails for this hour
-            emails_replied = 0
-            if hour in hourly_response_dict:
-                emails_replied = response_data.get('Email_Count', 0)
-            
-            hourly_entry = {
-                "hour": hour,
-                "unread_count": None,  # Will be populated when SLA data is added
-                "sla_met": None,      # Will be populated when SLA data is added
-                "emails_received": dist_data.get('Email_Count', 0),
-                "emails_replied": emails_replied,
-                "avg_response_time": response_data.get('Avg_Response_Time_Minutes') if response_data.get('Avg_Response_Time_Minutes', 0) > 0 else None
-            }
-            hourly_data.append(hourly_entry)
-        
-        # Create unified database structure
-        database = {
-            "metadata": {
-                "last_updated": datetime.now().isoformat(),
-                "total_days_processed": 1,
-                "data_sources": ["Complete_List_Raw.csv"],
-                "earliest_date": date_str,
-                "latest_date": date_str
-            },
-            "days": {
-                date_str: {
+        # Process SLA data days
+        if daily_sla_rates is not None:
+            for _, day_row in daily_sla_rates.iterrows():
+                date_str = day_row['date'].strftime('%Y-%m-%d')
+                
+                # Update date range
+                if earliest_date is None or date_str < earliest_date:
+                    earliest_date = date_str
+                if latest_date is None or date_str > latest_date:
+                    latest_date = date_str
+                
+                # Get hourly SLA data for this day
+                hourly_sla_data = self.process_sla_hourly_data(date_str)
+                
+                # Create hourly data array (0-23 hours)
+                hourly_data = []
+                for hour in range(24):
+                    sla_data = hourly_sla_data.get(hour, {}) if hourly_sla_data else {}
+                    
+                    hourly_entry = {
+                        "hour": hour,
+                        "unread_count": sla_data.get('unread_count'),
+                        "sla_met": sla_data.get('sla_met'),
+                        "emails_received": None,
+                        "emails_replied": None,
+                        "avg_response_time": None
+                    }
+                    hourly_data.append(hourly_entry)
+                
+                # Create day entry
+                days[date_str] = {
                     "date": date_str,
+                    "has_sla_data": True,
+                    "has_email_data": False,
+                    "daily_summary": {
+                        "sla_compliance_rate": day_row['SLA_Compliance_Rate'],
+                        "avg_unread_count": day_row['Avg_Unread_Count'],
+                        "total_emails": None,
+                        "reply_rate_percent": None,
+                        "avg_response_time_minutes": None,
+                        "median_response_time_minutes": None
+                    },
+                    "hourly_data": hourly_data
+                }
+        
+        # Process email data (single day: 2025-08-13)
+        if results_df is not None:
+            email_date_str = "2025-08-13"
+            
+            # Update date range
+            if earliest_date is None or email_date_str < earliest_date:
+                earliest_date = email_date_str
+            if latest_date is None or email_date_str > latest_date:
+                latest_date = email_date_str
+            
+            # Prepare email hourly data
+            hourly_dist_dict = {}
+            hourly_response_dict = {}
+            
+            # Convert hourly distribution to dict by hour
+            if hourly_distribution is not None:
+                for row in hourly_distribution.to_dict('records'):
+                    hourly_dist_dict[row['Hour']] = row
+            
+            # Convert hourly response times to dict by hour
+            if hourly_response_times is not None:
+                for row in hourly_response_times.to_dict('records'):
+                    hourly_response_dict[row['Hour']] = row
+            
+            # Check if this day already exists (has SLA data)
+            if email_date_str in days:
+                # Merge with existing SLA data
+                existing_day = days[email_date_str]
+                existing_day["has_email_data"] = True
+                
+                # Update daily summary with email data
+                existing_day["daily_summary"].update({
+                    "total_emails": summary_stats['Total_Inbox_Emails'],
+                    "reply_rate_percent": summary_stats['Reply_Rate_Percent'],
+                    "avg_response_time_minutes": summary_stats['Avg_Response_Time_Minutes'],
+                    "median_response_time_minutes": summary_stats['Median_Response_Time_Minutes']
+                })
+                
+                # Update hourly data with email metrics
+                for hour_entry in existing_day["hourly_data"]:
+                    hour = hour_entry["hour"]
+                    dist_data = hourly_dist_dict.get(hour, {})
+                    response_data = hourly_response_dict.get(hour, {})
+                    
+                    hour_entry["emails_received"] = dist_data.get('Email_Count', 0)
+                    hour_entry["emails_replied"] = response_data.get('Email_Count', 0) if hour in hourly_response_dict else 0
+                    hour_entry["avg_response_time"] = response_data.get('Avg_Response_Time_Minutes') if response_data.get('Avg_Response_Time_Minutes', 0) > 0 else None
+            
+            else:
+                # Create new day entry with email data only
+                hourly_data = []
+                for hour in range(24):
+                    dist_data = hourly_dist_dict.get(hour, {})
+                    response_data = hourly_response_dict.get(hour, {})
+                    
+                    hourly_entry = {
+                        "hour": hour,
+                        "unread_count": None,
+                        "sla_met": None,
+                        "emails_received": dist_data.get('Email_Count', 0),
+                        "emails_replied": response_data.get('Email_Count', 0) if hour in hourly_response_dict else 0,
+                        "avg_response_time": response_data.get('Avg_Response_Time_Minutes') if response_data.get('Avg_Response_Time_Minutes', 0) > 0 else None
+                    }
+                    hourly_data.append(hourly_entry)
+                
+                days[email_date_str] = {
+                    "date": email_date_str,
                     "has_sla_data": False,
                     "has_email_data": True,
                     "daily_summary": {
@@ -351,7 +513,17 @@ class EmailClassifier:
                     },
                     "hourly_data": hourly_data
                 }
-            }
+        
+        # Create unified database structure
+        database = {
+            "metadata": {
+                "last_updated": datetime.now().isoformat(),
+                "total_days_processed": len(days),
+                "data_sources": data_sources,
+                "earliest_date": earliest_date,
+                "latest_date": latest_date
+            },
+            "days": days
         }
         
         # Save to JSON
@@ -359,11 +531,19 @@ class EmailClassifier:
             json.dump(database, f, indent=2, default=str)
         
         logger.info(f"Unified database saved to {json_file}")
+        logger.info(f"Database contains {len(days)} days from {earliest_date} to {latest_date}")
         
         # Log summary to console
-        logger.info("=== CLASSIFICATION SUMMARY ===")
-        for key, value in summary_stats.items():
-            logger.info(f"{key}: {value}")
+        if summary_stats:
+            logger.info("=== EMAIL CLASSIFICATION SUMMARY ===")
+            for key, value in summary_stats.items():
+                logger.info(f"{key}: {value}")
+        
+        if daily_sla_rates is not None:
+            logger.info("=== SLA SUMMARY ===")
+            avg_sla_rate = daily_sla_rates['SLA_Compliance_Rate'].mean()
+            logger.info(f"Average SLA Compliance Rate: {avg_sla_rate:.2f}%")
+            logger.info(f"SLA data days: {len(daily_sla_rates)}")
     
     def run(self):
         """Execute the complete email classification process."""
@@ -384,8 +564,12 @@ class EmailClassifier:
         # Analyze response times by hour
         hourly_response_times = self.analyze_response_time_by_hour(results_df)
         
+        # Load and process SLA data
+        self.load_sla_data()
+        daily_sla_rates = self.calculate_daily_sla_rates()
+        
         # Save all data to unified multi-day JSON database
-        self.save_to_unified_json(results_df, summary_stats, hourly_distribution, hourly_response_times)
+        self.save_to_unified_json(results_df, summary_stats, hourly_distribution, hourly_response_times, daily_sla_rates)
         
         logger.info("Email classification process completed successfully!")
         
