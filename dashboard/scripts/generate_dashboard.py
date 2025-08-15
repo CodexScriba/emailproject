@@ -13,6 +13,7 @@ import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from jinja2 import Template
+import statistics
 
 class DashboardGenerator:
     def __init__(self, json_path, template_path, output_path, sla_config_path=None):
@@ -71,9 +72,176 @@ class DashboardGenerator:
                     'hour': hour,
                     'emails': hour_data.get('emails_received', 0) or 0,
                     'unread': hour_data.get('unread_count', 0) or 0,
-                    'sla_met': hour_data.get('sla_met', False)
+                    'sla_met': hour_data.get('sla_met', False),
+                    'avg_response_time': hour_data.get('avg_response_time', None),
+                    'emails_replied': hour_data.get('emails_replied', 0) or 0
                 })
         return business_hours
+    
+    def calculate_response_time_by_hour(self, hourly_data):
+        """Calculate response time metrics grouped by hour periods"""
+        periods = {
+            'Early Morning (6-9 AM)': {'hours': [6, 7, 8], 'total_time': 0, 'count': 0, 'color': 'success'},
+            'Morning (9 AM-1 PM)': {'hours': [9, 10, 11, 12], 'total_time': 0, 'count': 0, 'color': 'warning'},
+            'Afternoon (1-5 PM)': {'hours': [13, 14, 15, 16], 'total_time': 0, 'count': 0, 'color': 'danger'},
+            'Evening (5-9 PM)': {'hours': [17, 18, 19, 20], 'total_time': 0, 'count': 0, 'color': 'warning'}
+        }
+        
+        for hour_data in hourly_data:
+            hour = hour_data['hour']
+            response_time = hour_data.get('avg_response_time', None)
+            replied_count = hour_data.get('emails_replied', 0) or 0
+            
+            if response_time is not None and replied_count > 0:
+                for period_name, period_data in periods.items():
+                    if hour in period_data['hours']:
+                        period_data['total_time'] += response_time * replied_count
+                        period_data['count'] += replied_count
+                        break
+        
+        # Calculate averages and format results
+        result = []
+        for period_name, period_data in periods.items():
+            if period_data['count'] > 0:
+                avg_time = period_data['total_time'] / period_data['count']
+                # Apply SLA-based coloring
+                if avg_time <= 60:
+                    color = 'success'
+                elif avg_time <= 120:
+                    color = 'warning'
+                else:
+                    color = 'danger'
+            else:
+                avg_time = 0
+                color = 'muted'
+            
+            result.append({
+                'period': period_name,
+                'avg_response_time': round(avg_time, 1),
+                'color': color
+            })
+        
+        return result
+    
+    def calculate_response_time_distribution(self, hourly_data):
+        """Calculate distribution of email response times"""
+        distribution = {
+            'Very Fast (< 30 min)': {'count': 0, 'color': 'success'},
+            'Fast (30-60 min)': {'count': 0, 'color': 'success'},
+            'Moderate (60-120 min)': {'count': 0, 'color': 'warning'},
+            'Slow (120-180 min)': {'count': 0, 'color': 'warning'},
+            'Very Slow (180-300 min)': {'count': 0, 'color': 'danger'},
+            'Critical (> 300 min)': {'count': 0, 'color': 'danger'}
+        }
+        
+        for hour_data in hourly_data:
+            response_time = hour_data.get('avg_response_time', None)
+            replied_count = hour_data.get('emails_replied', 0) or 0
+            
+            if response_time is not None and replied_count > 0:
+                if response_time < 30:
+                    distribution['Very Fast (< 30 min)']['count'] += replied_count
+                elif response_time < 60:
+                    distribution['Fast (30-60 min)']['count'] += replied_count
+                elif response_time < 120:
+                    distribution['Moderate (60-120 min)']['count'] += replied_count
+                elif response_time < 180:
+                    distribution['Slow (120-180 min)']['count'] += replied_count
+                elif response_time < 300:
+                    distribution['Very Slow (180-300 min)']['count'] += replied_count
+                else:
+                    distribution['Critical (> 300 min)']['count'] += replied_count
+        
+        # Convert to list format
+        result = []
+        max_count = max([d['count'] for d in distribution.values()]) or 1
+        
+        for category, data in distribution.items():
+            result.append({
+                'category': category,
+                'count': data['count'],
+                'percentage': round((data['count'] / max_count) * 100) if max_count > 0 else 0,
+                'color': data['color']
+            })
+        
+        return result
+    
+    def calculate_response_time_percentiles(self, hourly_data):
+        """Calculate response time percentiles"""
+        response_times = []
+        
+        for hour_data in hourly_data:
+            response_time = hour_data.get('avg_response_time', None)
+            replied_count = hour_data.get('emails_replied', 0) or 0
+            
+            if response_time is not None and replied_count > 0:
+                # Add the response time for each email
+                for _ in range(int(replied_count)):
+                    response_times.append(response_time)
+        
+        if not response_times:
+            return {
+                'percentiles': [
+                    {'label': 'P25', 'value': 0, 'percentage': 25, 'color': 'muted'},
+                    {'label': 'P50', 'value': 0, 'percentage': 50, 'color': 'muted'},
+                    {'label': 'P75', 'value': 0, 'percentage': 75, 'color': 'muted'},
+                    {'label': 'P90', 'value': 0, 'percentage': 90, 'color': 'muted'},
+                    {'label': 'P95', 'value': 0, 'percentage': 95, 'color': 'muted'}
+                ],
+                'quartiles': {
+                    'q1_count': 0,
+                    'q2_count': 0,
+                    'q3_count': 0,
+                    'q4_count': 0
+                },
+                'has_data': False,
+                'sla_target': self.sla_config['kpi_targets']['response_time_target_minutes'] if self.sla_config else 60
+            }
+        
+        # Calculate percentiles
+        response_times.sort()
+        total_count = len(response_times)
+        
+        percentiles = []
+        for p_value, p_label in [(25, 'P25'), (50, 'P50'), (75, 'P75'), (90, 'P90'), (95, 'P95')]:
+            index = int((p_value / 100) * total_count)
+            if index >= total_count:
+                index = total_count - 1
+            value = response_times[index]
+            
+            # Determine color based on SLA
+            if value <= 60:
+                color = 'success'
+            elif value <= 120:
+                color = 'warning'
+            else:
+                color = 'danger'
+            
+            percentiles.append({
+                'label': p_label,
+                'value': round(value, 1),
+                'percentage': p_value,
+                'color': color
+            })
+        
+        # Calculate quartile counts
+        p25_val = percentiles[0]['value']
+        p50_val = percentiles[1]['value']
+        p75_val = percentiles[2]['value']
+        
+        quartiles = {
+            'q1_count': sum(1 for rt in response_times if rt <= p25_val),
+            'q2_count': sum(1 for rt in response_times if p25_val < rt <= p50_val),
+            'q3_count': sum(1 for rt in response_times if p50_val < rt <= p75_val),
+            'q4_count': sum(1 for rt in response_times if rt > p75_val)
+        }
+        
+        return {
+            'percentiles': percentiles,
+            'quartiles': quartiles,
+            'has_data': True,
+            'sla_target': self.sla_config['kpi_targets']['response_time_target_minutes'] if self.sla_config else 60
+        }
     
     def calculate_svg_coordinates(self, data_points, max_value, is_emails=True):
         """Calculate SVG coordinates for line chart data"""
@@ -176,11 +344,63 @@ class DashboardGenerator:
                 'x': coord['x']
             })
         
+        # Calculate response time components
+        response_time_by_hour = self.calculate_response_time_by_hour(day_data['hourly_data'])
+        response_time_distribution = self.calculate_response_time_distribution(day_data['hourly_data'])
+        response_time_percentiles_data = self.calculate_response_time_percentiles(day_data['hourly_data'])
+        
+        # Extract percentiles list and quartile counts from the response
+        response_time_percentiles = response_time_percentiles_data.get('percentiles', [])
+        quartiles_raw = response_time_percentiles_data.get('quartiles', {})
+        
+        # Convert quartiles to expected format
+        total_emails = sum([quartiles_raw.get('q1_count', 0), quartiles_raw.get('q2_count', 0), 
+                           quartiles_raw.get('q3_count', 0), quartiles_raw.get('q4_count', 0)])
+        
+        quartile_counts = []
+        if total_emails > 0:
+            quartile_counts = [
+                {
+                    'label': 'Q1 (Fastest)',
+                    'count': quartiles_raw.get('q1_count', 0),
+                    'percentage': round((quartiles_raw.get('q1_count', 0) / total_emails) * 100)
+                },
+                {
+                    'label': 'Q2 (Fast)',
+                    'count': quartiles_raw.get('q2_count', 0),
+                    'percentage': round((quartiles_raw.get('q2_count', 0) / total_emails) * 100)
+                },
+                {
+                    'label': 'Q3 (Moderate)',
+                    'count': quartiles_raw.get('q3_count', 0),
+                    'percentage': round((quartiles_raw.get('q3_count', 0) / total_emails) * 100)
+                },
+                {
+                    'label': 'Q4 (Slowest)',
+                    'count': quartiles_raw.get('q4_count', 0),
+                    'percentage': round((quartiles_raw.get('q4_count', 0) / total_emails) * 100)
+                }
+            ]
+        
         # Prepare template context
+        formatted_date = datetime.strptime(date_str, '%Y-%m-%d').strftime('%B %d, %Y')
+        daily_data = day_data['daily_summary']
+        sla_compliance = round(daily_data['sla_compliance_rate'], 1)
+        hourly_data = day_data['hourly_data']
+        
         context = {
-            'date': date_str,
-            'formatted_date': datetime.strptime(date_str, '%Y-%m-%d').strftime('%B %d, %Y'),
-            'daily_summary': day_data['daily_summary'],
+            'formatted_date': formatted_date,
+            'daily_data': daily_data,
+            'total_emails': daily_data.get('total_emails', 0),
+            'avg_unread_count': daily_data.get('avg_unread_count', 0),
+            'avg_response_time': daily_data.get('avg_response_time', 0),
+            'sla_compliance': sla_compliance,
+            'hourly_data': hourly_data,
+            'sla_config': self.sla_config,
+            'response_time_by_hour': response_time_by_hour,
+            'response_time_distribution': response_time_distribution,
+            'response_time_percentiles': response_time_percentiles,
+            'quartile_counts': quartile_counts,
             'email_path': email_path,
             'unread_path': unread_path,
             'email_coords': email_coords,
@@ -188,21 +408,19 @@ class DashboardGenerator:
             'y_labels': y_labels,
             'x_labels': x_labels,
             'business_data': business_data,
-            'chart_width': self.chart_width,
             'chart_height': self.chart_height,
-            'max_value': overall_max,
-            'sla_config': self.sla_config
+            'chart_width': self.chart_width
         }
         
         return context
     
     def render_template(self, context):
         """Render the dashboard template with context data"""
-        # Load template (convert to Jinja2 template)
+        # Load template
         with open(self.template_path, 'r') as f:
             template_content = f.read()
         
-        # Convert hardcoded template to Jinja2 template
+        # Convert hardcoded template to Jinja2 template (if needed)
         template_content = self.convert_to_jinja_template(template_content)
         
         template = Template(template_content)
@@ -210,103 +428,22 @@ class DashboardGenerator:
     
     def convert_to_jinja_template(self, html_content):
         """Convert the hardcoded HTML template to use Jinja2 variables"""
-        # Replace title
-        html_content = html_content.replace(
-            'Email Dashboard - KPI Overview',
-            'Email Dashboard - {{ formatted_date }}'
-        )
-        
-        # Replace hardcoded KPI values
-        html_content = html_content.replace(
-            '<div class="kpi-value">262</div>',
-            '<div class="kpi-value">{{ daily_summary.total_emails or 0 }}</div>'
-        )
-        html_content = html_content.replace(
-            '<div class="kpi-value">65.2 min</div>',
-            '<div class="kpi-value">{{ "%.1f"|format(daily_summary.avg_response_time_minutes or 0) }} min</div>'
-        )
-        html_content = html_content.replace(
-            '<div class="kpi-value">66.67%</div>',
-            '<div class="kpi-value">{{ "%.1f"|format(daily_summary.sla_compliance_rate or 0) }}%</div>'
-        )
-        html_content = html_content.replace(
-            '<div class="kpi-value">29.5</div>',
-            '<div class="kpi-value">{{ daily_summary.avg_unread_count or 0 }}</div>'
-        )
-        
-        # Replace SVG paths
-        html_content = html_content.replace(
-            'path id="emails-line" class="line-emails" d="M 135,356 L 190,350 L 245,266 L 300,326 L 355,260 L 410,150 L 465,278 L 520,224 L 575,194 L 630,224 L 685,230 L 740,350 L 795,278 L 845,356 L 900,374"',
-            'path id="emails-line" class="line-emails" d="{{ email_path }}"'
-        )
-        html_content = html_content.replace(
-            'path id="unread-line" class="line-unread" d="M 135,268 L 190,292 L 245,322 L 300,284 L 355,324 L 410,268 L 465,256 L 520,194 L 575,194 L 630,112 L 685,74 L 740,268 L 795,272 L 845,272 L 900,324"',
-            'path id="unread-line" class="line-unread" d="{{ unread_path }}"'
-        )
-        
-        # Replace data points and labels (this is more complex, we'll replace the entire sections)
-        # Find and replace email points section
-        import re
-        
-        # Replace email data points
-        email_points_pattern = r'<g id="email-points">.*?</g>'
-        email_points_replacement = '''<g id="email-points">
-                {% for coord in email_coords %}
-                <circle cx="{{ coord.x }}" cy="{{ coord.y }}" r="4" class="data-point point-emails"/>
-                <text x="{{ coord.x }}" y="{{ coord.y - 10 }}" class="data-label label-emails">{{ coord.value }}</text>
-                {% endfor %}
-            </g>'''
-        html_content = re.sub(email_points_pattern, email_points_replacement, html_content, flags=re.DOTALL)
-        
-        # Replace unread data points
-        unread_points_pattern = r'<g id="unread-points">.*?</g>'
-        unread_points_replacement = '''<g id="unread-points">
-                {% for coord in unread_coords %}
-                <circle cx="{{ coord.x }}" cy="{{ coord.y }}" r="4" class="data-point point-unread"/>
-                <text x="{{ coord.x }}" y="{{ coord.y - 10 }}" class="data-label label-unread">{{ coord.value }}</text>
-                {% endfor %}
-            </g>'''
-        html_content = re.sub(unread_points_pattern, unread_points_replacement, html_content, flags=re.DOTALL)
-        
-        # Replace X-axis labels
-        x_axis_pattern = r'<!-- X-axis Labels -->.*?(?=<!-- SLA Indicators -->|</svg>)'
-        x_axis_replacement = '''<!-- X-axis Labels -->
-            {% for label in x_labels %}
-            <text x="{{ label.x }}" y="{{ chart_height - 20 }}" class="axis-label" text-anchor="middle">{{ label.label }}</text>
-            {% endfor %}
-            
-            '''
-        html_content = re.sub(x_axis_pattern, x_axis_replacement, html_content, flags=re.DOTALL)
-        
-        # Replace Y-axis labels
-        y_axis_pattern = r'<!-- Y-axis Labels -->.*?(?=<!-- X-axis Labels -->)'
-        y_axis_replacement = '''<!-- Y-axis Labels -->
-            {% for label in y_labels %}
-            <text x="70" y="{{ label.y + 4 }}" class="y-axis-label" text-anchor="end">{{ label.value }}</text>
-            {% endfor %}
-            
-            '''
-        html_content = re.sub(y_axis_pattern, y_axis_replacement, html_content, flags=re.DOTALL)
-        
-        # Replace SLA indicators
-        sla_pattern = r'<!-- SLA Indicators -->.*?(?=</svg>)'
-        sla_replacement = '''<!-- SLA Indicators -->
-            {% for item in business_data %}
-            {% set coord = unread_coords[loop.index0] %}
-            <text x="{{ coord.x }}" y="{{ coord.y + 25 }}" class="sla-indicator {{ 'sla-met' if item.sla_met else 'sla-failed' }}" text-anchor="middle">
-                {{ '✓' if item.sla_met else '✗' }}
-            </text>
-            {% endfor %}
-            '''
-        html_content = re.sub(sla_pattern, sla_replacement, html_content, flags=re.DOTALL)
-        
+        # This function is optional - if the template already uses Jinja2 syntax,
+        # it will just return the content as-is
         return html_content
     
-    def save_dashboard(self, rendered_html):
+    def save_dashboard(self, rendered_html, date_str):
         """Save the rendered dashboard to output file"""
-        os.makedirs(os.path.dirname(self.output_path), exist_ok=True)
-        with open(self.output_path, 'w') as f:
+        output_filename = f"email_dashboard_{date_str}.html"
+        output_path = os.path.join(self.output_path, output_filename)
+        
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        
+        with open(output_path, 'w') as f:
             f.write(rendered_html)
+        
+        print(f"Dashboard saved to: {output_path}")
+        return output_path
 
 def main():
     """Main function to generate dashboard"""
@@ -318,45 +455,28 @@ def main():
     json_path = project_root / "email_database.json"
     template_path = project_root / "dashboard" / "templates" / "kpi_cards.html"
     sla_config_path = project_root / "config" / "sla_config.json"
+    output_dir = project_root / "dashboard" / "output"
     
-    # Generate output filename with current date
-    current_date = datetime.now().strftime("%Y-%m-%d")
-    output_path = project_root / "dashboard" / "output" / f"email_dashboard_{current_date}.html"
+    # Create generator
+    generator = DashboardGenerator(
+        json_path=str(json_path),
+        template_path=str(template_path),
+        output_path=str(output_dir),
+        sla_config_path=str(sla_config_path)
+    )
     
-    # Check if files exist
-    if not json_path.exists():
-        print(f"Error: JSON database not found at {json_path}")
-        sys.exit(1)
+    # Generate dashboard context
+    context = generator.generate_dashboard()
     
-    if not template_path.exists():
-        print(f"Error: Template not found at {template_path}")
-        sys.exit(1)
+    # Render template
+    rendered_html = generator.render_template(context)
     
-    try:
-        # Initialize generator with SLA config
-        generator = DashboardGenerator(str(json_path), str(template_path), str(output_path), str(sla_config_path))
-        
-        # Generate dashboard context
-        print("Generating dashboard...")
-        context = generator.generate_dashboard()
-        
-        print(f"Using data from: {context['formatted_date']}")
-        print(f"Total emails: {context['daily_summary']['total_emails']}")
-        print(f"SLA compliance: {context['daily_summary']['sla_compliance_rate']:.1f}%")
-        
-        # Render template
-        print("Rendering template...")
-        rendered_html = generator.render_template(context)
-        
-        # Save dashboard
-        generator.save_dashboard(rendered_html)
-        
-        print(f"Dashboard generated successfully!")
-        print(f"Output saved to: {output_path}")
-        
-    except Exception as e:
-        print(f"Error generating dashboard: {e}")
-        sys.exit(1)
+    # Save dashboard
+    date_str = datetime.now().strftime("%Y-%m-%d")
+    output_path = generator.save_dashboard(rendered_html, date_str)
+    
+    print(f"✓ Dashboard generation complete!")
+    print(f"  Output: {output_path}")
 
 if __name__ == "__main__":
     main()

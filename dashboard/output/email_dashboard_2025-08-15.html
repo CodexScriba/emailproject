@@ -1032,16 +1032,43 @@
                 <div class="chart-subtitle">Average response time grouped by business hour periods</div>
                 
                 <div class="response-time-periods">
-                    {% for period in response_time_by_hour %}
+                    
                     <div class="period-row">
-                        <div class="period-label">{{ period.period }}</div>
+                        <div class="period-label">Early Morning (6-9 AM)</div>
                         <div class="period-bar-container">
-                            <div class="period-bar {{ period.color }}" style="width: {{ (period.avg_response_time / 150 * 100) | round }}%;">
-                                <span class="period-value">{{ period.avg_response_time }} min</span>
+                            <div class="period-bar success" style="width: 28.0%;">
+                                <span class="period-value">41.6 min</span>
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
+                    
+                    <div class="period-row">
+                        <div class="period-label">Morning (9 AM-1 PM)</div>
+                        <div class="period-bar-container">
+                            <div class="period-bar warning" style="width: 43.0%;">
+                                <span class="period-value">63.9 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="period-row">
+                        <div class="period-label">Afternoon (1-5 PM)</div>
+                        <div class="period-bar-container">
+                            <div class="period-bar warning" style="width: 66.0%;">
+                                <span class="period-value">98.8 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="period-row">
+                        <div class="period-label">Evening (5-9 PM)</div>
+                        <div class="period-bar-container">
+                            <div class="period-bar success" style="width: 10.0%;">
+                                <span class="period-value">15.4 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </section>
@@ -1053,20 +1080,85 @@
                 <div class="chart-subtitle">Email response times categorized by performance</div>
                 
                 <div class="distribution-container">
-                    {% for category in response_time_distribution %}
+                    
                     <div class="distribution-row">
                         <div class="distribution-label">
-                            <span class="distribution-name">{{ category.category }}</span>
-                            <span class="distribution-range">{{ category.range }}</span>
+                            <span class="distribution-name">Very Fast (< 30 min)</span>
+                            <span class="distribution-range"></span>
                         </div>
                         <div class="distribution-bar-container">
-                            <div class="distribution-bar {{ category.color }}" style="width: {{ category.percentage }}%;">
-                                <span class="distribution-count">{{ category.count }} emails</span>
+                            <div class="distribution-bar success" style="width: 27%;">
+                                <span class="distribution-count">23 emails</span>
                             </div>
-                            <span class="distribution-percentage">{{ category.percentage }}%</span>
+                            <span class="distribution-percentage">27%</span>
                         </div>
                     </div>
-                    {% endfor %}
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">Fast (30-60 min)</span>
+                            <span class="distribution-range"></span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar success" style="width: 31%;">
+                                <span class="distribution-count">26 emails</span>
+                            </div>
+                            <span class="distribution-percentage">31%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">Moderate (60-120 min)</span>
+                            <span class="distribution-range"></span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar warning" style="width: 100%;">
+                                <span class="distribution-count">84 emails</span>
+                            </div>
+                            <span class="distribution-percentage">100%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">Slow (120-180 min)</span>
+                            <span class="distribution-range"></span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar warning" style="width: 15%;">
+                                <span class="distribution-count">13 emails</span>
+                            </div>
+                            <span class="distribution-percentage">15%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">Very Slow (180-300 min)</span>
+                            <span class="distribution-range"></span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar danger" style="width: 0%;">
+                                <span class="distribution-count">0 emails</span>
+                            </div>
+                            <span class="distribution-percentage">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">Critical (> 300 min)</span>
+                            <span class="distribution-range"></span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar danger" style="width: 0%;">
+                                <span class="distribution-count">0 emails</span>
+                            </div>
+                            <span class="distribution-percentage">0%</span>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </section>
@@ -1079,25 +1171,67 @@
                 
                 <div class="percentile-container">
                     <div class="percentile-chart">
-                        {% for percentile in response_time_percentiles %}
+                        
                         <div class="percentile-item">
-                            <div class="percentile-label">{{ percentile.label }}</div>
-                            <div class="percentile-value {{ percentile.color }}">{{ percentile.value }} min</div>
-                            <div class="percentile-bar" style="height: {{ (percentile.value / 150 * 100) | round }}%; background: var(--{{ percentile.color }});"></div>
+                            <div class="percentile-label">P25</div>
+                            <div class="percentile-value success">43.3 min</div>
+                            <div class="percentile-bar" style="height: 29.0%; background: var(--success);"></div>
                         </div>
-                        {% endfor %}
+                        
+                        <div class="percentile-item">
+                            <div class="percentile-label">P50</div>
+                            <div class="percentile-value warning">80.5 min</div>
+                            <div class="percentile-bar" style="height: 54.0%; background: var(--warning);"></div>
+                        </div>
+                        
+                        <div class="percentile-item">
+                            <div class="percentile-label">P75</div>
+                            <div class="percentile-value warning">89.5 min</div>
+                            <div class="percentile-bar" style="height: 60.0%; background: var(--warning);"></div>
+                        </div>
+                        
+                        <div class="percentile-item">
+                            <div class="percentile-label">P90</div>
+                            <div class="percentile-value warning">100.0 min</div>
+                            <div class="percentile-bar" style="height: 67.0%; background: var(--warning);"></div>
+                        </div>
+                        
+                        <div class="percentile-item">
+                            <div class="percentile-label">P95</div>
+                            <div class="percentile-value danger">138.8 min</div>
+                            <div class="percentile-bar" style="height: 93.0%; background: var(--danger);"></div>
+                        </div>
+                        
                     </div>
                     
                     <div class="quartile-summary">
                         <div class="quartile-title">Quartile Distribution</div>
                         <div class="quartile-grid">
-                            {% for quartile in quartile_counts %}
+                            
                             <div class="quartile-item">
-                                <div class="quartile-label">{{ quartile.label }}</div>
-                                <div class="quartile-count">{{ quartile.count }} emails</div>
-                                <div class="quartile-percentage">({{ quartile.percentage }}%)</div>
+                                <div class="quartile-label">Q1 (Fastest)</div>
+                                <div class="quartile-count">28 emails</div>
+                                <div class="quartile-percentage">(19%)</div>
                             </div>
-                            {% endfor %}
+                            
+                            <div class="quartile-item">
+                                <div class="quartile-label">Q2 (Fast)</div>
+                                <div class="quartile-count">43 emails</div>
+                                <div class="quartile-percentage">(29%)</div>
+                            </div>
+                            
+                            <div class="quartile-item">
+                                <div class="quartile-label">Q3 (Moderate)</div>
+                                <div class="quartile-count">46 emails</div>
+                                <div class="quartile-percentage">(32%)</div>
+                            </div>
+                            
+                            <div class="quartile-item">
+                                <div class="quartile-label">Q4 (Slowest)</div>
+                                <div class="quartile-count">29 emails</div>
+                                <div class="quartile-percentage">(20%)</div>
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
