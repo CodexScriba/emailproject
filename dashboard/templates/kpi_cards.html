@@ -27,6 +27,7 @@
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --chart-height: 320px; /* Controls vertical plotting area; adjust per data */
         }
 
         * {
@@ -199,131 +200,208 @@
         .status-warning { background: var(--warning); }
         .status-danger { background: var(--danger); }
 
-        /* Hourly Chart */
+        /* Modern Vertical Bar Chart */
         .chart-section {
             margin-top: 40px;
         }
 
         .chart-title {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 8px;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.4px;
+            text-align: center;
         }
 
         .chart-subtitle {
             font-size: 14px;
             color: var(--text-secondary);
-            margin-bottom: 24px;
+            margin-bottom: 32px;
+            text-align: center;
         }
 
         .chart-legend {
             display: flex;
-            gap: 24px;
-            margin-bottom: 20px;
+            gap: 32px;
+            margin-bottom: 32px;
             justify-content: center;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-secondary);
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .legend-emails { background: var(--accent); }
-        .legend-unread { background: var(--danger); }
+        .legend-emails { 
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+        }
+        
+        .legend-unread { 
+            background: linear-gradient(135deg, #EF4444, #DC2626);
+        }
 
-        .hour-row {
+        .chart-container {
+            background: linear-gradient(135deg, #F8FAFC, #F1F5F9);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+            overflow-x: auto;
+            overflow-y: visible;
+        }
+
+        .chart-grid {
+            position: relative;
+            height: calc(var(--chart-height) + 40px);
             display: flex;
+            align-items: end;
+            gap: 16px;
+            min-width: 900px;
+            padding-bottom: 40px;
+            overflow: visible;
+        }
+
+        .y-axis {
+            position: absolute;
+            left: -40px;
+            top: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column-reverse;
+            justify-content: space-between;
+            padding: 0 0 20px 0;
+        }
+
+        .y-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-align: right;
+            padding-right: 8px;
+        }
+
+        .grid-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--chart-height);
+            display: flex;
+            flex-direction: column-reverse;
+            justify-content: space-between;
+        }
+
+        .grid-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            opacity: 0.5;
+        }
+
+        .bar-group {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--bg-tertiary);
-            transition: background-color 0.2s ease;
-        }
-
-        .hour-row:hover {
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-            border-bottom-color: transparent;
-        }
-
-        .hour-row:last-child {
-            border-bottom: none;
-        }
-
-        .hour-label {
-            width: 60px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-        }
-
-        .chart-bars {
+            gap: 4px;
+            position: relative;
             flex: 1;
-            margin: 0 20px;
-            position: relative;
         }
 
-        .bar-container {
-            position: relative;
-            height: 20px;
-            margin-bottom: 4px;
+        .bars-container {
+            display: flex;
+            gap: 4px;
+            align-items: end;
+            height: var(--chart-height);
+            overflow: visible;
         }
 
         .bar {
-            height: 8px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            width: 22px;
+            border-radius: 6px 6px 2px 2px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .bar-emails { 
-            background: var(--accent); 
-            margin-bottom: 4px;
+        .bar:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
         }
 
-        .bar-unread { 
-            background: var(--danger); 
+        .bar-emails {
+            background: linear-gradient(180deg, #60A5FA, #3B82F6, #1D4ED8);
+            border: 1px solid #2563EB;
         }
 
-        .hour-metrics {
-            width: 140px;
-            text-align: right;
+        .bar-unread {
+            background: linear-gradient(180deg, #F87171, #EF4444, #DC2626);
+            border: 1px solid #B91C1C;
+        }
+
+        .bar-emails:hover {
+            background: linear-gradient(180deg, #93C5FD, #60A5FA, #2563EB);
+        }
+
+        .bar-unread:hover {
+            background: linear-gradient(180deg, #FCA5A5, #F87171, #EF4444);
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2px 4px;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            opacity: 1;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .bar-emails .bar-value {
+            color: var(--accent-dark);
+            border-color: var(--accent);
+        }
+
+        .bar-unread .bar-value {
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .hour-label {
             font-size: 12px;
-        }
-
-        .metric-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2px;
-        }
-
-        .metric-value {
             font-weight: 600;
             color: var(--text-primary);
+            margin-top: 12px;
+            transform: rotate(-45deg);
+            white-space: nowrap;
         }
 
-        .metric-label {
-            color: var(--text-muted);
-        }
-
-        .sla-indicator {
-            width: 40px;
-            text-align: center;
-            font-size: 11px;
-            font-weight: 600;
+        .sla-status {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: 900;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
         }
 
         .sla-met {
@@ -332,10 +410,6 @@
 
         .sla-not-met {
             color: var(--danger);
-        }
-
-        .sla-no-data {
-            color: var(--text-muted);
         }
 
         /* Responsive Design */
@@ -379,36 +453,31 @@
                 align-items: center;
             }
             
-            .hour-row {
-                flex-direction: column;
-                padding: 16px 0;
-                text-align: center;
+            .chart-container {
+                padding: 16px;
+                overflow-x: auto;
+            }
+            
+            .chart-grid {
+                min-width: 600px;
+                gap: 8px;
+            }
+            
+            .y-axis {
+                left: -30px;
+            }
+            
+            .bar {
+                width: 18px;
+            }
+            
+            .bar-group {
+                gap: 2px;
             }
             
             .hour-label {
-                width: auto;
-                margin-bottom: 8px;
-                font-size: 14px;
-            }
-            
-            .chart-bars {
-                margin: 8px 0;
-                width: 100%;
-            }
-            
-            .hour-metrics {
-                width: auto;
-                text-align: center;
-                margin-bottom: 8px;
-            }
-            
-            .metric-row {
-                justify-content: center;
-                gap: 16px;
-            }
-            
-            .sla-indicator {
-                width: auto;
+                font-size: 10px;
+                margin-top: 8px;
             }
         }
     </style>
@@ -495,349 +564,238 @@
                 </div>
 
                 <!-- Business Hours: 7 AM - 9 PM -->
-                <div class="hour-row">
-                    <div class="hour-label">07:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 11.4%;"></div>
+                <div class="chart-container">
+                    <div class="y-axis">
+                        <div class="y-label">60</div>
+                        <div class="y-label">50</div>
+                        <div class="y-label">40</div>
+                        <div class="y-label">30</div>
+                        <div class="y-label">20</div>
+                        <div class="y-label">10</div>
+                        <div class="y-label">0</div>
+                    </div>
+                    
+                    <div class="grid-lines">
+                        <div class="grid-line"></div>
+                        <div class="grid-line"></div>
+                        <div class="grid-line"></div>
+                        <div class="grid-line"></div>
+                        <div class="grid-line"></div>
+                        <div class="grid-line"></div>
+                        <div class="grid-line"></div>
+                    </div>
+                    
+                    <div class="chart-grid">
+                        <!-- 7 AM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 24px;">
+                                    <div class="bar-value">4</div>
+                                    <div class="sla-status sla-met">✓</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 168px;">
+                                    <div class="bar-value">28</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">7 AM</div>
                         </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 52.8%;"></div>
+                        
+                        <!-- 8 AM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 30px;">
+                                    <div class="bar-value">5</div>
+                                    <div class="sla-status sla-met">✓</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 138px;">
+                                    <div class="bar-value">23</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">8 AM</div>
+                        </div>
+                        
+                        <!-- 9 AM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 114px;">
+                                    <div class="bar-value">19</div>
+                                    <div class="sla-status sla-met">✓</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 102px;">
+                                    <div class="bar-value">17</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">9 AM</div>
+                        </div>
+                        
+                        <!-- 10 AM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 54px;">
+                                    <div class="bar-value">9</div>
+                                    <div class="sla-status sla-met">✓</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 132px;">
+                                    <div class="bar-value">22</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">10 AM</div>
+                        </div>
+                        
+                        <!-- 11 AM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 120px;">
+                                    <div class="bar-value">20</div>
+                                    <div class="sla-status sla-met">✓</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 96px;">
+                                    <div class="bar-value">16</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">11 AM</div>
+                        </div>
+                        
+                        <!-- 12 PM (PEAK) -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 210px;">
+                                    <div class="bar-value">35</div>
+                                    <div class="sla-status sla-met">✓</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 168px;">
+                                    <div class="bar-value">28</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">12 PM</div>
+                        </div>
+                        
+                        <!-- 1 PM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 102px;">
+                                    <div class="bar-value">17</div>
+                                    <div class="sla-status sla-met">✓</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 174px;">
+                                    <div class="bar-value">29</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">1 PM</div>
+                        </div>
+                        
+                        <!-- 2 PM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 156px;">
+                                    <div class="bar-value">26</div>
+                                    <div class="sla-status sla-not-met">✗</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 186px;">
+                                    <div class="bar-value">31</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">2 PM</div>
+                        </div>
+                        
+                        <!-- 3 PM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 186px;">
+                                    <div class="bar-value">31</div>
+                                    <div class="sla-status sla-not-met">✗</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 186px;">
+                                    <div class="bar-value">31</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">3 PM</div>
+                        </div>
+                        
+                        <!-- 4 PM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 156px;">
+                                    <div class="bar-value">26</div>
+                                    <div class="sla-status sla-not-met">✗</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 258px;">
+                                    <div class="bar-value">43</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">4 PM</div>
+                        </div>
+                        
+                        <!-- 5 PM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 204px;">
+                                    <div class="bar-value">34</div>
+                                    <div class="sla-status sla-not-met">✗</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 300px;">
+                                    <div class="bar-value">50</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">5 PM</div>
+                        </div>
+                        
+                        <!-- 6 PM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 66px;">
+                                    <div class="bar-value">11</div>
+                                    <div class="sla-status sla-not-met">✗</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 318px;">
+                                    <div class="bar-value">53</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">6 PM</div>
+                        </div>
+                        
+                        <!-- 7 PM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 78px;">
+                                    <div class="bar-value">13</div>
+                                    <div class="sla-status sla-met">✓</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 168px;">
+                                    <div class="bar-value">28</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">7 PM</div>
+                        </div>
+                        
+                        <!-- 8 PM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 24px;">
+                                    <div class="bar-value">4</div>
+                                    <div class="sla-status sla-met">✓</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 162px;">
+                                    <div class="bar-value">27</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">8 PM</div>
+                        </div>
+                        
+                        <!-- 9 PM -->
+                        <div class="bar-group">
+                            <div class="bars-container">
+                                <div class="bar bar-emails" style="height: 6px;">
+                                    <div class="bar-value">1</div>
+                                    <div class="sla-status sla-met">✓</div>
+                                </div>
+                                <div class="bar bar-unread" style="height: 96px;">
+                                    <div class="bar-value">16</div>
+                                </div>
+                            </div>
+                            <div class="hour-label">9 PM</div>
                         </div>
                     </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">4</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">28</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-met">✓</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">08:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 14.3%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 43.4%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">5</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">23</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-met">✓</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">09:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 54.3%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 32.1%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">19</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">17</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-met">✓</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">10:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 25.7%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 41.5%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">9</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">22</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-met">✓</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">11:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 57.1%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 30.2%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">20</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">16</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-met">✓</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">12:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 100%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 52.8%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">35</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">28</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-met">✓</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">13:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 48.6%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 54.7%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">17</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">29</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-met">✓</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">14:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 74.3%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 58.5%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">26</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">31</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-not-met">✗</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">15:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 88.6%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 58.5%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">31</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">31</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-not-met">✗</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">16:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 74.3%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 81.1%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">26</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">43</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-not-met">✗</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">17:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 97.1%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 94.3%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">34</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">50</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-not-met">✗</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">18:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 31.4%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 100%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">11</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">53</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-not-met">✗</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">19:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 37.1%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 52.8%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">13</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">28</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-met">✓</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">20:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 11.4%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 50.9%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">4</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">27</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-met">✓</div>
-                </div>
-
-                <div class="hour-row">
-                    <div class="hour-label">21:00</div>
-                    <div class="chart-bars">
-                        <div class="bar-container">
-                            <div class="bar bar-emails" style="width: 2.9%;"></div>
-                        </div>
-                        <div class="bar-container">
-                            <div class="bar bar-unread" style="width: 30.2%;"></div>
-                        </div>
-                    </div>
-                    <div class="hour-metrics">
-                        <div class="metric-row">
-                            <span class="metric-label">Received:</span>
-                            <span class="metric-value">1</span>
-                        </div>
-                        <div class="metric-row">
-                            <span class="metric-label">Unread:</span>
-                            <span class="metric-value">16</span>
-                        </div>
-                    </div>
-                    <div class="sla-indicator sla-met">✓</div>
                 </div>
             </div>
         </section>
@@ -852,5 +810,45 @@
             </div>
         </div>
     </div>
+    <script>
+        // Dynamically scale bar heights to fit chart height and update Y-axis labels
+        document.addEventListener('DOMContentLoaded', function () {
+            const root = document.documentElement;
+            const cssVal = getComputedStyle(root).getPropertyValue('--chart-height').trim();
+            const chartHeight = parseFloat(cssVal) || 320;
+
+            const bars = Array.from(document.querySelectorAll('.bars-container .bar'));
+            if (!bars.length) return;
+
+            const values = bars.map(bar => {
+                const txt = bar.querySelector('.bar-value')?.textContent || '0';
+                const num = parseFloat(txt);
+                return isNaN(num) ? 0 : num;
+            });
+
+            const maxVal = Math.max(1, ...values);
+            const yMax = Math.ceil((maxVal * 1.1) / 10) * 10; // 10% headroom, rounded to nearest 10
+            const scale = chartHeight / yMax;
+
+            bars.forEach(bar => {
+                const txt = bar.querySelector('.bar-value')?.textContent || '0';
+                const num = parseFloat(txt);
+                const h = Math.max(0, num * scale);
+                bar.style.height = h + 'px';
+            });
+
+            // Update Y-axis labels (7 ticks by default)
+            const yLabels = Array.from(document.querySelectorAll('.y-axis .y-label'));
+            if (yLabels.length) {
+                const steps = yLabels.length - 1;
+                // With column-reverse, the first DOM child sits at the bottom.
+                // So set labels from 0 (bottom) to yMax (top) in DOM order.
+                yLabels.forEach((label, idx) => {
+                    const val = Math.round(yMax * (idx / steps));
+                    label.textContent = String(val);
+                });
+            }
+        });
+    </script>
 </body>
 </html>

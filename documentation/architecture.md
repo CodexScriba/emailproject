@@ -238,6 +238,35 @@ The unified database provides direct access to all required KPI metrics:
 - **venv/** - Isolated Python environment with managed dependencies
 - **.gitignore** - Comprehensive ignore rules for Python development
 
+## Relations
+
+- **`daily/scripts/email_classifier.py` ↔ `data/*.csv`**
+  - Reads: `data/Complete_List_Raw.csv`, `data/UnreadCount.csv`, optionally `data/DailySummary.csv`
+  - Produces unified JSON: `email_database.json`
+  - Exposes metrics: total emails, reply/completion counts, response times, hourly unread counts/SLA
+
+- **`email_database.json` ↔ `dashboard/templates/*.html`**
+  - Source of truth consumed by dashboard generation
+  - Provides values for KPI cards and hourly charts (e.g., totals, averages, hourly distributions)
+
+- **`dashboard/templates/kpi_cards.html` ↔ `dashboard/scripts/`**
+  - Template used by Python (Jinja2) generators under `dashboard/scripts/` to render static dashboards
+  - Receives context populated from `email_database.json`
+
+- **`dashboard/output/*.html` ↔ `dashboard/templates/*.html`**
+  - Generated static files produced by rendering templates (with data) into finalized HTML
+  - Example: `dashboard/output/email_dashboard_2025-08-13.html` is a rendered snapshot for Aug 13, 2025
+
+- **`examples/*.html` ↔ `dashboard/templates/*.html`**
+  - Examples serve as visual/style references for building templates
+  - Not directly tied to data; used for design inspiration and UI patterns
+
+- **`requirements.txt` ↔ all Python scripts**
+  - Declares dependencies required by `daily/scripts/` and `dashboard/scripts/` (e.g., pandas, Jinja2, matplotlib, seaborn)
+
+- **`documentation/*` ↔ project root**
+  - Documents architecture, tasks, todos, and conversations that guide how code and data connect
+
 ## Key Obstacles
 
 1. **Severe Data Loss**: 95% of response time data missing due to tracking system failure
