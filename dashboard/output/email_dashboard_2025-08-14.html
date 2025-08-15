@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email Dashboard - KPI Overview</title>
+    <title>Email Dashboard - August 13, 2025</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
@@ -522,7 +522,7 @@
             
             <!-- SLA Compliance Card -->
             <div class="card kpi-card danger">
-                <div class="kpi-value">66.67%</div>
+                <div class="kpi-value">66.7%</div>
                 <div class="kpi-label">SLA Compliance</div>
                 <div class="kpi-subtitle">≤30 unread emails target</div>
                 <div class="kpi-change negative">
@@ -584,167 +584,92 @@
                             <line x1="80" y1="60" x2="80" y2="380" class="axis-line"/>
                             
                             <!-- Email Line -->
-                            <path id="emails-line" class="line-emails" d="M 135,356 L 190,350 L 245,266 L 300,326 L 355,260 L 410,150 L 465,278 L 520,224 L 575,194 L 630,224 L 685,230 L 740,350 L 795,278 L 845,356 L 900,374"/>
+                            <path id="emails-line" class="line-emails" d="M 80,319 L 150,314 L 220,240 L 290,292 L 360,234 L 430,155 L 500,250 L 570,203 L 640,176 L 710,203 L 780,160 L 850,282"/>
                             
                             <!-- Unread Line -->
-                            <path id="unread-line" class="line-unread" d="M 135,268 L 190,292 L 245,322 L 300,284 L 355,324 L 410,268 L 465,256 L 520,194 L 575,194 L 630,112 L 685,74 L 740,268 L 795,272 L 845,272 L 900,324"/>
+                            <path id="unread-line" class="line-unread" d="M 80,192 L 150,218 L 220,250 L 290,224 L 360,255 L 430,192 L 500,187 L 570,176 L 640,176 L 710,113 L 780,76 L 850,60"/>
                             
                             <!-- Email Data Points and Labels -->
                             <g id="email-points">
-                                <!-- 7 AM -->
-                                <circle cx="135" cy="356" r="4" class="data-point point-emails"/>
-                                <rect x="125" y="340" width="20" height="12" class="label-background"/>
-                                <text x="135" y="346" class="data-label label-emails">4</text>
-                                
-                                <!-- 8 AM -->
-                                <circle cx="190" cy="350" r="4" class="data-point point-emails"/>
-                                <rect x="180" y="334" width="20" height="12" class="label-background"/>
-                                <text x="190" y="340" class="data-label label-emails">5</text>
-                                
-                                <!-- 9 AM -->
-                                <circle cx="245" cy="266" r="4" class="data-point point-emails"/>
-                                <rect x="233" y="250" width="24" height="12" class="label-background"/>
-                                <text x="245" y="256" class="data-label label-emails">19</text>
-                                
-                                <!-- 10 AM -->
-                                <circle cx="300" cy="326" r="4" class="data-point point-emails"/>
-                                <rect x="290" y="310" width="20" height="12" class="label-background"/>
-                                <text x="300" y="316" class="data-label label-emails">9</text>
-                                
-                                <!-- 11 AM -->
-                                <circle cx="355" cy="260" r="4" class="data-point point-emails"/>
-                                <rect x="343" y="244" width="24" height="12" class="label-background"/>
-                                <text x="355" y="250" class="data-label label-emails">20</text>
-                                
-                                <!-- 12 PM -->
-                                <circle cx="410" cy="150" r="4" class="data-point point-emails"/>
-                                <rect x="398" y="134" width="24" height="12" class="label-background"/>
-                                <text x="410" y="140" class="data-label label-emails">35</text>
-                                
-                                <!-- 1 PM -->
-                                <circle cx="465" cy="278" r="4" class="data-point point-emails"/>
-                                <rect x="453" y="262" width="24" height="12" class="label-background"/>
-                                <text x="465" y="268" class="data-label label-emails">17</text>
-                                
-                                <!-- 2 PM -->
-                                <circle cx="520" cy="224" r="4" class="data-point point-emails"/>
-                                <rect x="508" y="208" width="24" height="12" class="label-background"/>
-                                <text x="520" y="214" class="data-label label-emails">26</text>
-                                
-                                <!-- 3 PM -->
-                                <circle cx="575" cy="194" r="4" class="data-point point-emails"/>
-                                <rect x="563" y="178" width="24" height="12" class="label-background"/>
-                                <text x="575" y="184" class="data-label label-emails">31</text>
-                                
-                                <!-- 4 PM -->
-                                <circle cx="630" cy="224" r="4" class="data-point point-emails"/>
-                                <rect x="618" y="208" width="24" height="12" class="label-background"/>
-                                <text x="630" y="214" class="data-label label-emails">26</text>
-                                
-                                <!-- 5 PM -->
-                                <circle cx="685" cy="230" r="4" class="data-point point-emails"/>
-                                <rect x="673" y="214" width="24" height="12" class="label-background"/>
-                                <text x="685" y="220" class="data-label label-emails">34</text>
-                                
-                                <!-- 6 PM -->
-                                <circle cx="740" cy="350" r="4" class="data-point point-emails"/>
-                                <rect x="728" y="334" width="24" height="12" class="label-background"/>
-                                <text x="740" y="340" class="data-label label-emails">11</text>
-                                
-                                <!-- 7 PM -->
-                                <circle cx="795" cy="356" r="4" class="data-point point-emails"/>
-                                <rect x="783" y="340" width="24" height="12" class="label-background"/>
-                                <text x="795" y="346" class="data-label label-emails">13</text>
-                                
-                                <!-- 8 PM -->
-                                <circle cx="845" cy="356" r="4" class="data-point point-emails"/>
-                                <rect x="833" y="340" width="24" height="12" class="label-background"/>
-                                <text x="845" y="346" class="data-label label-emails">4</text>
-                                
-                                <!-- 9 PM -->
-                                <circle cx="900" cy="374" r="4" class="data-point point-emails"/>
-                                <rect x="888" y="358" width="24" height="12" class="label-background"/>
-                                <text x="900" y="364" class="data-label label-emails">1</text>
-                            </g>
+                
+                <circle cx="80" cy="319" r="4" class="data-point point-emails"/>
+                <text x="80" y="309" class="data-label label-emails">4</text>
+                
+                <circle cx="150" cy="314" r="4" class="data-point point-emails"/>
+                <text x="150" y="304" class="data-label label-emails">5</text>
+                
+                <circle cx="220" cy="240" r="4" class="data-point point-emails"/>
+                <text x="220" y="230" class="data-label label-emails">19</text>
+                
+                <circle cx="290" cy="292" r="4" class="data-point point-emails"/>
+                <text x="290" y="282" class="data-label label-emails">9</text>
+                
+                <circle cx="360" cy="234" r="4" class="data-point point-emails"/>
+                <text x="360" y="224" class="data-label label-emails">20</text>
+                
+                <circle cx="430" cy="155" r="4" class="data-point point-emails"/>
+                <text x="430" y="145" class="data-label label-emails">35</text>
+                
+                <circle cx="500" cy="250" r="4" class="data-point point-emails"/>
+                <text x="500" y="240" class="data-label label-emails">17</text>
+                
+                <circle cx="570" cy="203" r="4" class="data-point point-emails"/>
+                <text x="570" y="193" class="data-label label-emails">26</text>
+                
+                <circle cx="640" cy="176" r="4" class="data-point point-emails"/>
+                <text x="640" y="166" class="data-label label-emails">31</text>
+                
+                <circle cx="710" cy="203" r="4" class="data-point point-emails"/>
+                <text x="710" y="193" class="data-label label-emails">26</text>
+                
+                <circle cx="780" cy="160" r="4" class="data-point point-emails"/>
+                <text x="780" y="150" class="data-label label-emails">34</text>
+                
+                <circle cx="850" cy="282" r="4" class="data-point point-emails"/>
+                <text x="850" y="272" class="data-label label-emails">11</text>
+                
+            </g>
                             
                             <!-- Unread Data Points and Labels -->
                             <g id="unread-points">
-                                <!-- 7 AM -->
-                                <circle cx="135" cy="268" r="4" class="data-point point-unread"/>
-                                <rect x="123" y="252" width="24" height="12" class="label-background"/>
-                                <text x="135" y="258" class="data-label label-unread">28</text>
-                                
-                                <!-- 8 AM -->
-                                <circle cx="190" cy="292" r="4" class="data-point point-unread"/>
-                                <rect x="178" y="276" width="24" height="12" class="label-background"/>
-                                <text x="190" y="282" class="data-label label-unread">23</text>
-                                
-                                <!-- 9 AM -->
-                                <circle cx="245" cy="322" r="4" class="data-point point-unread"/>
-                                <rect x="233" y="306" width="24" height="12" class="label-background"/>
-                                <text x="245" y="312" class="data-label label-unread">17</text>
-                                
-                                <!-- 10 AM -->
-                                <circle cx="300" cy="284" r="4" class="data-point point-unread"/>
-                                <rect x="288" y="268" width="24" height="12" class="label-background"/>
-                                <text x="300" y="274" class="data-label label-unread">22</text>
-                                
-                                <!-- 11 AM -->
-                                <circle cx="355" cy="324" r="4" class="data-point point-unread"/>
-                                <rect x="343" y="308" width="24" height="12" class="label-background"/>
-                                <text x="355" y="314" class="data-label label-unread">16</text>
-                                
-                                <!-- 12 PM -->
-                                <circle cx="410" cy="268" r="4" class="data-point point-unread"/>
-                                <rect x="398" y="252" width="24" height="12" class="label-background"/>
-                                <text x="410" y="258" class="data-label label-unread">28</text>
-                                
-                                <!-- 1 PM -->
-                                <circle cx="465" cy="256" r="4" class="data-point point-unread"/>
-                                <rect x="453" y="240" width="24" height="12" class="label-background"/>
-                                <text x="465" y="246" class="data-label label-unread">29</text>
-                                
-                                <!-- 2 PM -->
-                                <circle cx="520" cy="194" r="4" class="data-point point-unread"/>
-                                <rect x="508" y="178" width="24" height="12" class="label-background"/>
-                                <text x="520" y="184" class="data-label label-unread">31</text>
-                                
-                                <!-- 3 PM -->
-                                <circle cx="575" cy="194" r="4" class="data-point point-unread"/>
-                                <rect x="563" y="178" width="24" height="12" class="label-background"/>
-                                <text x="575" y="184" class="data-label label-unread">31</text>
-                                
-                                <!-- 4 PM -->
-                                <circle cx="630" cy="112" r="4" class="data-point point-unread"/>
-                                <rect x="618" y="96" width="24" height="12" class="label-background"/>
-                                <text x="630" y="102" class="data-label label-unread">43</text>
-                                
-                                <!-- 5 PM -->
-                                <circle cx="685" cy="74" r="4" class="data-point point-unread"/>
-                                <rect x="673" y="58" width="24" height="12" class="label-background"/>
-                                <text x="685" y="64" class="data-label label-unread">50</text>
-                                
-                                <!-- 6 PM -->
-                                <circle cx="740" cy="268" r="4" class="data-point point-unread"/>
-                                <rect x="728" y="252" width="24" height="12" class="label-background"/>
-                                <text x="740" y="258" class="data-label label-unread">53</text>
-                                
-                                <!-- 7 PM -->
-                                <circle cx="795" cy="272" r="4" class="data-point point-unread"/>
-                                <rect x="783" y="256" width="24" height="12" class="label-background"/>
-                                <text x="795" y="262" class="data-label label-unread">28</text>
-                                
-                                <!-- 8 PM -->
-                                <circle cx="845" cy="272" r="4" class="data-point point-unread"/>
-                                <rect x="833" y="256" width="24" height="12" class="label-background"/>
-                                <text x="845" y="262" class="data-label label-unread">27</text>
-                                
-                                <!-- 9 PM -->
-                                <circle cx="900" cy="324" r="4" class="data-point point-unread"/>
-                                <rect x="888" y="308" width="24" height="12" class="label-background"/>
-                                <text x="900" y="314" class="data-label label-unread">16</text>
-                                
-                            </g>
+                
+                <circle cx="80" cy="192" r="4" class="data-point point-unread"/>
+                <text x="80" y="182" class="data-label label-unread">28</text>
+                
+                <circle cx="150" cy="218" r="4" class="data-point point-unread"/>
+                <text x="150" y="208" class="data-label label-unread">23</text>
+                
+                <circle cx="220" cy="250" r="4" class="data-point point-unread"/>
+                <text x="220" y="240" class="data-label label-unread">17</text>
+                
+                <circle cx="290" cy="224" r="4" class="data-point point-unread"/>
+                <text x="290" y="214" class="data-label label-unread">22</text>
+                
+                <circle cx="360" cy="255" r="4" class="data-point point-unread"/>
+                <text x="360" y="245" class="data-label label-unread">16</text>
+                
+                <circle cx="430" cy="192" r="4" class="data-point point-unread"/>
+                <text x="430" y="182" class="data-label label-unread">28</text>
+                
+                <circle cx="500" cy="187" r="4" class="data-point point-unread"/>
+                <text x="500" y="177" class="data-label label-unread">29</text>
+                
+                <circle cx="570" cy="176" r="4" class="data-point point-unread"/>
+                <text x="570" y="166" class="data-label label-unread">31</text>
+                
+                <circle cx="640" cy="176" r="4" class="data-point point-unread"/>
+                <text x="640" y="166" class="data-label label-unread">31</text>
+                
+                <circle cx="710" cy="113" r="4" class="data-point point-unread"/>
+                <text x="710" y="103" class="data-label label-unread">43</text>
+                
+                <circle cx="780" cy="76" r="4" class="data-point point-unread"/>
+                <text x="780" y="66" class="data-label label-unread">50</text>
+                
+                <circle cx="850" cy="60" r="4" class="data-point point-unread"/>
+                <text x="850" y="50" class="data-label label-unread">53</text>
+                
+            </g>
                             
                             <!-- X-axis labels (Hours) -->
                             <text x="135" y="395" class="axis-label">7 AM</text>
