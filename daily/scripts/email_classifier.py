@@ -30,17 +30,45 @@ logger = logging.getLogger(__name__)
 class EmailClassifier:
     """Main class for processing and classifying email data."""
     
-    def __init__(self, csv_file_path='../../data/Complete_List_Raw.csv', sla_file_path='../../data/UnreadCount.csv'):
+    def __init__(self, csv_file_path='../../data/Complete_List_Raw.csv', sla_file_path='../../data/UnreadCount.csv', sla_config_path='../../config/sla_config.json'):
         """Initialize the classifier with data file paths."""
         self.csv_file_path = csv_file_path
         self.sla_file_path = sla_file_path
+        self.sla_config_path = sla_config_path
         self.df = None
         self.sla_df = None
+        self.sla_config = None
         
-        # Business hours configuration
-        self.business_start_hour = 7  # 7 AM
-        self.business_end_hour = 18   # 6 PM
-        self.business_days = [0, 1, 2, 3, 4]  # Monday=0 to Friday=4
+        # Load SLA configuration
+        self.load_sla_config()
+        
+        # Business hours configuration (from SLA config)
+        self.business_start_hour = self.sla_config['sla_thresholds']['business_hours']['start_hour']
+        self.business_end_hour = self.sla_config['sla_thresholds']['business_hours']['end_hour']
+        self.business_days = self.sla_config['sla_thresholds']['business_hours']['business_days']
+        self.unread_threshold = self.sla_config['sla_thresholds']['unread_email_threshold']
+        
+    def load_sla_config(self):
+        """Load SLA configuration from JSON file."""
+        try:
+            with open(self.sla_config_path, 'r') as f:
+                self.sla_config = json.load(f)
+            logger.info(f"Loaded SLA config: {self.sla_config['metadata']['version']}")
+            logger.info(f"Unread threshold: {self.sla_config['sla_thresholds']['unread_email_threshold']} emails")
+        except Exception as e:
+            logger.error(f"Error loading SLA config from {self.sla_config_path}: {e}")
+            # Fallback to hardcoded values
+            self.sla_config = {
+                'sla_thresholds': {
+                    'unread_email_threshold': 30,
+                    'business_hours': {
+                        'start_hour': 7,
+                        'end_hour': 18,
+                        'business_days': [0, 1, 2, 3, 4]
+                    }
+                }
+            }
+            logger.warning("Using fallback SLA configuration")
         
     def load_data(self):
         """Load and preprocess the CSV data."""

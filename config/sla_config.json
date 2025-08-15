@@ -1,0 +1,27 @@
+{
+  "sla_thresholds": {
+    "unread_email_threshold": 30,
+    "response_time_threshold_minutes": 120,
+    "business_hours": {
+      "start_hour": 7,
+      "end_hour": 18,
+      "business_days": [0, 1, 2, 3, 4]
+    }
+  },
+  "kpi_targets": {
+    "sla_compliance_target_percent": 85,
+    "response_time_target_minutes": 60,
+    "reply_rate_target_percent": 80
+  },
+  "alert_thresholds": {
+    "critical_unread_count": 50,
+    "warning_unread_count": 25,
+    "critical_response_time_minutes": 240,
+    "warning_response_time_minutes": 120
+  },
+  "metadata": {
+    "last_updated": "2025-08-15",
+    "version": "1.0",
+    "description": "SLA configuration for email dashboard and monitoring system"
+  }
+}

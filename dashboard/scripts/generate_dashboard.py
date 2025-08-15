@@ -15,10 +15,16 @@ from pathlib import Path
 from jinja2 import Template
 
 class DashboardGenerator:
-    def __init__(self, json_path, template_path, output_path):
+    def __init__(self, json_path, template_path, output_path, sla_config_path=None):
         self.json_path = json_path
         self.template_path = template_path
         self.output_path = output_path
+        self.sla_config_path = sla_config_path
+        self.sla_config = None
+        
+        # Load SLA configuration if provided
+        if sla_config_path:
+            self.load_sla_config()
         
         # Chart configuration
         self.chart_width = 900
@@ -31,6 +37,16 @@ class DashboardGenerator:
         # Calculate plotting area
         self.plot_width = self.chart_width - self.chart_left_margin - self.chart_right_margin
         self.plot_height = self.chart_height - self.chart_top_margin - self.chart_bottom_margin
+        
+    def load_sla_config(self):
+        """Load SLA configuration from JSON file."""
+        try:
+            with open(self.sla_config_path, 'r') as f:
+                self.sla_config = json.load(f)
+            print(f"Loaded SLA config: {self.sla_config['metadata']['version']}")
+        except Exception as e:
+            print(f"Warning: Could not load SLA config from {self.sla_config_path}: {e}")
+            self.sla_config = None
         
     def load_data(self):
         """Load and parse the JSON database"""
@@ -174,7 +190,8 @@ class DashboardGenerator:
             'business_data': business_data,
             'chart_width': self.chart_width,
             'chart_height': self.chart_height,
-            'max_value': overall_max
+            'max_value': overall_max,
+            'sla_config': self.sla_config
         }
         
         return context
@@ -300,6 +317,7 @@ def main():
     # Define paths
     json_path = project_root / "email_database.json"
     template_path = project_root / "dashboard" / "templates" / "kpi_cards.html"
+    sla_config_path = project_root / "config" / "sla_config.json"
     
     # Generate output filename with current date
     current_date = datetime.now().strftime("%Y-%m-%d")
@@ -315,8 +333,8 @@ def main():
         sys.exit(1)
     
     try:
-        # Initialize generator
-        generator = DashboardGenerator(str(json_path), str(template_path), str(output_path))
+        # Initialize generator with SLA config
+        generator = DashboardGenerator(str(json_path), str(template_path), str(output_path), str(sla_config_path))
         
         # Generate dashboard context
         print("Generating dashboard...")

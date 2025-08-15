@@ -31,11 +31,13 @@ This project addresses a data recovery and analytics challenge where tracking sy
   - SLA performance: 22-29% compliance when measured
   - Average response times: 125-158 minutes (2+ hours)
 
-### SLA Definition
-- **Unread SLA Threshold: 30 emails**
-- SLA MET: TotalUnread ≤ 30
-- SLA NOT MET: TotalUnread > 30
-- Measured hourly during business operations (7 AM - 9 PM)
+### SLA Definition ✅ **EXTERNALIZED TO CONFIG**
+- **Configuration File**: `config/sla_config.json` - Centralized SLA rules and thresholds
+- **Unread SLA Threshold: 30 emails** (configurable)
+- SLA MET: TotalUnread ≤ threshold
+- SLA NOT MET: TotalUnread > threshold  
+- **Business Hours: 7 AM - 6 PM, Monday-Friday** (configurable)
+- **Measured hourly during business operations** (7 AM - 9 PM in historical data)
 
 ### Data Patterns Identified
 - SLA compliance varies significantly by time of day
@@ -52,6 +54,8 @@ emailproject/
 │   ├── UnreadCount.csv         # Hourly SLA compliance data  
 │   ├── DailySummary.csv        # Daily volume and performance summaries
 │   └── Reserve.csv             # Sample data for validation
+├── config/                     # ✅ Configuration files
+│   └── sla_config.json         # SLA thresholds and business rules configuration
 ├── daily/                      # Daily processing pipeline
 │   ├── scripts/               # Daily analysis Python scripts
 │   │   └── email_classifier.py # Main email classification and analysis script
@@ -274,6 +278,12 @@ The unified database provides direct access to all required KPI metrics:
 
 - **`requirements.txt` ↔ all Python scripts**
   - Declares dependencies required by `daily/scripts/` and `dashboard/scripts/` (e.g., pandas, Jinja2)
+
+- **`config/sla_config.json` ↔ `daily/scripts/email_classifier.py` + `dashboard/scripts/generate_dashboard.py`**
+  - Centralized SLA configuration consumed by both data processing and dashboard generation
+  - Defines unread thresholds, business hours, target metrics, and alert levels
+  - Enables easy modification of SLA rules without code changes
+  - Both scripts load config on startup and apply rules dynamically
 
 - **`documentation/*` ↔ project root**
   - Documents architecture, tasks, todos, and conversations that guide how code and data connect
