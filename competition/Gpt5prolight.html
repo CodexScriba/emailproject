@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LanguageLine Solutions — Email Performance Dashboard</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+      /* LanguageLine Solutions Brand Palette */
+      --primary: #1E3A8A;
+      --primary-2: #3B82F6;
+      --accent: #60A5FA;
+      --accent-2: #DBEAFE;
+      --accent-3: #93C5FD;
+      /* High-contrast email series color */
+      --emails: #0EA5E9;
+      --success: #059669;
+      --success-2: #10B981;
+      --warning: #D97706;
+      --warning-2: #F59E0B;
+      --danger: #DC2626;
+      --danger-2: #EF4444;
+
+      --text: #0F172A;      /* primary text */
+      --text-2: #334155;    /* secondary */
+      --text-3: #64748B;    /* muted */
+      --bg: #F8FAFC;        /* page */
+      --card: #FFFFFF;      /* card */
+      --card-2: #F8FAFF;    /* subtle tint */
+
+      --border: #E5E7EB;
+      --border-2: #F1F5F9;
+
+      /* Subtle glow shadows for light UI */
+      --glow-accent: 0 0 28px rgba(99,102,241,0.28);
+      --glow-success: 0 0 28px rgba(16,185,129,0.22);
+      --glow-warning: 0 0 28px rgba(245,158,11,0.22);
+      --glow-danger: 0 0 28px rgba(239,68,68,0.22);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Animated soft background orbs */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(99,102,241,0.10) 0%, transparent 55%),
+        radial-gradient(circle at 80% 20%, rgba(167,139,250,0.10) 0%, transparent 55%),
+        radial-gradient(circle at 40% 40%, rgba(59,130,246,0.08) 0%, transparent 55%);
+      animation: bgShift 20s ease-in-out infinite;
+      z-index: -1;
+    }
+    @keyframes bgShift {
+      0%, 100% { transform: translate(0,0) rotate(0deg); }
+      33%      { transform: translate(-18px,-12px) rotate(0.6deg); }
+      66%      { transform: translate(16px,-8px) rotate(-0.6deg); }
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #FFFFFF 0%, #EEF2FF 100%);
+      padding: 48px 28px;
+      border-bottom: 1px solid var(--border-2);
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute; top: 0; left: -100%; height: 2px; width: 200%;
+      background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent);
+      opacity: .9; animation: scan 3s linear infinite;
+    }
+    @keyframes scan { to { left: 100%; } }
+
+    .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
+    .header-left h1 {
+      margin: 0; font-size: 34px; font-weight: 900; letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      animation: titleGlow 3s ease-in-out infinite;
+    }
+    @keyframes titleGlow { 0%,100%{filter: brightness(1);} 50%{filter: brightness(1.15);} }
+    .header-sub { color: var(--text-2); font-size: 15px; }
+    .header-meta { background: rgba(255,255,255,.92); border: 1px solid var(--border-2); border-radius: 12px; padding: 12px 16px; text-align: right; backdrop-filter: saturate(160%) blur(8px); }
+    .header-meta div { color: var(--text-2); font-size: 13px; }
+    .header-meta div:first-child { color: var(--accent-2); font-weight: 700; }
+
+    /* Layout */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .grid { display: grid; gap: 24px; margin: 36px 0; }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+
+    /* Cards */
+    .card {
+      background: linear-gradient(135deg, var(--card) 0%, var(--card-2) 100%);
+      border: 1px solid var(--border-2);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+      backdrop-filter: saturate(140%) blur(6px);
+      animation: fadeIn .6s ease-out forwards; opacity: 0;
+    }
+    .card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 12px 28px rgba(15,23,42,.08); border-color: var(--border); }
+    .card::before { content:''; position:absolute; left:0; right:0; top:0; height:1px; background: linear-gradient(90deg,transparent,var(--accent-2),transparent); opacity:0; transition: opacity .25s; }
+    .card:hover::before { opacity: 1; }
+    .card:nth-child(1){animation-delay:.08s} .card:nth-child(2){animation-delay:.14s} .card:nth-child(3){animation-delay:.20s} .card:nth-child(4){animation-delay:.26s}
+    @keyframes fadeIn { from{opacity:0; transform: translateY(18px)} to{opacity:1; transform:none} }
+
+    /* KPI Cards */
+    .kpi-card { overflow: visible; }
+    .kpi-card::after { content:''; position:absolute; inset:-2px; border-radius:20px; background: linear-gradient(45deg, var(--accent), var(--accent-3)); filter: blur(18px); opacity:0; z-index:-1; transition: opacity .3s; }
+    .kpi-card:hover::after { opacity:.45; }
+    .kpi-card.success::after { background: linear-gradient(45deg, var(--success-2), var(--success)); }
+    .kpi-card.warning::after { background: linear-gradient(45deg, var(--warning-2), var(--warning)); }
+    .kpi-card.danger::after { background: linear-gradient(45deg, var(--danger-2), var(--danger)); }
+
+    .kpi-icon { position:absolute; right:20px; top:20px; width:46px; height:46px; border-radius:12px; display:grid; place-items:center; font-size:22px; background: linear-gradient(135deg, rgba(79,70,229,.10), rgba(79,70,229,.06)); }
+    .kpi-value { font-size:40px; font-weight:900; letter-spacing:-.02em; margin-bottom:8px; background: linear-gradient(135deg,#1E3A8A 0%,#3B82F6 100%); background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent; color: transparent; animation:valueFloat 3s ease-in-out infinite; }
+    @keyframes valueFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+    .kpi-label { font-size:12px; font-weight:800; color: var(--text-2); text-transform: uppercase; letter-spacing:.08em }
+    .kpi-sub { font-size:12px; color: var(--text-3); }
+    .kpi-change { display:inline-flex; align-items:center; gap:6px; margin-top:12px; padding:7px 12px; border-radius:10px; font-size:12px; font-weight:800; border:1px solid var(--border-2); position:relative; overflow:hidden }
+    .kpi-change.positive{ color: var(--success-2); background: rgba(16,185,129,.10); border-color: rgba(16,185,129,.25) }
+    .kpi-change.neutral{ color: var(--text-2); background: #F1F5F9 }
+    .kpi-change.negative{ color: var(--danger-2); background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.25) }
+
+    .status { width:10px; height:10px; border-radius:50%; display:inline-block; animation: statusPulse 2s infinite; }
+    .good{ background: var(--success-2); box-shadow: var(--glow-success); }
+    .warn{ background: var(--warning-2); box-shadow: var(--glow-warning); }
+    .bad{  background: var(--danger-2);  box-shadow: var(--glow-danger); }
+    @keyframes statusPulse { 0%,100%{ box-shadow: 0 0 0 0 currentColor } 50%{ box-shadow: 0 0 0 6px transparent } }
+
+    /* Charting */
+    .chart-title { font-size:24px; font-weight:900; text-align:center; margin-bottom:10px; letter-spacing:-.01em; background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%); background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent; color: transparent; }
+    .chart-sub { color: var(--text-2); text-align:center; margin-bottom:26px }
+    .legend { display:flex; gap:24px; justify-content:center; margin-bottom:20px; flex-wrap:wrap }
+    .legend-item { display:flex; align-items:center; gap:12px; padding:8px 14px; border:1px solid var(--border-2); border-radius:12px; background:#F8FAFC; transition: transform .2s ease, background .2s ease }
+    .legend-item:hover { background:#EEF2FF; transform: translateY(-2px) }
+    .legend-line { width:28px; height:4px; border-radius:4px; position:relative }
+    .legend-line::after { content:''; position:absolute; right:-3px; top:50%; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; background:inherit; box-shadow: 0 0 12px currentColor }
+    .legend-emails{ background: var(--emails); color: var(--emails) }
+    .legend-unread{ background: var(--danger-2); color: var(--danger-2) }
+
+    .chart-wrap { background: linear-gradient(135deg, var(--card) 0%, var(--card-2) 100%); border:1px solid var(--border-2); border-radius:18px; padding:26px; overflow:auto; position:relative }
+    .chart-wrap::before { content:''; position:absolute; left:0; right:0; top:0; height:100px; background: linear-gradient(180deg, rgba(99,102,241,0.08) 0%, transparent 100%); border-radius:18px 18px 0 0; pointer-events:none }
+    .svg { width:100%; min-width:860px; height:420px }
+    .grid-line { stroke: #E5E7EB; stroke-width: 1; stroke-dasharray: 4,4 }
+    .axis { stroke: #94A3B8; stroke-width: 2; opacity: .7 }
+    .axis-label { font: 600 12px Inter, sans-serif; fill: var(--text-2) }
+    .y-label { font: 500 11px Inter, sans-serif; fill: var(--text-3) }
+    .line-emails { fill:none; stroke: var(--emails); stroke-width:5; stroke-linecap:round; stroke-linejoin:round; filter: drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 4px 12px rgba(14,165,233,.65)); animation: drawLine 2s ease-out }
+    .line-unread { fill:none; stroke: var(--danger-2); stroke-width:4; stroke-linecap:round; stroke-linejoin:round; filter: drop-shadow(0 4px 12px rgba(239,68,68,.45)); animation: drawLine 2s ease-out .5s both }
+    @keyframes drawLine { from{ stroke-dasharray:2000; stroke-dashoffset:2000 } to{ stroke-dasharray:2000; stroke-dashoffset:0 } }
+
+    .data-point { opacity:0; transition: transform .25s ease, filter .25s ease; animation: pointAppear .5s ease-out forwards }
+    .data-point:nth-child(1){animation-delay:.10s}
+    .data-point:nth-child(2){animation-delay:.20s}
+    .data-point:nth-child(3){animation-delay:.30s}
+    .data-point:nth-child(4){animation-delay:.40s}
+    .data-point:nth-child(5){animation-delay:.50s}
+    @keyframes pointAppear { to{ opacity:1; transform: scale(1) } }
+    .data-point:hover { transform: scale(1.75); filter: brightness(1.25) }
+    .point-emails { fill: var(--emails); stroke: var(--bg); stroke-width:3; filter: drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 0 8px var(--emails)) }
+    .point-unread { fill: var(--danger-2); stroke: var(--bg); stroke-width:3; filter: drop-shadow(0 0 8px var(--danger-2)) }
+
+    /* Data point labels */
+    .data-label { font: 700 11px Inter, sans-serif; text-anchor: middle; pointer-events: none }
+    .label-emails { fill: var(--emails) }
+    .label-unread { fill: var(--danger-2) }
+    .label-background { fill: rgba(255,255,255,0.95); stroke: var(--border); stroke-width:1; rx:4; ry:4; filter: drop-shadow(0 1px 4px rgba(15,23,42,0.10)) }
+
+    /* SLA indicators under X-axis */
+    .sla-indicator { font: 900 14px/1 Inter, sans-serif; text-anchor: middle; dominant-baseline: middle; animation: indicatorBounce 2s infinite }
+    @keyframes indicatorBounce { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-2px) } }
+    .sla-met { fill: var(--success-2); filter: drop-shadow(0 0 4px var(--success-2)) }
+    .sla-not-met { fill: var(--danger-2); filter: drop-shadow(0 0 4px var(--danger-2)) }
+
+    /* Response time bars */
+    .resp { padding: 22px 24px }
+    .row { display:flex; align-items:center; gap:16px; margin: 14px 0 }
+    .row .label { flex: 0 0 200px; color: var(--text-2); font-weight: 800 }
+    .bar-wrap { flex:1; height:44px; background: #F1F5F9; border: 1px solid var(--border-2); border-radius: 12px; overflow: hidden; position:relative }
+    .bar { height:100%; display:flex; align-items:center; padding:0 14px; color:#fff; font-weight:800; letter-spacing:.02em; position:relative }
+    .bar::after { content:''; position:absolute; inset:0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent); animation: shimmer 3s infinite }
+    @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+    .b-s{ background: linear-gradient(135deg, var(--success), var(--success-2)); box-shadow: inset 0 0 18px rgba(16,185,129,.25) }
+    .b-w{ background: linear-gradient(135deg, var(--warning), var(--warning-2)); box-shadow: inset 0 0 18px rgba(245,158,11,.25) }
+    .b-d{ background: linear-gradient(135deg, var(--danger), var(--danger-2)); box-shadow: inset 0 0 18px rgba(239,68,68,.25) }
+
+    /* Distribution */
+    .dist .name{ font-weight:800 }
+    .dist .range{ color: var(--text-3); font-size:12px }
+    .dist .bar{ height:34px; border-radius:10px }
+    .dist .pct{ min-width:46px; text-align:right; color: var(--accent-2); font-weight:800 }
+
+    /* Distribution (enhanced, light theme) */
+    .distribution-container { padding: 24px 0 }
+    .distribution-row { display:flex; align-items:center; margin-bottom:16px; gap:16px; transition: transform .2s ease }
+    .distribution-row:hover { transform: translateX(6px) }
+    .distribution-label { flex:0 0 220px; display:flex; flex-direction:column; gap:2px }
+    .distribution-name { font-weight:800; color: var(--text) }
+    .distribution-range { color: var(--text-3); font-size:12px }
+    .distribution-bar-container { flex:1; display:flex; align-items:center; gap:12px }
+    .distribution-bar { height:34px; border-radius:10px; display:flex; align-items:center; justify-content:flex-start; padding:0 12px; color:#fff; position:relative; overflow:hidden }
+    .distribution-bar::after { content:''; position:absolute; inset:0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent); animation: shimmer 3s infinite }
+    .distribution-bar.success { background: linear-gradient(135deg, var(--success), var(--success-2)); box-shadow: 0 4px 10px rgba(16,185,129,.20) }
+    .distribution-bar.warning { background: linear-gradient(135deg, var(--warning), var(--warning-2)); box-shadow: 0 4px 10px rgba(245,158,11,.20) }
+    .distribution-bar.danger { background: linear-gradient(135deg, var(--danger), var(--danger-2)); box-shadow: 0 4px 10px rgba(239,68,68,.20) }
+    .distribution-count { color:#fff; font-size:12px; font-weight:700; position:relative; z-index:1 }
+    .distribution-percentage { font-size:13px; font-weight:800; color: var(--accent-3); min-width:40px; text-align:right }
+
+    /* Percentiles */
+    .perc .p-label{ flex:0 0 60px; text-align:center; color: var(--emails); font-weight:900; border:1px solid var(--border-2); border-radius:8px; padding:6px 8px; background:#EEF2FF }
+    .perc .pbar{ height:34px; border-radius:10px; display:flex; align-items:center; justify-content:flex-end; color:#fff; font-weight:900; padding:0 12px }
+
+    /* Quartiles */
+    .q-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:16px; margin-top:22px }
+    .q-item{ border:1px solid var(--border-2); border-radius:12px; background:#F8FAFF; padding:14px; text-align:center; position:relative; overflow:hidden; transition: transform .2s ease }
+    .q-item::before{ content:''; position:absolute; left:-50%; top:-50%; width:200%; height:200%; background: radial-gradient(circle, rgba(99,102,241,.14) 0%, transparent 70%); animation: orbSpin 10s linear infinite }
+    .q-item:hover{ transform: translateY(-3px) }
+    @keyframes orbSpin { from{ transform: rotate(0deg) } to{ transform: rotate(360deg) } }
+    .q-item .lab{ color: var(--text-2); font-size:12px; font-weight:800; position:relative }
+    .q-item .val{ font-size:22px; font-weight:900; color: var(--emails); position:relative }
+    .q-item .pct{ font-size:11px; color: var(--emails); position:relative }
+
+    /* Summary */
+    .summary{ margin:28px 0 40px; border:1px solid var(--border); border-radius:14px; background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.06)); padding:16px; text-align:center; color: var(--text-2); position:relative; overflow:hidden }
+    .summary::after{ content:''; position:absolute; left:-100%; top:0; width:200%; height:1px; background: linear-gradient(90deg,transparent, var(--accent-2), transparent); animation: scan 4s linear infinite }
+
+    /* Responsive */
+    @media (max-width: 768px){
+      .header-content{ flex-direction:column; align-items:flex-start }
+      .row .label{ flex:0 0 140px }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1>
+          <div style="width: 40px; height: 28px; background: linear-gradient(45deg, #60A5FA, #DBEAFE); transform: skew(-15deg); border-radius: 4px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); animation: logoFloat 3s ease-in-out infinite;"></div>
+          LanguageLine Solutions Dashboard
+        </h1>
+        <div class="header-sub">Email Performance Analytics & SLA Compliance Monitoring</div>
+      </div>
+      <div class="header-meta">
+        <div>August 15, 2025</div>
+        <div>Live Update • 10:01 PM</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid grid-4">
+      <div class="card kpi-card">
+        <div class="kpi-icon">📧</div>
+        <div class="kpi-value">262</div>
+        <div class="kpi-label">Total Emails</div>
+        <div class="kpi-sub">Processed today</div>
+        <div class="kpi-change neutral"><span class="status good"></span>Daily volume tracked</div>
+      </div>
+      <div class="card kpi-card success">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-value">29.5</div>
+        <div class="kpi-label">Avg Unread Count</div>
+        <div class="kpi-sub">Below 30 email threshold</div>
+        <div class="kpi-change positive"><span class="status good"></span>SLA Target Met</div>
+      </div>
+      <div class="card kpi-card warning">
+        <div class="kpi-icon">⏱️</div>
+        <div class="kpi-value">65.2<span style="font-size:18px;font-weight:600"> min</span></div>
+        <div class="kpi-label">Avg Response Time</div>
+        <div class="kpi-sub">Business hours only</div>
+        <div class="kpi-change neutral"><span class="status warn"></span>Median: 43.5 min</div>
+      </div>
+      <div class="card kpi-card danger">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-value">66.67%</div>
+        <div class="kpi-label">SLA Compliance</div>
+        <div class="kpi-sub">Target: 100% compliance</div>
+        <div class="kpi-change negative"><span class="status bad"></span>Action Required</div>
+      </div>
+    </div>
+
+    <section class="card">
+      <div class="chart-title">Hourly Email Distribution</div>
+      <div class="chart-sub">Real-time tracking of email volume and unread count</div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-line legend-emails"></span><span>Emails Received</span></div>
+        <div class="legend-item"><span class="legend-line legend-unread"></span><span>Unread Count</span></div>
+      </div>
+      <div class="chart-wrap">
+        <svg class="svg" viewBox="0 0 900 420" preserveAspectRatio="xMidYMid meet">
+          <line x1="80" y1="60"  x2="820" y2="60"  class="grid-line"/>
+          <line x1="80" y1="120" x2="820" y2="120" class="grid-line"/>
+          <line x1="80" y1="180" x2="820" y2="180" class="grid-line"/>
+          <line x1="80" y1="240" x2="820" y2="240" class="grid-line"/>
+          <line x1="80" y1="300" x2="820" y2="300" class="grid-line"/>
+          <line x1="80" y1="360" x2="820" y2="360" class="grid-line"/>
+          <text x="70" y="65" class="y-label">60</text>
+          <text x="70" y="125" class="y-label">50</text>
+          <text x="70" y="185" class="y-label">40</text>
+          <text x="70" y="245" class="y-label">30</text>
+          <text x="70" y="305" class="y-label">20</text>
+          <text x="70" y="365" class="y-label">10</text>
+          <text x="70" y="395" class="y-label">0</text>
+          <line x1="80" y1="380" x2="820" y2="380" class="axis"/>
+          <line x1="80" y1="60"  x2="80"  y2="380" class="axis"/>
+
+          <path class="line-emails" d="M 135,356 L 190,350 L 245,266 L 300,326 L 355,260 L 410,150 L 465,278 L 520,224 L 575,194 L 630,224 L 685,230 L 740,350 L 795,278"/>
+          <path class="line-unread" d="M 135,268 L 190,292 L 245,322 L 300,284 L 355,324 L 410,268 L 465,256 L 520,194 L 575,194 L 630,112 L 685,74 L 740,268 L 795,272"/>
+
+          <g id="email-points">
+            <circle cx="135" cy="356" r="5" class="data-point point-emails"/>
+            <circle cx="190" cy="350" r="5" class="data-point point-emails"/>
+            <circle cx="245" cy="266" r="5" class="data-point point-emails"/>
+            <circle cx="300" cy="326" r="5" class="data-point point-emails"/>
+            <circle cx="355" cy="260" r="5" class="data-point point-emails"/>
+            <circle cx="410" cy="150" r="5" class="data-point point-emails"/>
+            <circle cx="465" cy="278" r="5" class="data-point point-emails"/>
+            <circle cx="520" cy="224" r="5" class="data-point point-emails"/>
+            <circle cx="575" cy="194" r="5" class="data-point point-emails"/>
+            <circle cx="630" cy="224" r="5" class="data-point point-emails"/>
+            <circle cx="685" cy="230" r="5" class="data-point point-emails"/>
+            <circle cx="740" cy="350" r="5" class="data-point point-emails"/>
+            <circle cx="795" cy="278" r="5" class="data-point point-emails"/>
+          </g>
+          <g id="unread-points">
+            <circle cx="135" cy="268" r="5" class="data-point point-unread"/>
+            <circle cx="190" cy="292" r="5" class="data-point point-unread"/>
+            <circle cx="245" cy="322" r="5" class="data-point point-unread"/>
+            <circle cx="300" cy="284" r="5" class="data-point point-unread"/>
+            <circle cx="355" cy="324" r="5" class="data-point point-unread"/>
+            <circle cx="410" cy="268" r="5" class="data-point point-unread"/>
+            <circle cx="465" cy="256" r="5" class="data-point point-unread"/>
+            <circle cx="520" cy="194" r="5" class="data-point point-unread"/>
+            <circle cx="575" cy="194" r="5" class="data-point point-unread"/>
+            <circle cx="630" cy="112" r="5" class="data-point point-unread"/>
+            <circle cx="685" cy="74" r="5" class="data-point point-unread"/>
+            <circle cx="740" cy="268" r="5" class="data-point point-unread"/>
+            <circle cx="795" cy="272" r="5" class="data-point point-unread"/>
+          </g>
+          
+          <!-- Labels -->
+          <g id="email-labels">
+            <rect x="125" y="340" width="20" height="12" class="label-background"/>
+            <text x="135" y="346" class="data-label label-emails">4</text>
+            <rect x="180" y="334" width="20" height="12" class="label-background"/>
+            <text x="190" y="340" class="data-label label-emails">5</text>
+            <rect x="233" y="250" width="24" height="12" class="label-background"/>
+            <text x="245" y="256" class="data-label label-emails">19</text>
+            <rect x="290" y="310" width="20" height="12" class="label-background"/>
+            <text x="300" y="316" class="data-label label-emails">9</text>
+            <rect x="343" y="244" width="24" height="12" class="label-background"/>
+            <text x="355" y="250" class="data-label label-emails">20</text>
+            <rect x="398" y="134" width="24" height="12" class="label-background"/>
+            <text x="410" y="140" class="data-label label-emails">35</text>
+            <rect x="453" y="262" width="24" height="12" class="label-background"/>
+            <text x="465" y="268" class="data-label label-emails">17</text>
+            <rect x="508" y="208" width="24" height="12" class="label-background"/>
+            <text x="520" y="214" class="data-label label-emails">26</text>
+            <rect x="563" y="178" width="24" height="12" class="label-background"/>
+            <text x="575" y="184" class="data-label label-emails">31</text>
+            <rect x="618" y="208" width="24" height="12" class="label-background"/>
+            <text x="630" y="214" class="data-label label-emails">26</text>
+            <rect x="673" y="214" width="24" height="12" class="label-background"/>
+            <text x="685" y="220" class="data-label label-emails">34</text>
+            <rect x="728" y="334" width="24" height="12" class="label-background"/>
+            <text x="740" y="340" class="data-label label-emails">11</text>
+            <rect x="783" y="262" width="24" height="12" class="label-background"/>
+            <text x="795" y="268" class="data-label label-emails">13</text>
+          </g>
+
+          <g id="unread-labels">
+            <rect x="123" y="252" width="24" height="12" class="label-background"/>
+            <text x="135" y="258" class="data-label label-unread">28</text>
+            <rect x="178" y="276" width="24" height="12" class="label-background"/>
+            <text x="190" y="282" class="data-label label-unread">23</text>
+            <rect x="233" y="306" width="24" height="12" class="label-background"/>
+            <text x="245" y="312" class="data-label label-unread">17</text>
+            <rect x="288" y="268" width="24" height="12" class="label-background"/>
+            <text x="300" y="274" class="data-label label-unread">22</text>
+            <rect x="343" y="308" width="24" height="12" class="label-background"/>
+            <text x="355" y="314" class="data-label label-unread">16</text>
+            <rect x="398" y="252" width="24" height="12" class="label-background"/>
+            <text x="410" y="258" class="data-label label-unread">28</text>
+            <rect x="453" y="240" width="24" height="12" class="label-background"/>
+            <text x="465" y="246" class="data-label label-unread">29</text>
+            <rect x="508" y="178" width="24" height="12" class="label-background"/>
+            <text x="520" y="184" class="data-label label-unread">31</text>
+            <rect x="563" y="178" width="24" height="12" class="label-background"/>
+            <text x="575" y="184" class="data-label label-unread">31</text>
+            <rect x="618" y="96" width="24" height="12" class="label-background"/>
+            <text x="630" y="102" class="data-label label-unread">43</text>
+            <rect x="673" y="58" width="24" height="12" class="label-background"/>
+            <text x="685" y="64" class="data-label label-unread">50</text>
+            <rect x="728" y="252" width="24" height="12" class="label-background"/>
+            <text x="740" y="258" class="data-label label-unread">53</text>
+            <rect x="783" y="256" width="24" height="12" class="label-background"/>
+            <text x="795" y="262" class="data-label label-unread">28</text>
+          </g>
+
+          <!-- X-axis labels -->
+          <text x="135" y="400" class="axis-label">7AM</text>
+          <text x="190" y="400" class="axis-label">8AM</text>
+          <text x="245" y="400" class="axis-label">9AM</text>
+          <text x="300" y="400" class="axis-label">10AM</text>
+          <text x="355" y="400" class="axis-label">11AM</text>
+          <text x="410" y="400" class="axis-label">12PM</text>
+          <text x="465" y="400" class="axis-label">1PM</text>
+          <text x="520" y="400" class="axis-label">2PM</text>
+          <text x="575" y="400" class="axis-label">3PM</text>
+          <text x="630" y="400" class="axis-label">4PM</text>
+          <text x="685" y="400" class="axis-label">5PM</text>
+          <text x="740" y="400" class="axis-label">6PM</text>
+          <text x="795" y="400" class="axis-label">7PM</text>
+
+          <text x="135" y="415" class="sla-indicator sla-met">✓</text>
+          <text x="190" y="415" class="sla-indicator sla-met">✓</text>
+          <text x="245" y="415" class="sla-indicator sla-met">✓</text>
+          <text x="300" y="415" class="sla-indicator sla-met">✓</text>
+          <text x="355" y="415" class="sla-indicator sla-met">✓</text>
+          <text x="410" y="415" class="sla-indicator sla-met">✓</text>
+          <text x="465" y="415" class="sla-indicator sla-met">✓</text>
+          <text x="520" y="415" class="sla-indicator sla-not-met">✗</text>
+          <text x="575" y="415" class="sla-indicator sla-not-met">✗</text>
+          <text x="630" y="415" class="sla-indicator sla-not-met">✗</text>
+          <text x="685" y="415" class="sla-indicator sla-not-met">✗</text>
+          <text x="740" y="415" class="sla-indicator sla-not-met">✗</text>
+          <text x="795" y="415" class="sla-indicator sla-met">✓</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="card resp">
+      <div class="chart-title">Response Time Analysis</div>
+      <div class="chart-sub">Average response times by business hour segments</div>
+      <div class="row"><div class="label">🌅 Early Morning (6-9 AM)</div><div class="bar-wrap"><div class="bar b-s" style="width:28%">41.6 min</div></div></div>
+      <div class="row"><div class="label">☀️ Morning (9 AM-1 PM)</div><div class="bar-wrap"><div class="bar b-w" style="width:43%">63.9 min</div></div></div>
+      <div class="row"><div class="label">🌤️ Afternoon (1-5 PM)</div><div class="bar-wrap"><div class="bar b-w" style="width:66%">98.8 min</div></div></div>
+      <div class="row"><div class="label">🌆 Evening (5-9 PM)</div><div class="bar-wrap"><div class="bar b-s" style="width:10%">15.4 min</div></div></div>
+    </section>
+
+    <section class="card">
+      <div class="chart-title">Response Time Distribution</div>
+      <div class="chart-sub">Categorized email response performance</div>
+      <div class="distribution-container">
+        <div class="distribution-row">
+          <div class="distribution-label">
+            <span class="distribution-name">⚡ Lightning Fast</span>
+            <span class="distribution-range" style="color: var(--success-2);">Under 30 minutes</span>
+          </div>
+          <div class="distribution-bar-container">
+            <div class="distribution-bar success" style="width: 27%;">
+              <span class="distribution-count">23 emails</span>
+            </div>
+            <span class="distribution-percentage">27%</span>
+          </div>
+        </div>
+
+        <div class="distribution-row">
+          <div class="distribution-label">
+            <span class="distribution-name">🚀 Fast Response</span>
+            <span class="distribution-range" style="color: var(--success-2);">30-60 minutes</span>
+          </div>
+          <div class="distribution-bar-container">
+            <div class="distribution-bar success" style="width: 31%;">
+              <span class="distribution-count">26 emails</span>
+            </div>
+            <span class="distribution-percentage">31%</span>
+          </div>
+        </div>
+
+        <div class="distribution-row">
+          <div class="distribution-label">
+            <span class="distribution-name">⏱️ Moderate</span>
+            <span class="distribution-range" style="color: var(--warning-2);">60-120 minutes</span>
+          </div>
+          <div class="distribution-bar-container">
+            <div class="distribution-bar warning" style="width: 100%;">
+              <span class="distribution-count">84 emails</span>
+            </div>
+            <span class="distribution-percentage">100%</span>
+          </div>
+        </div>
+
+        <div class="distribution-row">
+          <div class="distribution-label">
+            <span class="distribution-name">🐢 Slow</span>
+            <span class="distribution-range" style="color: var(--warning-2);">120-180 minutes</span>
+          </div>
+          <div class="distribution-bar-container">
+            <div class="distribution-bar warning" style="width: 15%;">
+              <span class="distribution-count">13 emails</span>
+            </div>
+            <span class="distribution-percentage">15%</span>
+          </div>
+        </div>
+
+        <div class="distribution-row">
+          <div class="distribution-label">
+            <span class="distribution-name">⚠️ Very Slow</span>
+            <span class="distribution-range" style="color: var(--danger-2);">180-300 minutes</span>
+          </div>
+          <div class="distribution-bar-container">
+            <div class="distribution-bar danger" style="width: 5%;">
+              <span class="distribution-count">0 emails</span>
+            </div>
+            <span class="distribution-percentage">0%</span>
+          </div>
+        </div>
+
+        <div class="distribution-row">
+          <div class="distribution-label">
+            <span class="distribution-name">🔴 Critical</span>
+            <span class="distribution-range" style="color: var(--danger-2);">Over 300 minutes</span>
+          </div>
+          <div class="distribution-bar-container">
+            <div class="distribution-bar danger" style="width: 5%;">
+              <span class="distribution-count">0 emails</span>
+            </div>
+            <span class="distribution-percentage">0%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card perc">
+      <div class="chart-title">Statistical Performance Metrics</div>
+      <div class="chart-sub">Response time percentile distribution</div>
+      <div class="row"><div class="p-label">P25</div><div class="bar-wrap"><div class="pbar b-s" style="width:31%">43.3 min</div></div></div>
+      <div class="row"><div class="p-label">P50</div><div class="bar-wrap"><div class="pbar b-w" style="width:58%">80.5 min</div></div></div>
+      <div class="row"><div class="p-label">P75</div><div class="bar-wrap"><div class="pbar b-w" style="width:64%">89.5 min</div></div></div>
+      <div class="row"><div class="p-label">P90</div><div class="bar-wrap"><div class="pbar b-w" style="width:72%">100.0 min</div></div></div>
+      <div class="row"><div class="p-label">P95</div><div class="bar-wrap"><div class="pbar b-d" style="width:100%">138.8 min</div></div></div>
+
+      <div class="q-grid">
+        <div class="q-item"><div class="lab">Q1 (Top 25%)</div><div class="val">28</div><div class="pct">19% of emails</div></div>
+        <div class="q-item"><div class="lab">Q2 (25-50%)</div><div class="val">43</div><div class="pct">29% of emails</div></div>
+        <div class="q-item"><div class="lab">Q3 (50-75%)</div><div class="val">46</div><div class="pct">32% of emails</div></div>
+        <div class="q-item"><div class="lab">Q4 (Bottom 25%)</div><div class="val">29</div><div class="pct">20% of emails</div></div>
+      </div>
+    </section>
+
+    <div class="card summary">
+      <strong>Data Source:</strong> Unified JSON database (88 days: May 18 - Aug 13, 2025) •
+      <strong>Sample Date:</strong> August 13, 2025 •
+      <strong>Total Emails:</strong> 262 classified •
+      <strong>SLA Target:</strong> ≤30 unread emails •
+      <strong>Business Hours:</strong> 7 AM - 6 PM (Mon-Fri)
+    </div>
+  </div>
+</body>
+</html>
