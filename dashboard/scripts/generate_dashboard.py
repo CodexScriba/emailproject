@@ -154,13 +154,15 @@ class DashboardGenerator:
         
         # Convert to list format
         result = []
-        max_count = max([d['count'] for d in distribution.values()]) or 1
+        # Use total count for percentage so bars represent composition of all replied emails
+        total_count = sum(d['count'] for d in distribution.values())
         
         for category, data in distribution.items():
+            percentage = round((data['count'] / total_count) * 100) if total_count > 0 else 0
             result.append({
                 'category': category,
                 'count': data['count'],
-                'percentage': round((data['count'] / max_count) * 100) if max_count > 0 else 0,
+                'percentage': percentage,
                 'color': data['color']
             })
         

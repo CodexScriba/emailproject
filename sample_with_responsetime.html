@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sample - Modern Email Hourly Table</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      /* Reused palette from dashboard/output/email_dashboard_2025-08-15.html */
+      --primary: #0F172A;
+      --primary-light: #1E293B;
+      --accent: #3B82F6;
+      --accent-dark: #2563EB;
+      --success: #10B981;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --text-primary: #0F172A;
+      --text-secondary: #64748B;
+      --text-muted: #94A3B8;
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F8FAFC;
+      --bg-tertiary: #F1F5F9;
+      --border: #E2E8F0;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      padding: 32px 24px;
+    }
+
+    /* Header */
+    .header {
+      background: var(--primary);
+      color: white;
+      margin: -32px -24px 40px -24px;
+      padding: 28px 24px;
+      box-shadow: var(--shadow-md);
+    }
+    .header-content { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .header-left h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 4px; }
+    .header-subtitle { font-size: 13px; color: #94A3B8; }
+    .header-meta { text-align: right; font-size: 12px; color: #94A3B8; }
+
+    /* Container & Card */
+    .container { max-width: 1000px; margin: 0 auto; }
+    .card {
+      background: var(--bg-primary);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    .card + .card { margin-top: 20px; }
+
+    .title { font-size: 18px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.3px; }
+    .subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
+
+    /* Table styles */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      color: var(--text-secondary);
+      background: var(--bg-tertiary);
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    tbody tr:nth-child(even) { background: var(--bg-secondary); }
+    tbody tr:hover { background: #EEF2F7; }
+
+    .num { font-variant-numeric: tabular-nums; font-weight: 600; }
+
+    /* Badges (use dashboard colors) */
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .badge.success { color: var(--success); background: #10B98120; }
+    .badge.warning { color: var(--warning); background: #F59E0B20; }
+    .badge.danger { color: var(--danger); background: #EF444420; }
+
+    .muted { color: var(--text-muted); font-weight: 500; }
+
+    /* Modern enhancements */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 16px; }
+    .kpi { position: relative; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm); overflow: hidden; }
+    .kpi::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+    .kpi.success::before { background: var(--success); }
+    .kpi.warning::before { background: var(--warning); }
+    .kpi.danger::before { background: var(--danger); }
+    .kpi-value { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; color: var(--text-primary); }
+    .kpi-label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+    .toolbar { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+    .pill { appearance: none; border: 1px solid var(--border); background: var(--bg-primary); color: var(--text-primary); padding: 8px 12px; border-radius: 999px; font-weight: 600; font-size: 12px; cursor: pointer; transition: all .2s ease; }
+    .pill:hover { box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+    .pill.active { border-color: var(--accent); color: var(--accent-dark); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+
+    /* Sticky table header & wider layout for more columns */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+    thead th { position: sticky; top: 0; z-index: 5; backdrop-filter: blur(6px); }
+
+    /* Value + bar cells */
+    .cell-bar { display: grid; grid-template-columns: auto auto 1fr; align-items: center; gap: 8px; }
+    .bar-track { height: 8px; background: var(--bg-tertiary); border-radius: 999px; overflow: hidden; }
+    .bar { height: 100%; border-radius: 999px; }
+    .bar.accent { background: linear-gradient(90deg, var(--accent), #2563EB); }
+    .bar.danger { background: linear-gradient(90deg, var(--danger), #DC2626); }
+
+    .delta { display: none; font-size: 11px; font-weight: 700; }
+    .delta.pos { color: var(--success); }
+    .delta.neg { color: var(--danger); }
+    .show-deltas .delta { display: inline-flex; align-items: center; gap: 2px; }
+
+    /* Metric cells with progress */
+    .cell-metric { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+    .progress { height: 8px; background: var(--bg-tertiary); border-radius: 999px; overflow: hidden; }
+    .progress-bar { height: 100%; border-radius: 999px; }
+    .progress-bar.success { background: linear-gradient(90deg, var(--success), #059669); }
+    .progress-bar.warning { background: linear-gradient(90deg, var(--warning), #D97706); }
+    .progress-bar.danger  { background: linear-gradient(90deg, var(--danger), #DC2626); }
+
+    /* SLA chip */
+    .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; letter-spacing: .2px; }
+    .chip.success { color: var(--success); background: #10B98120; }
+    .chip.danger { color: var(--danger); background: #EF444420; }
+
+    /* Compact mode */
+    .compact thead th, .compact tbody td { padding: 8px; }
+    .compact .kpi { padding: 12px; }
+
+    @media (max-width: 768px) {
+      body { padding: 16px; }
+      .header { margin: -16px -16px 24px -16px; padding: 20px 16px; }
+      .header-content { flex-direction: column; text-align: center; gap: 8px; }
+      .header-meta { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1>Sample: Modern Hourly Email Table</h1>
+        <div class="header-subtitle">Design system and colors reused from Email Dashboard</div>
+      </div>
+      <div class="header-meta">
+        <div>Sample Data</div>
+        <div>Business Hours: 7 AM – 9 PM</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="kpi-grid" id="kpiGrid">
+      <div class="kpi success">
+        <div class="kpi-value" id="kpiTotalEmails">—</div>
+        <div class="kpi-label">Total Emails</div>
+      </div>
+      <div class="kpi warning">
+        <div class="kpi-value" id="kpiAvgRT">—</div>
+        <div class="kpi-label">Avg Response Time</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-value" id="kpiMedianRT">—</div>
+        <div class="kpi-label">Median Response Time</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-value" id="kpiPeakHour">—</div>
+        <div class="kpi-label">Peak Hour (Emails)</div>
+      </div>
+      <div class="kpi" id="kpiSLABox">
+        <div class="kpi-value" id="kpiSLA">—</div>
+        <div class="kpi-label">SLA Compliance</div>
+      </div>
+    </div>
+    <div class="toolbar">
+      <button class="pill" id="toggleDeltas" aria-pressed="false">Show Deltas</button>
+      <button class="pill" id="toggleCompact" aria-pressed="false">Compact Mode</button>
+      <button class="pill active" id="toggleGrouped" aria-pressed="true">Grouped View</button>
+    </div>
+    <div class="card">
+      <div class="title" id="tableTitle">Hourly Metrics</div>
+      <div class="subtitle" id="tableSubtitle">Emails received and unread with read rate, response time banding, and SLA state per hour</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th id="colHourLabel">Hour</th>
+              <th title="Received per hour with bar visualization">Emails Received</th>
+              <th title="Unread count with bar visualization">Emails Unread</th>
+              <th title="Approximate read proportion across volume">Read Rate</th>
+              <th title="Average response time for the hour">Avg RT</th>
+              <th title="Median response time for the hour">Median RT</th>
+              <th title="90th percentile response time (approx)">P90 RT</th>
+              <th title="SLA threshold ≤30 unread">SLA</th>
+            </tr>
+          </thead>
+          <tbody id="hourlyBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card" style="background: var(--bg-tertiary); border: none;">
+      <div class="muted" style="text-align: center;">
+        This is a static, fake dataset for design preview. Palette and styles mirror the dashboard.
+      </div>
+    </div>
+  </div>
+  <script>
+    // Render dynamic table with Hourly and Grouped (7–10 AM, 11 AM–2 PM, 3–6 PM, 7–9 PM) modes
+    (function() {
+      const raw = [
+        { hour: '7 AM',  received: 4,  unread: 28, avg: 38,  median: 32 },
+        { hour: '8 AM',  received: 5,  unread: 23, avg: 45,  median: 36 },
+        { hour: '9 AM',  received: 19, unread: 17, avg: 58,  median: 50 },
+        { hour: '10 AM', received: 9,  unread: 22, avg: 62,  median: 54 },
+        { hour: '11 AM', received: 20, unread: 16, avg: 68,  median: 60 },
+        { hour: '12 PM', received: 35, unread: 28, avg: 67,  median: 58 },
+        { hour: '1 PM',  received: 17, unread: 29, avg: 90,  median: 80 },
+        { hour: '2 PM',  received: 26, unread: 31, avg: 95,  median: 82 },
+        { hour: '3 PM',  received: 31, unread: 31, avg: 102, median: 95 },
+        { hour: '4 PM',  received: 26, unread: 43, avg: 106, median: 98 },
+        { hour: '5 PM',  received: 34, unread: 50, avg: 101, median: 92 },
+        { hour: '6 PM',  received: 11, unread: 53, avg: 18,  median: 14 },
+        { hour: '7 PM',  received: 13, unread: 28, avg: 14,  median: 12 },
+        { hour: '8 PM',  received: 4,  unread: 27, avg: 12,  median: 10 },
+        { hour: '9 PM',  received: 1,  unread: 16, avg: 10,  median: 8  }
+      ];
+
+      const tbody = document.getElementById('hourlyBody');
+      const titleEl = document.getElementById('tableTitle');
+      const subtitleEl = document.getElementById('tableSubtitle');
+      const colLabel = document.getElementById('colHourLabel');
+      if (!tbody) return;
+
+      const pct = (v) => `${Math.round(v)}%`;
+      const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+      const cat = (avg) => avg < 30 ? 'success' : (avg <= 120 ? 'warning' : 'danger');
+
+      const groups = [
+        { label: '7–10 AM', start: 0, end: 3 },
+        { label: '11 AM–2 PM', start: 4, end: 7 },
+        { label: '3–6 PM', start: 8, end: 11 },
+        { label: '7–9 PM', start: 12, end: 14 },
+      ];
+
+      const medianOf = (arr) => {
+        if (!arr.length) return 0;
+        const s = arr.slice().sort((a,b)=>a-b);
+        const mid = (s.length - 1) / 2;
+        return (s[Math.floor(mid)] + s[Math.ceil(mid)]) / 2;
+      };
+
+      const toHourly = () => raw.map(d => ({
+        label: d.hour,
+        received: d.received,
+        unread: d.unread,
+        avg: d.avg,
+        median: d.median,
+        p90: Math.min(180, Math.round(d.avg * 1.35)),
+        countHours: 1,
+      }));
+
+      const toGrouped = () => groups.map(g => {
+        const slice = raw.slice(g.start, g.end + 1);
+        const received = slice.reduce((a,b)=>a+b.received, 0);
+        const unread = slice.reduce((a,b)=>a+b.unread, 0);
+        const totalR = slice.reduce((a,b)=>a+b.received, 0);
+        const avg = totalR
+          ? Math.round(slice.reduce((s,h)=>s + h.avg * h.received, 0) / totalR)
+          : Math.round(slice.reduce((s,h)=>s + h.avg, 0) / slice.length);
+        const median = Math.round(medianOf(slice.map(h=>h.median)));
+        const p90 = Math.min(180, Math.round(avg * 1.35));
+        return { label: g.label, received, unread, avg, median, p90, countHours: (g.end - g.start + 1) };
+      });
+
+      const render = (mode) => {
+        const display = mode === 'grouped' ? toGrouped() : toHourly();
+        const maxReceived = Math.max(...display.map(d => d.received), 1);
+        const maxUnread   = Math.max(...display.map(d => d.unread), 1);
+        const rtCap = Math.max(...display.map(d => d.avg), 1);
+
+        const rows = display.map((d, i) => {
+          const prev = i > 0 ? display[i - 1] : null;
+          const recDelta = prev ? d.received - prev.received : 0;
+          const unDelta  = prev ? d.unread   - prev.unread   : 0;
+          const recWidth = (d.received / (maxReceived || 1)) * 100;
+          const unWidth  = (d.unread   / (maxUnread   || 1)) * 100;
+          const rr = (d.received + d.unread) === 0 ? 0 : (d.received / (d.received + d.unread));
+          const rrPct = rr * 100;
+          const klass = cat(d.avg);
+          const threshold = 30 * (mode === 'grouped' ? d.countHours : 1);
+          const sla = d.unread <= threshold;
+
+          return `
+            <tr>
+              <td>${d.label}</td>
+              <td>
+                <div class="cell-bar">
+                  <span class="num">${d.received}</span>
+                  <span class="delta ${recDelta >= 0 ? 'pos' : 'neg'}">${recDelta >= 0 ? '▲' : '▼'} ${Math.abs(recDelta)}</span>
+                  <div class="bar-track"><div class="bar accent" style="width: ${clamp(recWidth, 0, 100)}%"></div></div>
+                </div>
+              </td>
+              <td>
+                <div class="cell-bar">
+                  <span class="num">${d.unread}</span>
+                  <span class="delta ${unDelta >= 0 ? 'pos' : 'neg'}">${unDelta >= 0 ? '▲' : '▼'} ${Math.abs(unDelta)}</span>
+                  <div class="bar-track"><div class="bar danger" style="width: ${clamp(unWidth, 0, 100)}%"></div></div>
+                </div>
+              </td>
+              <td>
+                <div class="cell-metric">
+                  <div class="progress"><div class="progress-bar success" style="width: ${clamp(rrPct, 0, 100)}%"></div></div>
+                  <span class="num">${pct(rrPct)}</span>
+                </div>
+              </td>
+              <td>
+                <div class="rt-cell">
+                  <div class="rt-top"><span class="badge ${klass}">${d.avg} min</span></div>
+                  <div class="progress"><div class="progress-bar ${klass}" style="width: ${clamp((d.avg / (rtCap || 1)) * 100, 0, 100)}%"></div></div>
+                </div>
+              </td>
+              <td><span class="num">${d.median} min</span></td>
+              <td><span class="num">${d.p90} min</span></td>
+              <td><span class="chip ${sla ? 'success' : 'danger'}">${sla ? '✓ SLA' : '✗ SLA'}</span></td>
+            </tr>`;
+        });
+
+        tbody.innerHTML = rows.join('');
+        if (titleEl) titleEl.textContent = mode === 'grouped' ? 'Grouped Metrics' : 'Hourly Metrics';
+        if (subtitleEl) subtitleEl.textContent = mode === 'grouped'
+          ? 'Emails received and unread with read rate, response time banding, and SLA state per period'
+          : 'Emails received and unread with read rate, response time banding, and SLA state per hour';
+        if (colLabel) colLabel.textContent = mode === 'grouped' ? 'Range' : 'Hour';
+      };
+
+      // Initial render: Grouped view
+      let grouped = true;
+      render(grouped ? 'grouped' : 'hourly');
+
+      // KPI calculations are based on hourly dataset for consistency
+      const sum = (arr) => arr.reduce((a, b) => a + b, 0);
+      const totalEmails = sum(raw.map(d => d.received));
+      const avgRT = (sum(raw.map(d => d.avg)) / raw.length).toFixed(1);
+      const medians = raw.map(d => d.median).slice().sort((a,b)=>a-b);
+      const overallMedian = (medians[Math.floor((medians.length-1)/2)] + medians[Math.ceil((medians.length-1)/2)]) / 2;
+      const peak = raw.reduce((m, d) => d.received > m.received ? d : m, raw[0]);
+      const slaHours = raw.filter(d => d.unread <= 30).length;
+      const slaPct = Math.round((slaHours / raw.length) * 100);
+
+      document.getElementById('kpiTotalEmails').textContent = totalEmails.toString();
+      document.getElementById('kpiAvgRT').textContent = `${avgRT} min`;
+      document.getElementById('kpiMedianRT').textContent = `${overallMedian.toFixed(1)} min`;
+      document.getElementById('kpiPeakHour').textContent = `${peak.received} @ ${peak.hour}`;
+      const slaEl = document.getElementById('kpiSLA');
+      slaEl.textContent = `${slaPct}%`;
+      const kpiSLABox = document.getElementById('kpiSLABox');
+      kpiSLABox.classList.add(slaPct >= 80 ? 'success' : (slaPct >= 60 ? 'warning' : 'danger'));
+
+      // Toolbar interactions
+      const toggle = (btn, className) => {
+        btn.addEventListener('click', () => {
+          const active = document.body.classList.toggle(className);
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+      };
+      toggle(document.getElementById('toggleDeltas'), 'show-deltas');
+      toggle(document.getElementById('toggleCompact'), 'compact');
+
+      const groupedBtn = document.getElementById('toggleGrouped');
+      if (groupedBtn) {
+        groupedBtn.classList.toggle('active', grouped);
+        groupedBtn.setAttribute('aria-pressed', grouped ? 'true' : 'false');
+        groupedBtn.addEventListener('click', () => {
+          grouped = !grouped;
+          groupedBtn.classList.toggle('active', grouped);
+          groupedBtn.setAttribute('aria-pressed', grouped ? 'true' : 'false');
+          render(grouped ? 'grouped' : 'hourly');
+        });
+      }
+    })();
+  </script>
+
+</body>
+</html>
