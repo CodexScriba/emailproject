@@ -531,111 +531,94 @@
             min-width: 40px;
         }
 
-        /* Percentile Styles */
-        .percentile-container {
-            padding: 20px;
+        /* New Percentile Styles */
+        .percentile-grid {
+            display: grid;
+            gap: 20px;
         }
 
-        .percentile-chart {
+        .percentile-row {
             display: flex;
-            justify-content: space-around;
-            align-items: flex-end;
-            height: 200px;
-            margin-bottom: 32px;
-            padding: 20px 0;
-            border-bottom: 2px solid var(--border);
-            position: relative;
-        }
-
-        .percentile-item {
-            display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 8px;
-            flex: 1;
-            position: relative;
+            gap: 16px;
         }
 
         .percentile-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .percentile-value {
-            font-size: 18px;
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        .percentile-value.success {
-            color: var(--success);
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        .percentile-value.warning {
-            color: var(--warning);
-            background: rgba(245, 158, 11, 0.1);
-        }
-
-        .percentile-value.danger {
-            color: var(--danger);
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .percentile-bar {
-            width: 40px;
-            border-radius: 4px 4px 0 0;
-            position: absolute;
-            bottom: 0;
-            opacity: 0.3;
-            z-index: -1;
-        }
-
-        .quartile-summary {
-            background: var(--bg-tertiary);
-            border-radius: 8px;
-            padding: 16px;
-        }
-
-        .quartile-title {
+            flex: 0 0 50px;
             font-size: 13px;
             font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 12px;
+        }
+
+        .percentile-bar-container {
+            flex: 1;
+            background-color: var(--bg-tertiary);
+            border-radius: 8px;
+            height: 28px;
+            overflow: hidden;
+        }
+
+        .percentile-bar {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 12px;
+            transition: width 0.5s ease-in-out;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .percentile-bar.success { background: linear-gradient(90deg, #10B981, #059669); }
+        .percentile-bar.warning { background: linear-gradient(90deg, #F59E0B, #D97706); }
+        .percentile-bar.danger { background: linear-gradient(90deg, #EF4444, #DC2626); }
+
+        .quartile-section {
+            margin-top: 32px;
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+        }
+
+        .quartile-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
             text-align: center;
         }
 
         .quartile-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 16px;
         }
 
         .quartile-item {
+            background: var(--bg-tertiary);
+            padding: 12px;
+            border-radius: 8px;
             text-align: center;
-            padding: 8px;
-            background: white;
-            border-radius: 6px;
-            border: 1px solid var(--border);
         }
 
         .quartile-label {
-            font-size: 11px;
-            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
             margin-bottom: 4px;
         }
 
-        .quartile-count {
-            font-size: 16px;
+        .quartile-value {
+            font-size: 18px;
             font-weight: 700;
             color: var(--text-primary);
         }
 
         .quartile-percentage {
             font-size: 11px;
-            color: var(--text-secondary);
+            color: var(--text-muted);
         }
 
         /* Responsive Design */
@@ -1075,30 +1058,29 @@
         <section class="chart-section">
             <div class="card">
                 <div class="chart-title">Response Time Percentiles</div>
-                <div class="chart-subtitle">Statistical distribution of response times</div>
-                
-                <div class="percentile-container">
-                    <div class="percentile-chart">
-                        {% for percentile in response_time_percentiles %}
-                        <div class="percentile-item">
-                            <div class="percentile-label">{{ percentile.label }}</div>
-                            <div class="percentile-value {{ percentile.color }}">{{ percentile.value }} min</div>
-                            <div class="percentile-bar" style="height: {{ (percentile.value / 150 * 100) | round }}%; background: var(--{{ percentile.color }});"></div>
+                <div class="chart-subtitle">Redesigned statistical distribution of response times</div>
+
+                <div class="percentile-grid">
+                    {% for p in response_time_percentiles %}
+                    <div class="percentile-row">
+                        <div class="percentile-label">{{ p.label }}</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar {{ p.color }}" style="width: {{ p.bar_width }}%;">{{ p.value }} min</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="quartile-section">
+                    <div class="quartile-title">Quartile Distribution</div>
+                    <div class="quartile-grid">
+                        {% for q in quartile_counts %}
+                        <div class="quartile-item">
+                            <div class="quartile-label">{{ q.label }}</div>
+                            <div class="quartile-value">{{ q.count }}</div>
+                            <div class="quartile-percentage">{{ q.percentage }}% of emails</div>
                         </div>
                         {% endfor %}
-                    </div>
-                    
-                    <div class="quartile-summary">
-                        <div class="quartile-title">Quartile Distribution</div>
-                        <div class="quartile-grid">
-                            {% for quartile in quartile_counts %}
-                            <div class="quartile-item">
-                                <div class="quartile-label">{{ quartile.label }}</div>
-                                <div class="quartile-count">{{ quartile.count }} emails</div>
-                                <div class="quartile-percentage">({{ quartile.percentage }}%)</div>
-                            </div>
-                            {% endfor %}
-                        </div>
                     </div>
                 </div>
             </div>

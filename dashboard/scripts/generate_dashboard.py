@@ -167,7 +167,7 @@ class DashboardGenerator:
         return result
     
     def calculate_response_time_percentiles(self, hourly_data):
-        """Calculate response time percentiles"""
+        """Calculate response time percentiles and bar widths for the new design."""
         response_times = []
         
         for hour_data in hourly_data:
@@ -175,30 +175,23 @@ class DashboardGenerator:
             replied_count = hour_data.get('emails_replied', 0) or 0
             
             if response_time is not None and replied_count > 0:
-                # Add the response time for each email
                 for _ in range(int(replied_count)):
                     response_times.append(response_time)
         
         if not response_times:
             return {
                 'percentiles': [
-                    {'label': 'P25', 'value': 0, 'percentage': 25, 'color': 'muted'},
-                    {'label': 'P50', 'value': 0, 'percentage': 50, 'color': 'muted'},
-                    {'label': 'P75', 'value': 0, 'percentage': 75, 'color': 'muted'},
-                    {'label': 'P90', 'value': 0, 'percentage': 90, 'color': 'muted'},
-                    {'label': 'P95', 'value': 0, 'percentage': 95, 'color': 'muted'}
+                    {'label': 'P25', 'value': 0, 'percentage': 25, 'color': 'muted', 'bar_width': 0},
+                    {'label': 'P50', 'value': 0, 'percentage': 50, 'color': 'muted', 'bar_width': 0},
+                    {'label': 'P75', 'value': 0, 'percentage': 75, 'color': 'muted', 'bar_width': 0},
+                    {'label': 'P90', 'value': 0, 'percentage': 90, 'color': 'muted', 'bar_width': 0},
+                    {'label': 'P95', 'value': 0, 'percentage': 95, 'color': 'muted', 'bar_width': 0}
                 ],
-                'quartiles': {
-                    'q1_count': 0,
-                    'q2_count': 0,
-                    'q3_count': 0,
-                    'q4_count': 0
-                },
+                'quartiles': {'q1_count': 0, 'q2_count': 0, 'q3_count': 0, 'q4_count': 0},
                 'has_data': False,
                 'sla_target': self.sla_config['kpi_targets']['response_time_target_minutes'] if self.sla_config else 60
             }
         
-        # Calculate percentiles
         response_times.sort()
         total_count = len(response_times)
         
@@ -209,7 +202,6 @@ class DashboardGenerator:
                 index = total_count - 1
             value = response_times[index]
             
-            # Determine color based on SLA
             if value <= 60:
                 color = 'success'
             elif value <= 120:
@@ -223,7 +215,15 @@ class DashboardGenerator:
                 'percentage': p_value,
                 'color': color
             })
-        
+            
+        # Calculate bar widths based on the max percentile value (P95)
+        max_p_value = percentiles[-1]['value'] if percentiles else 0
+        for p in percentiles:
+            if max_p_value > 0:
+                p['bar_width'] = round((p['value'] / max_p_value) * 100)
+            else:
+                p['bar_width'] = 0
+
         # Calculate quartile counts
         p25_val = percentiles[0]['value']
         p50_val = percentiles[1]['value']
@@ -361,22 +361,22 @@ class DashboardGenerator:
         if total_emails > 0:
             quartile_counts = [
                 {
-                    'label': 'Q1 (Fastest)',
+                    'label': 'Q1 (0-25%)',
                     'count': quartiles_raw.get('q1_count', 0),
                     'percentage': round((quartiles_raw.get('q1_count', 0) / total_emails) * 100)
                 },
                 {
-                    'label': 'Q2 (Fast)',
+                    'label': 'Q2 (25-50%)',
                     'count': quartiles_raw.get('q2_count', 0),
                     'percentage': round((quartiles_raw.get('q2_count', 0) / total_emails) * 100)
                 },
                 {
-                    'label': 'Q3 (Moderate)',
+                    'label': 'Q3 (50-75%)',
                     'count': quartiles_raw.get('q3_count', 0),
                     'percentage': round((quartiles_raw.get('q3_count', 0) / total_emails) * 100)
                 },
                 {
-                    'label': 'Q4 (Slowest)',
+                    'label': 'Q4 (75-100%)',
                     'count': quartiles_raw.get('q4_count', 0),
                     'percentage': round((quartiles_raw.get('q4_count', 0) / total_emails) * 100)
                 }
