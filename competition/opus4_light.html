@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Email Performance Dashboard - Light UI</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+
+    :root{
+      --primary:#111827;--primary-2:#1F2937;--accent:#4F46E5;--accent-2:#6366F1;--accent-3:#A78BFA;
+      --success:#10B981;--success-2:#059669;--warning:#F59E0B;--warning-2:#D97706;--danger:#EF4444;--danger-2:#DC2626;
+      --text:#0F172A;--text-2:#334155;--text-3:#64748B;--bg:#F8FAFC;--card:#FFFFFF;--card-2:#F8FAFF;
+      --border:#E5E7EB;--border-2:#F1F5F9
+    }
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+    .header{background:linear-gradient(135deg,#fff 0%,#EEF2FF 100%);padding:44px 24px;border-bottom:1px solid var(--border-2);position:relative}
+    .header::before{content:"";position:absolute;top:0;left:-100%;width:200%;height:2px;background:linear-gradient(90deg,transparent,var(--accent),var(--accent-2),transparent);opacity:.9;animation:scan 3s linear infinite}
+    @keyframes scan{to{left:100%}}
+    .header-content{max-width:1200px;margin:0 auto;display:flex;gap:24px;align-items:center;justify-content:space-between}
+    .header-left h1{margin:0;font-size:32px;font-weight:800;background:linear-gradient(135deg,#0F172A 0%,#4F46E5 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .header-sub{color:var(--text-2)}
+    .header-meta{background:rgba(255,255,255,.9);border:1px solid var(--border-2);border-radius:12px;padding:10px 16px;text-align:right}
+    .header-meta div{color:var(--text-2);font-size:13px}
+
+    .container{max-width:1200px;margin:0 auto;padding:0 24px}
+    .grid{display:grid;gap:24px;margin:36px 0}
+    .grid-4{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+
+    .card{background:linear-gradient(135deg,var(--card) 0%,var(--card-2) 100%);border:1px solid var(--border-2);border-radius:18px;padding:24px;transition:.25s box-shadow,.25s transform}
+    .card:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(15,23,42,.08)}
+
+    .kpi-card{position:relative}
+    .kpi-icon{position:absolute;right:20px;top:20px;width:44px;height:44px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(79,70,229,.08),rgba(79,70,229,.06));font-size:22px}
+    .kpi-value{font-size:38px;font-weight:800;background:linear-gradient(135deg,#111827 0%,#4B5563 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1px;margin-bottom:8px}
+    .kpi-label{font-size:12px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.08em}
+    .kpi-sub{font-size:12px;color:var(--text-3)}
+    .kpi-change{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:6px 10px;border-radius:10px;font-size:12px;font-weight:700;border:1px solid var(--border-2)}
+    .kpi-change.positive{color:var(--success);background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.25)}
+    .kpi-change.neutral{color:var(--text-2);background:#F1F5F9}
+    .kpi-change.negative{color:var(--danger);background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.25)}
+    .status{width:10px;height:10px;border-radius:50%;display:inline-block}
+    .good{background:var(--success)}.warn{background:var(--warning)}.bad{background:var(--danger)}
+
+    .chart-title{font-size:22px;font-weight:800;text-align:center;background:linear-gradient(135deg,#0F172A 0%,#6366F1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+    .chart-sub{color:var(--text-2);text-align:center;margin-bottom:24px}
+    .legend{display:flex;gap:24px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
+    .legend-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--border-2);border-radius:10px;background:#F8FAFC}
+    .legend-line{width:28px;height:4px;border-radius:4px}
+    .legend-emails{background:var(--accent)}.legend-unread{background:var(--danger)}
+
+    .chart-wrap{background:linear-gradient(135deg,var(--card) 0%,var(--card-2) 100%);border:1px solid var(--border-2);border-radius:18px;padding:24px;overflow:auto}
+    .svg{width:100%;min-width:860px;height:420px}
+    .grid-line{stroke:#E5E7EB;stroke-width:1;stroke-dasharray:4,4}
+    .axis{stroke:#94A3B8;stroke-width:2;opacity:.7}
+    .axis-label{font:600 12px Inter, sans-serif;fill:var(--text-2)}
+    .y-label{font:500 11px Inter, sans-serif;fill:var(--text-3)}
+    .line-emails{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+    .line-unread{fill:none;stroke:var(--danger);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+
+    .resp{padding:20px 0}
+    .row{display:flex;align-items:center;gap:16px;margin:14px 0}
+    .row .label{flex:0 0 200px;color:var(--text-2);font-weight:700}
+    .bar-wrap{flex:1;height:42px;background:#F1F5F9;border:1px solid var(--border-2);border-radius:12px;overflow:hidden}
+    .bar{height:100%;display:flex;align-items:center;padding:0 12px;color:#fff;font-weight:700}
+    .b-s{background:linear-gradient(135deg,var(--success),var(--success-2))}
+    .b-w{background:linear-gradient(135deg,var(--warning),var(--warning-2))}
+    .b-d{background:linear-gradient(135deg,var(--danger),var(--danger-2))}
+
+    .dist .name{font-weight:700}
+    .dist .range{color:var(--text-3);font-size:12px}
+    .dist .bar{height:34px;border-radius:10px}
+    .dist .pct{min-width:46px;text-align:right;color:var(--accent-2);font-weight:700}
+
+    .perc .p-label{flex:0 0 60px;text-align:center;color:var(--accent-2);font-weight:800;border:1px solid var(--border-2);border-radius:8px;padding:6px 8px;background:#EEF2FF}
+    .perc .pbar{height:34px;border-radius:10px;display:flex;align-items:center;justify-content:flex-end;color:#fff;font-weight:800;padding:0 12px}
+
+    .q-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-top:22px}
+    .q-item{border:1px solid var(--border-2);border-radius:12px;background:#F8FAFF;padding:14px;text-align:center}
+    .q-item .lab{color:var(--text-2);font-size:12px;font-weight:700}
+    .q-item .val{font-size:22px;font-weight:800;color:var(--accent)}
+    .q-item .pct{font-size:11px;color:var(--text-3)}
+
+    .summary{margin:28px 0 40px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(168,85,247,.06));padding:16px;text-align:center;color:var(--text-2)}
+
+    @media (max-width:768px){.header-content{flex-direction:column;align-items:flex-start}.row .label{flex:0 0 140px}}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1>Email Performance Dashboard</h1>
+        <div class="header-sub">Real-time metrics and SLA compliance monitoring</div>
+      </div>
+      <div class="header-meta">
+        <div>August 15, 2025</div>
+        <div>Live Update • 9:46 PM</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="grid grid-4">
+      <div class="card kpi-card">
+        <div class="kpi-icon">📧</div>
+        <div class="kpi-value">262</div>
+        <div class="kpi-label">Total Emails</div>
+        <div class="kpi-sub">Processed today</div>
+        <div class="kpi-change neutral"><span class="status good"></span>Daily volume tracked</div>
+      </div>
+      <div class="card kpi-card">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-value">29.5</div>
+        <div class="kpi-label">Avg Unread Count</div>
+        <div class="kpi-sub">Below 30 email threshold</div>
+        <div class="kpi-change positive"><span class="status good"></span>SLA Target Met</div>
+      </div>
+      <div class="card kpi-card">
+        <div class="kpi-icon">⏱️</div>
+        <div class="kpi-value">65.2<span style="font-size:18px;font-weight:600"> min</span></div>
+        <div class="kpi-label">Avg Response Time</div>
+        <div class="kpi-sub">Business hours only</div>
+        <div class="kpi-change neutral"><span class="status warn"></span>Median: 43.5 min</div>
+      </div>
+      <div class="card kpi-card">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-value">66.67%</div>
+        <div class="kpi-label">SLA Compliance</div>
+        <div class="kpi-sub">Target: 100% compliance</div>
+        <div class="kpi-change negative"><span class="status bad"></span>Action Required</div>
+      </div>
+    </div>
+
+    <section class="card">
+      <div class="chart-title">Hourly Email Distribution</div>
+      <div class="chart-sub">Real-time tracking of email volume and unread count</div>
+      <div class="legend">
+        <div class="legend-item"><span class="legend-line legend-emails"></span><span>Emails Received</span></div>
+        <div class="legend-item"><span class="legend-line legend-unread"></span><span>Unread Count</span></div>
+      </div>
+      <div class="chart-wrap">
+        <svg class="svg" viewBox="0 0 900 420" preserveAspectRatio="xMidYMid meet">
+          <line x1="80" y1="60"  x2="820" y2="60"  class="grid-line"/>
+          <line x1="80" y1="120" x2="820" y2="120" class="grid-line"/>
+          <line x1="80" y1="180" x2="820" y2="180" class="grid-line"/>
+          <line x1="80" y1="240" x2="820" y2="240" class="grid-line"/>
+          <line x1="80" y1="300" x2="820" y2="300" class="grid-line"/>
+          <line x1="80" y1="360" x2="820" y2="360" class="grid-line"/>
+          <text x="70" y="65" class="y-label">60</text>
+          <text x="70" y="125" class="y-label">50</text>
+          <text x="70" y="185" class="y-label">40</text>
+          <text x="70" y="245" class="y-label">30</text>
+          <text x="70" y="305" class="y-label">20</text>
+          <text x="70" y="365" class="y-label">10</text>
+          <text x="70" y="395" class="y-label">0</text>
+          <line x1="80" y1="380" x2="820" y2="380" class="axis"/>
+          <line x1="80" y1="60"  x2="80"  y2="380" class="axis"/>
+
+          <path class="line-emails" d="M 135,356 L 190,350 L 245,266 L 300,326 L 355,260 L 410,150 L 465,278 L 520,224 L 575,194 L 630,224 L 685,230 L 740,350 L 795,278"/>
+          <path class="line-unread" d="M 135,268 L 190,292 L 245,322 L 300,284 L 355,324 L 410,268 L 465,256 L 520,194 L 575,194 L 630,112 L 685,74 L 740,268 L 795,272"/>
+
+          <text x="135" y="400" class="axis-label">7AM</text>
+          <text x="190" y="400" class="axis-label">8AM</text>
+          <text x="245" y="400" class="axis-label">9AM</text>
+          <text x="300" y="400" class="axis-label">10AM</text>
+          <text x="355" y="400" class="axis-label">11AM</text>
+          <text x="410" y="400" class="axis-label">12PM</text>
+          <text x="465" y="400" class="axis-label">1PM</text>
+          <text x="520" y="400" class="axis-label">2PM</text>
+          <text x="575" y="400" class="axis-label">3PM</text>
+          <text x="630" y="400" class="axis-label">4PM</text>
+          <text x="685" y="400" class="axis-label">5PM</text>
+          <text x="740" y="400" class="axis-label">6PM</text>
+          <text x="795" y="400" class="axis-label">7PM</text>
+
+          <text x="135" y="415" class="axis-label" fill="var(--success)">✓</text>
+          <text x="190" y="415" class="axis-label" fill="var(--success)">✓</text>
+          <text x="245" y="415" class="axis-label" fill="var(--success)">✓</text>
+          <text x="300" y="415" class="axis-label" fill="var(--success)">✓</text>
+          <text x="355" y="415" class="axis-label" fill="var(--success)">✓</text>
+          <text x="410" y="415" class="axis-label" fill="var(--success)">✓</text>
+          <text x="465" y="415" class="axis-label" fill="var(--success)">✓</text>
+          <text x="520" y="415" class="axis-label" fill="var(--danger)">✗</text>
+          <text x="575" y="415" class="axis-label" fill="var(--danger)">✗</text>
+          <text x="630" y="415" class="axis-label" fill="var(--danger)">✗</text>
+          <text x="685" y="415" class="axis-label" fill="var(--danger)">✗</text>
+          <text x="740" y="415" class="axis-label" fill="var(--danger)">✗</text>
+          <text x="795" y="415" class="axis-label" fill="var(--success)">✓</text>
+        </svg>
+      </div>
+    </section>
+
+    <section class="card resp">
+      <div class="chart-title">Response Time Analysis</div>
+      <div class="chart-sub">Average response times by business hour segments</div>
+      <div class="row"><div class="label">🌅 Early Morning (6-9 AM)</div><div class="bar-wrap"><div class="bar b-s" style="width:28%">41.6 min</div></div></div>
+      <div class="row"><div class="label">☀️ Morning (9 AM-1 PM)</div><div class="bar-wrap"><div class="bar b-w" style="width:43%">63.9 min</div></div></div>
+      <div class="row"><div class="label">🌤️ Afternoon (1-5 PM)</div><div class="bar-wrap"><div class="bar b-w" style="width:66%">98.8 min</div></div></div>
+      <div class="row"><div class="label">🌆 Evening (5-9 PM)</div><div class="bar-wrap"><div class="bar b-s" style="width:10%">15.4 min</div></div></div>
+    </section>
+
+    <section class="card dist">
+      <div class="chart-title">Response Time Distribution</div>
+      <div class="chart-sub">Categorized email response performance</div>
+      <div class="row"><div class="label"><div class="name">⚡ Lightning Fast</div><div class="range">Under 30 minutes</div></div><div class="bar-wrap" style="background:none;border:none"><div class="bar b-s" style="width:27%">23 emails</div></div><div class="pct">27%</div></div>
+      <div class="row"><div class="label"><div class="name">🚀 Fast Response</div><div class="range">30-60 minutes</div></div><div class="bar-wrap" style="background:none;border:none"><div class="bar b-s" style="width:31%">26 emails</div></div><div class="pct">31%</div></div>
+      <div class="row"><div class="label"><div class="name">⏱️ Moderate</div><div class="range">60-120 minutes</div></div><div class="bar-wrap" style="background:none;border:none"><div class="bar b-w" style="width:100%">84 emails</div></div><div class="pct">100%</div></div>
+      <div class="row"><div class="label"><div class="name">🐢 Slow</div><div class="range">120-180 minutes</div></div><div class="bar-wrap" style="background:none;border:none"><div class="bar b-w" style="width:15%">13 emails</div></div><div class="pct">15%</div></div>
+      <div class="row"><div class="label"><div class="name">⚠️ Very Slow</div><div class="range">180-300 minutes</div></div><div class="bar-wrap" style="background:none;border:none"><div class="bar b-d" style="width:5%">0 emails</div></div><div class="pct">0%</div></div>
+      <div class="row"><div class="label"><div class="name">🔴 Critical</div><div class="range">Over 300 minutes</div></div><div class="bar-wrap" style="background:none;border:none"><div class="bar b-d" style="width:5%">0 emails</div></div><div class="pct">0%</div></div>
+    </section>
+
+    <section class="card perc">
+      <div class="chart-title">Statistical Performance Metrics</div>
+      <div class="chart-sub">Response time percentile distribution</div>
+      <div class="row"><div class="p-label">P25</div><div class="bar-wrap"><div class="pbar b-s" style="width:31%">43.3 min</div></div></div>
+      <div class="row"><div class="p-label">P50</div><div class="bar-wrap"><div class="pbar b-w" style="width:58%">80.5 min</div></div></div>
+      <div class="row"><div class="p-label">P75</div><div class="bar-wrap"><div class="pbar b-w" style="width:64%">89.5 min</div></div></div>
+      <div class="row"><div class="p-label">P90</div><div class="bar-wrap"><div class="pbar b-w" style="width:72%">100.0 min</div></div></div>
+      <div class="row"><div class="p-label">P95</div><div class="bar-wrap"><div class="pbar b-d" style="width:100%">138.8 min</div></div></div>
+
+      <div class="q-grid">
+        <div class="q-item"><div class="lab">Q1 (Top 25%)</div><div class="val">28</div><div class="pct">19% of emails</div></div>
+        <div class="q-item"><div class="lab">Q2 (25-50%)</div><div class="val">43</div><div class="pct">29% of emails</div></div>
+        <div class="q-item"><div class="lab">Q3 (50-75%)</div><div class="val">46</div><div class="pct">32% of emails</div></div>
+        <div class="q-item"><div class="lab">Q4 (Bottom 25%)</div><div class="val">29</div><div class="pct">20% of emails</div></div>
+      </div>
+    </section>
+
+    <div class="card summary">
+      <strong>Data Source:</strong> Unified JSON database (88 days: May 18 - Aug 13, 2025) •
+      <strong>Sample Date:</strong> August 13, 2025 •
+      <strong>Total Emails:</strong> 262 classified •
+      <strong>SLA Target:</strong> ≤30 unread emails •
+      <strong>Business Hours:</strong> 7 AM - 6 PM (Mon-Fri)
+    </div>
+  </div>
+</body>
+</html>

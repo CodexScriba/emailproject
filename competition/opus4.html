@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Performance Dashboard - Modern UI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            /* Vibrant Modern Color Palette */
+            --primary: #0A0E27;
+            --primary-light: #151A3A;
+            --accent: #6366F1;
+            --accent-bright: #818CF8;
+            --accent-glow: #A78BFA;
+            --success: #34D399;
+            --success-dark: #10B981;
+            --warning: #FBBF24;
+            --warning-dark: #F59E0B;
+            --danger: #F87171;
+            --danger-dark: #EF4444;
+            --text-primary: #F9FAFB;
+            --text-secondary: #D1D5DB;
+            --text-muted: #9CA3AF;
+            --bg-primary: #0F1629;
+            --bg-card: linear-gradient(135deg, #1A1F3A 0%, #141829 100%);
+            --bg-hover: linear-gradient(135deg, #1F2447 0%, #191E38 100%);
+            --border: rgba(99, 102, 241, 0.2);
+            --border-light: rgba(99, 102, 241, 0.1);
+            --glow-accent: 0 0 40px rgba(99, 102, 241, 0.5);
+            --glow-success: 0 0 40px rgba(52, 211, 153, 0.5);
+            --glow-warning: 0 0 40px rgba(251, 191, 36, 0.5);
+            --glow-danger: 0 0 40px rgba(248, 113, 113, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-20px, -20px) rotate(1deg); }
+            66% { transform: translate(20px, -10px) rotate(-1deg); }
+        }
+
+        /* Glowing Header */
+        .header {
+            background: linear-gradient(135deg, #1A1F3A 0%, #0A0E27 100%);
+            position: relative;
+            padding: 48px 32px;
+            margin-bottom: 48px;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), var(--accent-bright), transparent);
+            animation: headerGlow 3s linear infinite;
+        }
+
+        @keyframes headerGlow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-left h1 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #F9FAFB 0%, #818CF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.2); }
+        }
+
+        .header-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        .header-meta {
+            text-align: right;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+        }
+
+        .header-meta div {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 2px 0;
+        }
+
+        .header-meta div:first-child {
+            color: var(--accent-bright);
+            font-weight: 600;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 28px;
+            margin-bottom: 48px;
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        /* Glassmorphic Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 28px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-bright), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: var(--bg-hover);
+            border-color: var(--border);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        /* KPI Cards with Neon Effects */
+        .kpi-card {
+            position: relative;
+            overflow: visible;
+        }
+
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 20px;
+            background: linear-gradient(45deg, var(--accent), var(--accent-glow));
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s;
+            filter: blur(20px);
+        }
+
+        .kpi-card:hover::after {
+            opacity: 0.5;
+        }
+
+        .kpi-card.success::after {
+            background: linear-gradient(45deg, var(--success), var(--success-dark));
+        }
+
+        .kpi-card.warning::after {
+            background: linear-gradient(45deg, var(--warning), var(--warning-dark));
+        }
+
+        .kpi-card.danger::after {
+            background: linear-gradient(45deg, var(--danger), var(--danger-dark));
+        }
+
+        .kpi-icon {
+            position: absolute;
+            top: 28px;
+            right: 28px;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .kpi-value {
+            font-size: 42px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #F9FAFB 0%, #D1D5DB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            margin-bottom: 12px;
+            letter-spacing: -2px;
+            animation: valueFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes valueFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .kpi-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        .kpi-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .kpi-change::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            background: currentColor;
+            opacity: 0.1;
+            border-radius: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; }
+        }
+
+        .kpi-change.positive {
+            color: var(--success);
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+
+        .kpi-change.negative {
+            color: var(--danger);
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        .kpi-change.neutral {
+            color: var(--text-secondary);
+            background: rgba(209, 213, 219, 0.1);
+            border: 1px solid rgba(209, 213, 219, 0.2);
+        }
+
+        /* Status Indicators with Animation */
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+            position: relative;
+            animation: statusPulse 2s infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { box-shadow: 0 0 0 0 currentColor; }
+            50% { box-shadow: 0 0 0 4px transparent; }
+        }
+
+        .status-good {
+            background: var(--success);
+            box-shadow: 0 0 12px var(--success);
+        }
+
+        .status-warning {
+            background: var(--warning);
+            box-shadow: 0 0 12px var(--warning);
+        }
+
+        .status-danger {
+            background: var(--danger);
+            box-shadow: 0 0 12px var(--danger);
+        }
+
+        /* Chart Sections */
+        .chart-section {
+            margin-top: 56px;
+        }
+
+        .chart-title {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #F9FAFB 0%, #818CF8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .chart-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 36px;
+            text-align: center;
+            opacity: 0.9;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 36px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s;
+        }
+
+        .legend-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .legend-line {
+            width: 28px;
+            height: 4px;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .legend-line::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -3px;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: inherit;
+            box-shadow: 0 0 12px currentColor;
+        }
+
+        .legend-emails {
+            background: var(--accent);
+            box-shadow: 0 0 16px var(--accent);
+        }
+
+        .legend-unread {
+            background: var(--danger);
+            box-shadow: 0 0 16px var(--danger);
+        }
+
+        .chart-container {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid var(--border-light);
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .chart-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+            border-radius: 24px 24px 0 0;
+            pointer-events: none;
+        }
+
+        /* Enhanced SVG Styles */
+        .line-chart-wrapper {
+            position: relative;
+            width: 100%;
+            min-width: 900px;
+            height: 480px;
+        }
+
+        .line-chart-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .grid-line {
+            stroke: rgba(99, 102, 241, 0.1);
+            stroke-width: 1;
+            stroke-dasharray: 4,4;
+        }
+
+        .axis-line {
+            stroke: var(--text-muted);
+            stroke-width: 2;
+            opacity: 0.5;
+        }
+
+        .axis-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            fill: var(--text-secondary);
+        }
+
+        .y-axis-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            fill: var(--text-muted);
+        }
+
+        .line-emails {
+            fill: none;
+            stroke: var(--accent);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 4px 12px rgba(99, 102, 241, 0.6));
+            animation: drawLine 2s ease-out;
+        }
+
+        .line-unread {
+            fill: none;
+            stroke: var(--danger);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 4px 12px rgba(248, 113, 113, 0.6));
+            animation: drawLine 2s ease-out 0.5s both;
+        }
+
+        @keyframes drawLine {
+            from {
+                stroke-dasharray: 2000;
+                stroke-dashoffset: 2000;
+            }
+            to {
+                stroke-dasharray: 2000;
+                stroke-dashoffset: 0;
+            }
+        }
+
+        .data-point {
+            transition: all 0.3s ease;
+            animation: pointAppear 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .data-point:nth-child(1) { animation-delay: 0.1s; }
+        .data-point:nth-child(2) { animation-delay: 0.2s; }
+        .data-point:nth-child(3) { animation-delay: 0.3s; }
+        .data-point:nth-child(4) { animation-delay: 0.4s; }
+        .data-point:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes pointAppear {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .data-point:hover {
+            transform: scale(1.8);
+            filter: brightness(1.5);
+        }
+
+        .point-emails {
+            fill: var(--accent);
+            stroke: var(--bg-primary);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 8px var(--accent));
+        }
+
+        .point-unread {
+            fill: var(--danger);
+            stroke: var(--bg-primary);
+            stroke-width: 3;
+            filter: drop-shadow(0 0 8px var(--danger));
+        }
+
+        .data-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+
+        .label-emails {
+            fill: var(--accent-bright);
+        }
+
+        .label-unread {
+            fill: var(--danger);
+        }
+
+        .label-background {
+            fill: rgba(26, 31, 58, 0.95);
+            stroke: var(--border);
+            stroke-width: 1;
+            rx: 4;
+            ry: 4;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+        }
+
+        .sla-indicator {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 900;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            animation: indicatorBounce 2s infinite;
+        }
+
+        @keyframes indicatorBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-2px); }
+        }
+
+        .sla-met {
+            fill: var(--success);
+            filter: drop-shadow(0 0 4px var(--success));
+        }
+
+        .sla-not-met {
+            fill: var(--danger);
+            filter: drop-shadow(0 0 4px var(--danger));
+        }
+
+        /* Modern Response Time Bars */
+        .response-time-periods {
+            padding: 24px 0;
+        }
+
+        .period-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
+        }
+
+        .period-label {
+            flex: 0 0 200px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .period-bar-container {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            height: 44px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+        }
+
+        .period-bar {
+            height: 100%;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            animation: barSlide 1s ease-out;
+        }
+
+        @keyframes barSlide {
+            from {
+                width: 0 !important;
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .period-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .period-bar.success {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            box-shadow: inset 0 0 20px rgba(52, 211, 153, 0.3);
+        }
+
+        .period-bar.warning {
+            background: linear-gradient(135deg, var(--warning), var(--warning-dark));
+            box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+
+        .period-bar.danger {
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+            box-shadow: inset 0 0 20px rgba(248, 113, 113, 0.3);
+        }
+
+        .period-value {
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 1;
+            position: relative;
+        }
+
+        /* Enhanced Distribution Styles */
+        .distribution-container {
+            padding: 24px 0;
+        }
+
+        .distribution-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 20px;
+            transition: all 0.3s;
+        }
+
+        .distribution-row:hover {
+            transform: translateX(8px);
+        }
+
+        .distribution-label {
+            flex: 0 0 220px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .distribution-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .distribution-bar-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .distribution-bar {
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            padding: 0 14px;
+            min-width: 80px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .distribution-bar.success {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+        }
+
+        .distribution-bar.warning {
+            background: linear-gradient(135deg, var(--warning), var(--warning-dark));
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+
+        .distribution-bar.danger {
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+            box-shadow: 0 4px 12px rgba(248, 113, 113, 0.3);
+        }
+
+        .distribution-count {
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            z-index: 1;
+            position: relative;
+        }
+
+        .distribution-percentage {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-bright);
+            min-width: 50px;
+        }
+
+        /* Futuristic Percentile Styles */
+        .percentile-grid {
+            display: grid;
+            gap: 24px;
+        }
+
+        .percentile-row {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .percentile-label {
+            flex: 0 0 60px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-bright);
+            padding: 8px 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .percentile-bar-container {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            height: 36px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-light);
+        }
+
+        .percentile-bar {
+            height: 100%;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 16px;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+            position: relative;
+            animation: percentileGrow 1.5s ease-out;
+        }
+
+        @keyframes percentileGrow {
+            from {
+                width: 0 !important;
+            }
+        }
+
+        .percentile-bar.success {
+            background: linear-gradient(90deg, #34D399, #10B981);
+            box-shadow: inset 0 0 20px rgba(52, 211, 153, 0.4);
+        }
+
+        .percentile-bar.warning {
+            background: linear-gradient(90deg, #FBBF24, #F59E0B);
+            box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+
+        .percentile-bar.danger {
+            background: linear-gradient(90deg, #F87171, #EF4444);
+            box-shadow: inset 0 0 20px rgba(248, 113, 113, 0.4);
+        }
+
+        .quartile-section {
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+            padding-top: 32px;
+        }
+
+        .quartile-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .quartile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+        }
+
+        .quartile-item {
+            background: rgba(99, 102, 241, 0.1);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quartile-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .quartile-item:hover {
+            transform: translateY(-4px);
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        .quartile-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .quartile-value {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .quartile-percentage {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            position: relative;
+        }
+
+        /* Data Summary Footer */
+        .data-summary {
+            margin-top: 48px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(168, 85, 247, 0.05));
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .data-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-bright), transparent);
+            animation: footerScan 4s linear infinite;
+        }
+
+        @keyframes footerScan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .data-summary-content {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .data-summary-content strong {
+            color: var(--accent-bright);
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .quartile-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 16px;
+            }
+            
+            .header {
+                padding: 32px 16px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 24px;
+            }
+            
+            .header-left h1 {
+                font-size: 28px;
+                text-align: center;
+            }
+            
+            .header-subtitle {
+                text-align: center;
+            }
+            
+            .header-meta {
+                width: 100%;
+            }
+            
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpi-value {
+                font-size: 36px;
+            }
+            
+            .chart-container {
+                padding: 24px 16px;
+                border-radius: 16px;
+            }
+            
+            .period-label {
+                flex: 0 0 120px;
+                font-size: 12px;
+            }
+            
+            .distribution-label {
+                flex: 0 0 140px;
+            }
+            
+            .distribution-name {
+                font-size: 12px;
+            }
+            
+            .percentile-label {
+                flex: 0 0 50px;
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Additional Hover Effects */
+        .card:hover .kpi-value {
+            transform: translateY(-4px) scale(1.05);
+        }
+
+        .card:hover .kpi-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Glowing Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1>Email Performance Dashboard</h1>
+                <div class="header-subtitle">Real-time metrics and SLA compliance monitoring</div>
+            </div>
+            <div class="header-meta">
+                <div>August 13, 2025</div>
+                <div>Live Update • 2:40 PM</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- KPI Cards Section -->
+        <div class="grid grid-4">
+            <!-- Total Emails Card -->
+            <div class="card kpi-card">
+                <div class="kpi-icon">📧</div>
+                <div class="kpi-value">262</div>
+                <div class="kpi-label">Total Emails</div>
+                <div class="kpi-subtitle">Processed today</div>
+                <div class="kpi-change neutral">
+                    <span class="status-indicator status-good"></span>
+                    Daily volume tracked
+                </div>
+            </div>
+            
+            <!-- Avg Unread Count Card -->
+            <div class="card kpi-card success">
+                <div class="kpi-icon">✅</div>
+                <div class="kpi-value">29.5</div>
+                <div class="kpi-label">Avg Unread Count</div>
+                <div class="kpi-subtitle">Below 30 email threshold</div>
+                <div class="kpi-change positive">
+                    <span class="status-indicator status-good"></span>
+                    SLA Target Met
+                </div>
+            </div>
+            
+            <!-- Average Response Time Card -->
+            <div class="card kpi-card warning">
+                <div class="kpi-icon">⏱️</div>
+                <div class="kpi-value">65.2<span style="font-size: 20px; font-weight: 400;">min</span></div>
+                <div class="kpi-label">Avg Response Time</div>
+                <div class="kpi-subtitle">Business hours only</div>
+                <div class="kpi-change neutral">
+                    <span class="status-indicator status-warning"></span>
+                    Median: 43.5 min
+                </div>
+            </div>
+            
+            <!-- SLA Compliance Card -->
+            <div class="card kpi-card danger">
+                <div class="kpi-icon">📊</div>
+                <div class="kpi-value">66.67%</div>
+                <div class="kpi-label">SLA Compliance</div>
+                <div class="kpi-subtitle">Target: 100% compliance</div>
+                <div class="kpi-change negative">
+                    <span class="status-indicator status-danger"></span>
+                    Action Required
+                </div>
+            </div>
+        </div>
+
+        <!-- Hourly Email Distribution Chart -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">Hourly Email Distribution</div>
+                <div class="chart-subtitle">Real-time tracking of email volume and unread count</div>
+                
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-line legend-emails"></div>
+                        <span>Emails Received</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line legend-unread"></div>
+                        <span>Unread Count</span>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="line-chart-wrapper">
+                        <svg class="line-chart-svg" viewBox="0 0 900 420" preserveAspectRatio="xMidYMid meet">
+                            <!-- Enhanced Grid -->
+                            <defs>
+                                <linearGradient id="emailGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#6366F1;stop-opacity:0.8" />
+                                    <stop offset="100%" style="stop-color:#6366F1;stop-opacity:0.2" />
+                                </linearGradient>
+                                <linearGradient id="unreadGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#F87171;stop-opacity:0.8" />
+                                    <stop offset="100%" style="stop-color:#F87171;stop-opacity:0.2" />
+                                </linearGradient>
+                            </defs>
+                            
+                            <!-- Grid Lines -->
+                            <line x1="80" y1="60" x2="820" y2="60" class="grid-line"/>
+                            <line x1="80" y1="120" x2="820" y2="120" class="grid-line"/>
+                            <line x1="80" y1="180" x2="820" y2="180" class="grid-line"/>
+                            <line x1="80" y1="240" x2="820" y2="240" class="grid-line"/>
+                            <line x1="80" y1="300" x2="820" y2="300" class="grid-line"/>
+                            <line x1="80" y1="360" x2="820" y2="360" class="grid-line"/>
+                            
+                            <!-- Y-axis labels -->
+                            <text x="70" y="65" class="y-axis-label">60</text>
+                            <text x="70" y="125" class="y-axis-label">50</text>
+                            <text x="70" y="185" class="y-axis-label">40</text>
+                            <text x="70" y="245" class="y-axis-label">30</text>
+                            <text x="70" y="305" class="y-axis-label">20</text>
+                            <text x="70" y="365" class="y-axis-label">10</text>
+                            <text x="70" y="395" class="y-axis-label">0</text>
+                            
+                            <!-- Axes -->
+                            <line x1="80" y1="380" x2="820" y2="380" class="axis-line"/>
+                            <line x1="80" y1="60" x2="80" y2="380" class="axis-line"/>
+                            
+                            <!-- Email Line -->
+                            <path class="line-emails" d="M 135,356 L 190,350 L 245,266 L 300,326 L 355,260 L 410,150 L 465,278 L 520,224 L 575,194 L 630,224 L 685,230 L 740,350 L 795,278"/>
+                            
+                            <!-- Unread Line -->
+                            <path class="line-unread" d="M 135,268 L 190,292 L 245,322 L 300,284 L 355,324 L 410,268 L 465,256 L 520,194 L 575,194 L 630,112 L 685,74 L 740,268 L 795,272"/>
+                            
+                            <!-- Data Points -->
+                            <g id="email-points">
+                                <circle cx="135" cy="356" r="5" class="data-point point-emails"/>
+                                <circle cx="190" cy="350" r="5" class="data-point point-emails"/>
+                                <circle cx="245" cy="266" r="5" class="data-point point-emails"/>
+                                <circle cx="300" cy="326" r="5" class="data-point point-emails"/>
+                                <circle cx="355" cy="260" r="5" class="data-point point-emails"/>
+                                <circle cx="410" cy="150" r="5" class="data-point point-emails"/>
+                                <circle cx="465" cy="278" r="5" class="data-point point-emails"/>
+                                <circle cx="520" cy="224" r="5" class="data-point point-emails"/>
+                                <circle cx="575" cy="194" r="5" class="data-point point-emails"/>
+                                <circle cx="630" cy="224" r="5" class="data-point point-emails"/>
+                                <circle cx="685" cy="230" r="5" class="data-point point-emails"/>
+                                <circle cx="740" cy="350" r="5" class="data-point point-emails"/>
+                                <circle cx="795" cy="278" r="5" class="data-point point-emails"/>
+                            </g>
+                            
+                            <g id="unread-points">
+                                <circle cx="135" cy="268" r="5" class="data-point point-unread"/>
+                                <circle cx="190" cy="292" r="5" class="data-point point-unread"/>
+                                <circle cx="245" cy="322" r="5" class="data-point point-unread"/>
+                                <circle cx="300" cy="284" r="5" class="data-point point-unread"/>
+                                <circle cx="355" cy="324" r="5" class="data-point point-unread"/>
+                                <circle cx="410" cy="268" r="5" class="data-point point-unread"/>
+                                <circle cx="465" cy="256" r="5" class="data-point point-unread"/>
+                                <circle cx="520" cy="194" r="5" class="data-point point-unread"/>
+                                <circle cx="575" cy="194" r="5" class="data-point point-unread"/>
+                                <circle cx="630" cy="112" r="5" class="data-point point-unread"/>
+                                <circle cx="685" cy="74" r="5" class="data-point point-unread"/>
+                                <circle cx="740" cy="268" r="5" class="data-point point-unread"/>
+                                <circle cx="795" cy="272" r="5" class="data-point point-unread"/>
+                            </g>
+                            
+                            <!-- Labels -->
+                            <g id="email-labels">
+                                <rect x="125" y="340" width="20" height="12" class="label-background"/>
+                                <text x="135" y="346" class="data-label label-emails">4</text>
+                                <rect x="180" y="334" width="20" height="12" class="label-background"/>
+                                <text x="190" y="340" class="data-label label-emails">5</text>
+                                <rect x="233" y="250" width="24" height="12" class="label-background"/>
+                                <text x="245" y="256" class="data-label label-emails">19</text>
+                                <rect x="290" y="310" width="20" height="12" class="label-background"/>
+                                <text x="300" y="316" class="data-label label-emails">9</text>
+                                <rect x="343" y="244" width="24" height="12" class="label-background"/>
+                                <text x="355" y="250" class="data-label label-emails">20</text>
+                                <rect x="398" y="134" width="24" height="12" class="label-background"/>
+                                <text x="410" y="140" class="data-label label-emails">35</text>
+                                <rect x="453" y="262" width="24" height="12" class="label-background"/>
+                                <text x="465" y="268" class="data-label label-emails">17</text>
+                                <rect x="508" y="208" width="24" height="12" class="label-background"/>
+                                <text x="520" y="214" class="data-label label-emails">26</text>
+                                <rect x="563" y="178" width="24" height="12" class="label-background"/>
+                                <text x="575" y="184" class="data-label label-emails">31</text>
+                                <rect x="618" y="208" width="24" height="12" class="label-background"/>
+                                <text x="630" y="214" class="data-label label-emails">26</text>
+                                <rect x="673" y="214" width="24" height="12" class="label-background"/>
+                                <text x="685" y="220" class="data-label label-emails">34</text>
+                                <rect x="728" y="334" width="24" height="12" class="label-background"/>
+                                <text x="740" y="340" class="data-label label-emails">11</text>
+                                <rect x="783" y="262" width="24" height="12" class="label-background"/>
+                                <text x="795" y="268" class="data-label label-emails">13</text>
+                            </g>
+                            
+                            <g id="unread-labels">
+                                <rect x="123" y="252" width="24" height="12" class="label-background"/>
+                                <text x="135" y="258" class="data-label label-unread">28</text>
+                                <rect x="178" y="276" width="24" height="12" class="label-background"/>
+                                <text x="190" y="282" class="data-label label-unread">23</text>
+                                <rect x="233" y="306" width="24" height="12" class="label-background"/>
+                                <text x="245" y="312" class="data-label label-unread">17</text>
+                                <rect x="288" y="268" width="24" height="12" class="label-background"/>
+                                <text x="300" y="274" class="data-label label-unread">22</text>
+                                <rect x="343" y="308" width="24" height="12" class="label-background"/>
+                                <text x="355" y="314" class="data-label label-unread">16</text>
+                                <rect x="398" y="252" width="24" height="12" class="label-background"/>
+                                <text x="410" y="258" class="data-label label-unread">28</text>
+                                <rect x="453" y="240" width="24" height="12" class="label-background"/>
+                                <text x="465" y="246" class="data-label label-unread">29</text>
+                                <rect x="508" y="178" width="24" height="12" class="label-background"/>
+                                <text x="520" y="184" class="data-label label-unread">31</text>
+                                <rect x="563" y="178" width="24" height="12" class="label-background"/>
+                                <text x="575" y="184" class="data-label label-unread">31</text>
+                                <rect x="618" y="96" width="24" height="12" class="label-background"/>
+                                <text x="630" y="102" class="data-label label-unread">43</text>
+                                <rect x="673" y="58" width="24" height="12" class="label-background"/>
+                                <text x="685" y="64" class="data-label label-unread">50</text>
+                                <rect x="728" y="252" width="24" height="12" class="label-background"/>
+                                <text x="740" y="258" class="data-label label-unread">53</text>
+                                <rect x="783" y="256" width="24" height="12" class="label-background"/>
+                                <text x="795" y="262" class="data-label label-unread">28</text>
+                            </g>
+                            
+                            <!-- X-axis labels -->
+                            <text x="135" y="400" class="axis-label">7AM</text>
+                            <text x="190" y="400" class="axis-label">8AM</text>
+                            <text x="245" y="400" class="axis-label">9AM</text>
+                            <text x="300" y="400" class="axis-label">10AM</text>
+                            <text x="355" y="400" class="axis-label">11AM</text>
+                            <text x="410" y="400" class="axis-label">12PM</text>
+                            <text x="465" y="400" class="axis-label">1PM</text>
+                            <text x="520" y="400" class="axis-label">2PM</text>
+                            <text x="575" y="400" class="axis-label">3PM</text>
+                            <text x="630" y="400" class="axis-label">4PM</text>
+                            <text x="685" y="400" class="axis-label">5PM</text>
+                            <text x="740" y="400" class="axis-label">6PM</text>
+                            <text x="795" y="400" class="axis-label">7PM</text>
+                            
+                            <!-- SLA Indicators -->
+                            <text x="135" y="415" class="sla-indicator sla-met">✓</text>
+                            <text x="190" y="415" class="sla-indicator sla-met">✓</text>
+                            <text x="245" y="415" class="sla-indicator sla-met">✓</text>
+                            <text x="300" y="415" class="sla-indicator sla-met">✓</text>
+                            <text x="355" y="415" class="sla-indicator sla-met">✓</text>
+                            <text x="410" y="415" class="sla-indicator sla-met">✓</text>
+                            <text x="465" y="415" class="sla-indicator sla-met">✓</text>
+                            <text x="520" y="415" class="sla-indicator sla-not-met">✗</text>
+                            <text x="575" y="415" class="sla-indicator sla-not-met">✗</text>
+                            <text x="630" y="415" class="sla-indicator sla-not-met">✗</text>
+                            <text x="685" y="415" class="sla-indicator sla-not-met">✗</text>
+                            <text x="740" y="415" class="sla-indicator sla-not-met">✗</text>
+                            <text x="795" y="415" class="sla-indicator sla-met">✓</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Response Time by Hour -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">Response Time Analysis</div>
+                <div class="chart-subtitle">Average response times by business hour segments</div>
+                
+                <div class="response-time-periods">
+                    <div class="period-row">
+                        <div class="period-label">🌅 Early Morning (6-9 AM)</div>
+                        <div class="period-bar-container">
+                            <div class="period-bar success" style="width: 28%;">
+                                <span class="period-value">41.6 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="period-row">
+                        <div class="period-label">☀️ Morning (9 AM-1 PM)</div>
+                        <div class="period-bar-container">
+                            <div class="period-bar warning" style="width: 43%;">
+                                <span class="period-value">63.9 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="period-row">
+                        <div class="period-label">🌤️ Afternoon (1-5 PM)</div>
+                        <div class="period-bar-container">
+                            <div class="period-bar warning" style="width: 66%;">
+                                <span class="period-value">98.8 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="period-row">
+                        <div class="period-label">🌆 Evening (5-9 PM)</div>
+                        <div class="period-bar-container">
+                            <div class="period-bar success" style="width: 10%;">
+                                <span class="period-value">15.4 min</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Response Time Distribution -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">Response Time Distribution</div>
+                <div class="chart-subtitle">Categorized email response performance</div>
+                
+                <div class="distribution-container">
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">⚡ Lightning Fast</span>
+                            <span class="distribution-range" style="color: var(--success);">Under 30 minutes</span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar success" style="width: 27%;">
+                                <span class="distribution-count">23 emails</span>
+                            </div>
+                            <span class="distribution-percentage">27%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">🚀 Fast Response</span>
+                            <span class="distribution-range" style="color: var(--success);">30-60 minutes</span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar success" style="width: 31%;">
+                                <span class="distribution-count">26 emails</span>
+                            </div>
+                            <span class="distribution-percentage">31%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">⏱️ Moderate</span>
+                            <span class="distribution-range" style="color: var(--warning);">60-120 minutes</span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar warning" style="width: 100%;">
+                                <span class="distribution-count">84 emails</span>
+                            </div>
+                            <span class="distribution-percentage">100%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">🐢 Slow</span>
+                            <span class="distribution-range" style="color: var(--warning);">120-180 minutes</span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar warning" style="width: 15%;">
+                                <span class="distribution-count">13 emails</span>
+                            </div>
+                            <span class="distribution-percentage">15%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">⚠️ Very Slow</span>
+                            <span class="distribution-range" style="color: var(--danger);">180-300 minutes</span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar danger" style="width: 5%;">
+                                <span class="distribution-count">0 emails</span>
+                            </div>
+                            <span class="distribution-percentage">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            <span class="distribution-name">🔴 Critical</span>
+                            <span class="distribution-range" style="color: var(--danger);">Over 300 minutes</span>
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar danger" style="width: 5%;">
+                                <span class="distribution-count">0 emails</span>
+                            </div>
+                            <span class="distribution-percentage">0%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Response Time Percentiles -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">Statistical Performance Metrics</div>
+                <div class="chart-subtitle">Response time percentile distribution</div>
+
+                <div class="percentile-grid">
+                    <div class="percentile-row">
+                        <div class="percentile-label">P25</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar success" style="width: 31%;">43.3 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="percentile-row">
+                        <div class="percentile-label">P50</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar warning" style="width: 58%;">80.5 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="percentile-row">
+                        <div class="percentile-label">P75</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar warning" style="width: 64%;">89.5 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="percentile-row">
+                        <div class="percentile-label">P90</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar warning" style="width: 72%;">100.0 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="percentile-row">
+                        <div class="percentile-label">P95</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar danger" style="width: 100%;">138.8 min</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quartile-section">
+                    <div class="quartile-title">Quartile Performance Breakdown</div>
+                    <div class="quartile-grid">
+                        <div class="quartile-item">
+                            <div class="quartile-label">Q1 (Top 25%)</div>
+                            <div class="quartile-value">28</div>
+                            <div class="quartile-percentage">19% of emails</div>
+                        </div>
+                        
+                        <div class="quartile-item">
+                            <div class="quartile-label">Q2 (25-50%)</div>
+                            <div class="quartile-value">43</div>
+                            <div class="quartile-percentage">29% of emails</div>
+                        </div>
+                        
+                        <div class="quartile-item">
+                            <div class="quartile-label">Q3 (50-75%)</div>
+                            <div class="quartile-value">46</div>
+                            <div class="quartile-percentage">32% of emails</div>
+                        </div>
+                        
+                        <div class="quartile-item">
+                            <div class="quartile-label">Q4 (Bottom 25%)</div>
+                            <div class="quartile-value">29</div>
+                            <div class="quartile-percentage">20% of emails</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Summary Footer -->
+        <div class="card data-summary">
+            <div class="data-summary-content">
+                <strong>Data Source:</strong> Unified JSON database (88 days: May 18 - Aug 13, 2025) | 
+                <strong>Sample Date:</strong> August 13, 2025 | 
+                <strong>Total Emails:</strong> 262 classified | 
+                <strong>SLA Target:</strong> ≤30 unread emails | 
+                <strong>Business Hours:</strong> 7 AM - 6 PM (Mon-Fri)
+            </div>
+        </div>
+    </div>
+</body>
+</html>
