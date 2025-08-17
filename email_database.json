@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2025-08-14T23:20:41.240213",
+    "last_updated": "2025-08-17T01:28:52.767741",
     "total_days_processed": 88,
     "data_sources": [
       "UnreadCount.csv",
@@ -18028,8 +18028,8 @@
         "avg_unread_count": 29.5,
         "total_emails": 262,
         "reply_rate_percent": 59.16,
-        "avg_response_time_minutes": 65.2,
-        "median_response_time_minutes": 43.5
+        "avg_response_time_minutes": 76.59,
+        "median_response_time_minutes": 58.5
       },
       "hourly_data": [
         {
@@ -18142,7 +18142,7 @@
           "sla_met": true,
           "emails_received": 17,
           "emails_replied": 14,
-          "avg_response_time": 89.86
+          "avg_response_time": 92.43
         },
         {
           "hour": 14,
@@ -18150,7 +18150,7 @@
           "sla_met": false,
           "emails_received": 26,
           "emails_replied": 13,
-          "avg_response_time": 138.77
+          "avg_response_time": 147.69
         },
         {
           "hour": 15,
@@ -18158,7 +18158,7 @@
           "sla_met": false,
           "emails_received": 31,
           "emails_replied": 21,
-          "avg_response_time": 89.48
+          "avg_response_time": 105.0
         },
         {
           "hour": 16,
@@ -18166,7 +18166,7 @@
           "sla_met": false,
           "emails_received": 26,
           "emails_replied": 14,
-          "avg_response_time": 84.79
+          "avg_response_time": 120.0
         },
         {
           "hour": 17,
@@ -18174,7 +18174,7 @@
           "sla_met": false,
           "emails_received": 34,
           "emails_replied": 20,
-          "avg_response_time": 15.45
+          "avg_response_time": 39.15
         },
         {
           "hour": 18,
@@ -18182,7 +18182,7 @@
           "sla_met": false,
           "emails_received": 11,
           "emails_replied": 4,
-          "avg_response_time": null
+          "avg_response_time": 45.75
         },
         {
           "hour": 19,
@@ -18190,7 +18190,7 @@
           "sla_met": true,
           "emails_received": 13,
           "emails_replied": 6,
-          "avg_response_time": null
+          "avg_response_time": 27.0
         },
         {
           "hour": 20,
@@ -18198,7 +18198,7 @@
           "sla_met": true,
           "emails_received": 4,
           "emails_replied": 2,
-          "avg_response_time": null
+          "avg_response_time": 5.0
         },
         {
           "hour": 21,
