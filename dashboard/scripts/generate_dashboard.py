@@ -284,6 +284,49 @@ class DashboardGenerator:
         
         return " ".join(path_parts)
     
+    def create_smooth_svg_path(self, coordinates, tension: float = 1.0):
+        """Create a smoothed SVG path using Catmull–Rom to cubic Bezier conversion.
+        If fewer than 2 points, returns a move command only.
+        """
+        if not coordinates:
+            return ""
+        if len(coordinates) == 1:
+            return f"M {coordinates[0]['x']},{coordinates[0]['y']}"
+
+        # Extract points
+        pts = [(c['x'], c['y']) for c in coordinates]
+        path = [f"M {pts[0][0]},{pts[0][1]}"]
+
+        for i in range(len(pts) - 1):
+            p0 = pts[i - 1] if i - 1 >= 0 else pts[i]
+            p1 = pts[i]
+            p2 = pts[i + 1]
+            p3 = pts[i + 2] if i + 2 < len(pts) else pts[i + 1]
+
+            c1x = p1[0] + (p2[0] - p0[0]) / 6.0 * tension
+            c1y = p1[1] + (p2[1] - p0[1]) / 6.0 * tension
+            c2x = p2[0] - (p3[0] - p1[0]) / 6.0 * tension
+            c2y = p2[1] - (p3[1] - p1[1]) / 6.0 * tension
+
+            path.append(
+                f"C {round(c1x, 2)},{round(c1y, 2)} {round(c2x, 2)},{round(c2y, 2)} {p2[0]},{p2[1]}"
+            )
+
+        return " ".join(path)
+
+    def create_area_path(self, coordinates, baseline_y: float, use_smooth: bool = True, tension: float = 1.0):
+        """Create a closed area path under the line down to the given baseline (x-axis)."""
+        if not coordinates:
+            return ""
+        line_path = (
+            self.create_smooth_svg_path(coordinates, tension) if use_smooth else self.create_svg_path(coordinates)
+        )
+        first_x = coordinates[0]['x']
+        last_x = coordinates[-1]['x']
+        # Close down to baseline and back to start
+        area_path = f"{line_path} L {last_x},{baseline_y} L {first_x},{baseline_y} Z"
+        return area_path
+    
     def format_hour_label(self, hour):
         """Format hour as 12-hour time"""
         if hour == 0:
@@ -316,18 +359,31 @@ class DashboardGenerator:
         email_values = [item['emails'] for item in business_data]
         unread_values = [item['unread'] for item in business_data]
         
-        # Calculate max values for scaling
+        # Targets and thresholds needed for scaling and template
+        unread_threshold = (self.sla_config or {}).get('sla_thresholds', {}).get('unread_email_threshold', 30)
+
+        # Calculate max values for scaling (ensure SLA threshold is visible on chart)
         max_emails = max(email_values) if email_values else 1
         max_unread = max(unread_values) if unread_values else 1
-        overall_max = max(max_emails, max_unread)
+        overall_max = max(max_emails, max_unread, unread_threshold)
         
         # Calculate coordinates
         email_coords = self.calculate_svg_coordinates(email_values, overall_max, True)
         unread_coords = self.calculate_svg_coordinates(unread_values, overall_max, False)
         
-        # Create SVG paths
-        email_path = self.create_svg_path(email_coords)
-        unread_path = self.create_svg_path(unread_coords)
+        # SLA threshold Y position (horizontal line)
+        if overall_max > 0:
+            sla_ratio = unread_threshold / overall_max
+        else:
+            sla_ratio = 0
+        sla_line_y = round(self.chart_top_margin + (self.plot_height * (1 - sla_ratio)))
+
+        # Create smoothed SVG paths and area fills
+        email_path = self.create_smooth_svg_path(email_coords)
+        unread_path = self.create_smooth_svg_path(unread_coords)
+        baseline_y = self.chart_height - self.chart_bottom_margin
+        email_area_path = self.create_area_path(email_coords, baseline_y, use_smooth=True)
+        unread_area_path = self.create_area_path(unread_coords, baseline_y, use_smooth=True)
         
         # Generate Y-axis labels
         y_labels = []
@@ -389,29 +445,58 @@ class DashboardGenerator:
         daily_data = day_data['daily_summary']
         sla_compliance = round(daily_data['sla_compliance_rate'], 1)
         hourly_data = day_data['hourly_data']
-        
+
+        # Friendly timestamp for header (e.g., "2:40 PM")
+        generated_at = datetime.now().strftime("%I:%M %p").lstrip("0")
+
+        # Robust total emails fallback
+        total_emails_val = daily_data.get('total_emails')
+        if not total_emails_val:
+            total_emails_val = sum(email_values)
+
+        # Targets and thresholds for template convenience
+        response_time_target = (self.sla_config or {}).get('kpi_targets', {}).get('response_time_target_minutes', 60)
+        sla_compliance_target = (self.sla_config or {}).get('kpi_targets', {}).get('sla_compliance_target_percent', 85)
+
+        # Median (P50) for quick reference in KPI card
+        median_response_time = next((p['value'] for p in response_time_percentiles if p['label'] == 'P50'), 0)
+
         context = {
             'formatted_date': formatted_date,
+            'generated_at': generated_at,
             'daily_data': daily_data,
-            'total_emails': daily_data.get('total_emails', 0),
+            'total_emails': total_emails_val,
             'avg_unread_count': daily_data.get('avg_unread_count', 0),
             'avg_response_time': daily_data.get('avg_response_time', 0),
+            'median_response_time': median_response_time,
             'sla_compliance': sla_compliance,
             'hourly_data': hourly_data,
             'sla_config': self.sla_config,
+            'unread_threshold': unread_threshold,
+            'response_time_target': response_time_target,
+            'sla_compliance_target': sla_compliance_target,
             'response_time_by_hour': response_time_by_hour,
             'response_time_distribution': response_time_distribution,
             'response_time_percentiles': response_time_percentiles,
             'quartile_counts': quartile_counts,
             'email_path': email_path,
             'unread_path': unread_path,
+            'email_area_path': email_area_path,
+            'unread_area_path': unread_area_path,
             'email_coords': email_coords,
             'unread_coords': unread_coords,
+            'sla_line_y': sla_line_y,
             'y_labels': y_labels,
             'x_labels': x_labels,
             'business_data': business_data,
             'chart_height': self.chart_height,
-            'chart_width': self.chart_width
+            'chart_width': self.chart_width,
+            'chart_left_margin': self.chart_left_margin,
+            'chart_right_margin': self.chart_right_margin,
+            'chart_top_margin': self.chart_top_margin,
+            'chart_bottom_margin': self.chart_bottom_margin,
+            'plot_width': self.plot_width,
+            'plot_height': self.plot_height
         }
         
         return context
