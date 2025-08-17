@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Dashboard - KPI Overview</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         :root {
             /* Modern Color Palette - Extracted from modern_dashboard.html */
@@ -18,6 +18,7 @@
             --danger: #EF4444;
             --text-primary: #0F172A;
             --text-secondary: #64748B;
+            --muted: #64748B;
             --text-muted: #94A3B8;
             --bg-primary: #FFFFFF;
             --bg-secondary: #F8FAFC;
@@ -455,10 +456,15 @@
         }
 
         .percentile-label {
-            flex: 0 0 50px;
+            flex: 0 0 60px;
             font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
+            font-weight: 900;
+            color: var(--emails);
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 8px;
+            background: #EEF2FF;
         }
 
         .percentile-bar-container {
@@ -502,23 +508,22 @@
         .summary{ margin:28px 0 40px; border:1px solid var(--border); border-radius:14px; background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.06)); padding:16px; text-align:center; color: var(--text-secondary); position:relative; overflow:hidden; font-size: 12px }
         .summary::after{ content:''; position:absolute; left:-100%; top:0; width:200%; height:1px; background: linear-gradient(90deg,transparent, var(--accent-2), transparent); animation: scan 4s linear infinite }
 
-        /* Two-Hour Metrics Table */
-        .two-hour-table { margin-top: 16px; display: flex; flex-direction: column; gap: 10px }
-        .two-hour-row { display:grid; grid-template-columns: 1.2fr .7fr .9fr .9fr .9fr .9fr; align-items:center; gap:12px; padding:12px 16px; border:1px solid var(--border); border-radius:12px; background: linear-gradient(135deg, var(--bg-primary) 0%, #F8FAFF 100%); box-shadow: var(--shadow-sm) }
-        .two-hour-row.header { background: var(--bg-tertiary); border-color: var(--border); box-shadow:none }
-        .two-hour-cell { font-size:13px; font-weight:600; color: var(--text-primary) }
-        .two-hour-cell.header { color: var(--text-secondary); font-weight:800; text-transform: uppercase; font-size:12px }
+        /* Two-Hour Metrics Table — Design A (pixel-exact) */
+        .a-table { display:flex; flex-direction:column; gap:10px; margin-top: 16px }
+        .a-row { display:grid; grid-template-columns: 1.2fr .7fr .9fr .9fr .9fr .9fr; gap:12px; align-items:center; padding:12px 14px; border:1px solid var(--border); border-radius:12px; background:#fff }
+        .a-row.header { background:#f1f5f9; font-weight:800; color: var(--muted); text-transform:uppercase; font-size:12px }
+        .a-cell { font-size:13px; font-weight:600 }
+
         .badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-weight:800; font-size:12px }
         .badge.success { color: var(--success); background: #10B98120 }
+        .badge.warning { color: var(--warning); background: #F59E0B20 }
         .badge.danger { color: var(--danger); background: #EF444420 }
-        .badge.muted { color: var(--text-secondary); background: var(--bg-tertiary) }
 
-        /* Microbar styles for Design A */
         .microbar { height:8px; background:#e5e7eb; border-radius:999px; width:100%; position:relative; overflow:hidden }
         .microbar .fill { height:100%; border-radius:999px }
         .microbar .fill.emails { background: linear-gradient(90deg, var(--emails), #0284c7) }
-        .microbar .fill.response { background: linear-gradient(90deg, var(--accent), var(--accent-dark)) }
-        .weak { color: var(--text-muted); font-weight:600 }
+        .microbar .fill.response { background: linear-gradient(90deg, #3b82f6, #2563eb) }
+        .weak { color: var(--muted); font-weight:600 }
 
         /* Responsive Design */
         @media (max-width: 1024px) {
@@ -778,7 +783,13 @@
                 <div class="response-time-periods">
                     {% for period in response_time_by_hour %}
                     <div class="period-row">
-                        <div class="period-label">{{ period.period }}</div>
+                        <div class="period-label">
+                            {% if 'Early Morning' in period.period %}🌅 {{ period.period }}
+                            {% elif 'Morning' in period.period %}☀️ {{ period.period }}
+                            {% elif 'Afternoon' in period.period %}🌤️ {{ period.period }}
+                            {% elif 'Evening' in period.period %}🌆 {{ period.period }}
+                            {% else %}{{ period.period }}{% endif %}
+                        </div>
                         <div class="period-bar-container">
                             <div class="period-bar {{ period.color }}" data-width="{{ (period.avg_response_time / 150 * 100) | round }}" title="{{ period.period }} • Avg: {{ period.avg_response_time }} min">
                                 <span class="period-value">{{ period.avg_response_time }} min</span>
@@ -800,7 +811,28 @@
                     {% for category in response_time_distribution %}
                     <div class="distribution-row">
                         <div class="distribution-label">
-                            <span class="distribution-name">{{ category.category }}</span>
+                            {% set cat = category.category %}
+                            {% if 'Very Fast' in cat %}
+                                <span class="distribution-name">⚡ Lightning Fast</span>
+                                <span class="distribution-range" style="color: var(--success-2);">Under 30 minutes</span>
+                            {% elif 'Fast' in cat and 'Very Fast' not in cat %}
+                                <span class="distribution-name">🚀 Fast Response</span>
+                                <span class="distribution-range" style="color: var(--success-2);">30-60 minutes</span>
+                            {% elif 'Moderate' in cat %}
+                                <span class="distribution-name">⏱️ Moderate</span>
+                                <span class="distribution-range" style="color: var(--warning-2);">60-120 minutes</span>
+                            {% elif 'Very Slow' in cat %}
+                                <span class="distribution-name">⚠️ Very Slow</span>
+                                <span class="distribution-range" style="color: var(--danger-2);">180-300 minutes</span>
+                            {% elif 'Slow' in cat and 'Very' not in cat %}
+                                <span class="distribution-name">🐢 Slow</span>
+                                <span class="distribution-range" style="color: var(--warning-2);">120-180 minutes</span>
+                            {% elif 'Critical' in cat %}
+                                <span class="distribution-name">🔴 Critical</span>
+                                <span class="distribution-range" style="color: var(--danger-2);">Over 300 minutes</span>
+                            {% else %}
+                                <span class="distribution-name">{{ category.category }}</span>
+                            {% endif %}
                         </div>
                         <div class="distribution-bar-container">
                             <div class="distribution-bar {{ category.color }}" data-width="{{ category.percentage }}" title="{{ category.category }} • {{ category.count }} emails ({{ category.percentage }}%)">
@@ -852,38 +884,58 @@
                 <div class="chart-title">2-Hour Email Metrics</div>
                 <div class="chart-subtitle">Aggregated metrics across 2-hour blocks (7 AM – 9 PM)</div>
 
-                <div class="two-hour-table">
-                    <div class="two-hour-row header">
-                        <div class="two-hour-cell header">Block</div>
-                        <div class="two-hour-cell header">Emails</div>
-                        <div class="two-hour-cell header">Avg Unread</div>
-                        <div class="two-hour-cell header">SLA</div>
-                        <div class="two-hour-cell header">Avg Response</div>
-                        <div class="two-hour-cell header">Median Time</div>
+                <div class="a-table">
+                    <div class="a-row header">
+                        <div>Block</div><div>Emails</div><div>Avg Unread</div><div>SLA</div><div>Avg Response</div><div>Median Time</div>
                     </div>
 
                     {% for row in two_hour_metrics %}
-                    <div class="two-hour-row" title="{{ row.label }} • Emails: {{ row.emails }} • Avg Unread: {{ row.avg_unread if row.avg_unread is not none else 'N/A' }} • SLA: {{ 'Met' if row.sla_met else ('Not Met' if row.sla_met is not none else 'N/A') }} • Avg Response: {{ row.avg_response_time if row.avg_response_time is not none else 'N/A' }} min • Median: {{ row.median_response_time if row.median_response_time is not none else 'N/A' }} min">
-                        <div class="two-hour-cell">{{ row.label }}</div>
-                        <div class="two-hour-cell">
-                            <div class="microbar"><div class="fill emails" data-width="{{ (row.emails / (two_hour_max_emails or 1) * 100) | round(0) }}"></div></div>
-                            <span class="weak">{{ row.emails }}</span>
-                        </div>
-                        <div class="two-hour-cell">{{ row.avg_unread if row.avg_unread is not none else '—' }}</div>
-                        <div class="two-hour-cell">
-                            {% if row.sla_met is none %}
-                                <span class="badge muted">N/A</span>
-                            {% elif row.sla_met %}
-                                <span class="badge success"><span class="status-indicator status-good"></span>Met</span>
+                    <div class="a-row" title="{{ row.label }} • Emails: {{ row.emails }} • Avg Unread: {{ row.avg_unread if row.avg_unread is not none else 'N/A' }} • SLA: {{ 'Met' if row.sla_met else ('Not Met' if row.sla_met is not none else 'N/A') }} • Avg Response: {{ row.avg_response_time if row.avg_response_time is not none else 'N/A' }} min • Median: {{ row.median_response_time if row.median_response_time is not none else 'N/A' }} min">
+                        <div class="a-cell">
+                            {% set s = row.start_hour %}
+                            {% if s <= 8 %}
+                                <div class="distribution-name">🌅 Early Morning</div>
+                            {% elif s <= 12 %}
+                                <div class="distribution-name">☀️ Morning</div>
+                            {% elif s <= 16 %}
+                                <div class="distribution-name">🌤️ Afternoon</div>
                             {% else %}
-                                <span class="badge danger"><span class="status-indicator status-danger"></span>Not Met</span>
+                                <div class="distribution-name">🌆 Evening</div>
+                            {% endif %}
+                            <div class="distribution-range">{{ row.label }}</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="{{ (row.emails / (two_hour_max_emails or 1) * 100) | round(0) }}"></div></div> <span class="weak">{{ row.emails }}</span></div>
+                        <div class="a-cell">{{ row.avg_unread if row.avg_unread is not none else '—' }}</div>
+                        <div class="a-cell">
+                            {% if row.sla_met is none %}
+                                <span class="badge warning">N/A</span>
+                            {% elif row.sla_met %}
+                                <span class="badge success">Met</span>
+                            {% else %}
+                                <span class="badge danger">Not Met</span>
                             {% endif %}
                         </div>
-                        <div class="two-hour-cell">
+                        <div class="a-cell">
+                            {% set art = row.avg_response_time %}
+                            {% if art is not none %}
+                                {% if art < 30 %}
+                                    <span class="badge success">⚡ Lightning Fast</span>
+                                {% elif art < 60 %}
+                                    <span class="badge success">🚀 Fast Response</span>
+                                {% elif art < 120 %}
+                                    <span class="badge warning">⏱️ Moderate</span>
+                                {% elif art < 180 %}
+                                    <span class="badge warning">🐢 Slow</span>
+                                {% elif art < 300 %}
+                                    <span class="badge danger">⚠️ Very Slow</span>
+                                {% else %}
+                                    <span class="badge danger">🔴 Critical</span>
+                                {% endif %}
+                            {% endif %}
                             <div class="microbar"><div class="fill response" data-width="{{ ( (row.avg_response_time or 0) / (response_time_target or 60) * 100 ) | round(0) }}"></div></div>
                             <span class="weak">{% if row.avg_response_time is not none %}{{ row.avg_response_time }} min{% else %}—{% endif %}</span>
                         </div>
-                        <div class="two-hour-cell">{% if row.median_response_time is not none %}{{ row.median_response_time }} min{% else %}—{% endif %}</div>
+                        <div class="a-cell">{% if row.median_response_time is not none %}{{ row.median_response_time }} min{% else %}—{% endif %}</div>
                     </div>
                     {% endfor %}
                 </div>

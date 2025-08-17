@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Email Dashboard - KPI Overview</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         :root {
             /* Modern Color Palette - Extracted from modern_dashboard.html */
@@ -18,6 +18,7 @@
             --danger: #EF4444;
             --text-primary: #0F172A;
             --text-secondary: #64748B;
+            --muted: #64748B;
             --text-muted: #94A3B8;
             --bg-primary: #FFFFFF;
             --bg-secondary: #F8FAFC;
@@ -455,10 +456,15 @@
         }
 
         .percentile-label {
-            flex: 0 0 50px;
+            flex: 0 0 60px;
             font-size: 13px;
-            font-weight: 600;
-            color: var(--text-secondary);
+            font-weight: 900;
+            color: var(--emails);
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 8px;
+            background: #EEF2FF;
         }
 
         .percentile-bar-container {
@@ -502,23 +508,22 @@
         .summary{ margin:28px 0 40px; border:1px solid var(--border); border-radius:14px; background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.06)); padding:16px; text-align:center; color: var(--text-secondary); position:relative; overflow:hidden; font-size: 12px }
         .summary::after{ content:''; position:absolute; left:-100%; top:0; width:200%; height:1px; background: linear-gradient(90deg,transparent, var(--accent-2), transparent); animation: scan 4s linear infinite }
 
-        /* Two-Hour Metrics Table */
-        .two-hour-table { margin-top: 16px; display: flex; flex-direction: column; gap: 10px }
-        .two-hour-row { display:grid; grid-template-columns: 1.2fr .7fr .9fr .9fr .9fr .9fr; align-items:center; gap:12px; padding:12px 16px; border:1px solid var(--border); border-radius:12px; background: linear-gradient(135deg, var(--bg-primary) 0%, #F8FAFF 100%); box-shadow: var(--shadow-sm) }
-        .two-hour-row.header { background: var(--bg-tertiary); border-color: var(--border); box-shadow:none }
-        .two-hour-cell { font-size:13px; font-weight:600; color: var(--text-primary) }
-        .two-hour-cell.header { color: var(--text-secondary); font-weight:800; text-transform: uppercase; font-size:12px }
+        /* Two-Hour Metrics Table — Design A (pixel-exact) */
+        .a-table { display:flex; flex-direction:column; gap:10px; margin-top: 16px }
+        .a-row { display:grid; grid-template-columns: 1.2fr .7fr .9fr .9fr .9fr .9fr; gap:12px; align-items:center; padding:12px 14px; border:1px solid var(--border); border-radius:12px; background:#fff }
+        .a-row.header { background:#f1f5f9; font-weight:800; color: var(--muted); text-transform:uppercase; font-size:12px }
+        .a-cell { font-size:13px; font-weight:600 }
+
         .badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-weight:800; font-size:12px }
         .badge.success { color: var(--success); background: #10B98120 }
+        .badge.warning { color: var(--warning); background: #F59E0B20 }
         .badge.danger { color: var(--danger); background: #EF444420 }
-        .badge.muted { color: var(--text-secondary); background: var(--bg-tertiary) }
 
-        /* Microbar styles for Design A */
         .microbar { height:8px; background:#e5e7eb; border-radius:999px; width:100%; position:relative; overflow:hidden }
         .microbar .fill { height:100%; border-radius:999px }
         .microbar .fill.emails { background: linear-gradient(90deg, var(--emails), #0284c7) }
-        .microbar .fill.response { background: linear-gradient(90deg, var(--accent), var(--accent-dark)) }
-        .weak { color: var(--text-muted); font-weight:600 }
+        .microbar .fill.response { background: linear-gradient(90deg, #3b82f6, #2563eb) }
+        .weak { color: var(--muted); font-weight:600 }
 
         /* Responsive Design */
         @media (max-width: 1024px) {
@@ -600,7 +605,7 @@
             </div>
             <div class="header-meta">
                 <div>August 13, 2025</div>
-                <div>Last Updated: 7:59 PM</div>
+                <div>Last Updated: 8:35 PM</div>
             </div>
         </div>
     </div>
@@ -632,8 +637,8 @@
             </div>
             
             <!-- Average Response Time Card -->
-            <div class="card kpi-card success">
-                <div class="kpi-value">0<span style="font-size: 16px; font-weight: 400;">min</span></div>
+            <div class="card kpi-card warning">
+                <div class="kpi-value">65.2<span style="font-size: 16px; font-weight: 400;">min</span></div>
                 <div class="kpi-label">Avg Response Time</div>
                 <div class="kpi-subtitle">Business hours calculation</div>
                 <div class="kpi-change negative">
@@ -1029,7 +1034,10 @@
                 <div class="response-time-periods">
                     
                     <div class="period-row">
-                        <div class="period-label">Early Morning (6-9 AM)</div>
+                        <div class="period-label">
+                            🌅 Early Morning (6-9 AM)
+                            
+                        </div>
                         <div class="period-bar-container">
                             <div class="period-bar success" data-width="28.0" title="Early Morning (6-9 AM) • Avg: 41.6 min">
                                 <span class="period-value">41.6 min</span>
@@ -1038,7 +1046,10 @@
                     </div>
                     
                     <div class="period-row">
-                        <div class="period-label">Morning (9 AM-1 PM)</div>
+                        <div class="period-label">
+                            ☀️ Morning (9 AM-1 PM)
+                            
+                        </div>
                         <div class="period-bar-container">
                             <div class="period-bar warning" data-width="43.0" title="Morning (9 AM-1 PM) • Avg: 63.9 min">
                                 <span class="period-value">63.9 min</span>
@@ -1047,7 +1058,10 @@
                     </div>
                     
                     <div class="period-row">
-                        <div class="period-label">Afternoon (1-5 PM)</div>
+                        <div class="period-label">
+                            🌤️ Afternoon (1-5 PM)
+                            
+                        </div>
                         <div class="period-bar-container">
                             <div class="period-bar warning" data-width="66.0" title="Afternoon (1-5 PM) • Avg: 98.8 min">
                                 <span class="period-value">98.8 min</span>
@@ -1056,7 +1070,10 @@
                     </div>
                     
                     <div class="period-row">
-                        <div class="period-label">Evening (5-9 PM)</div>
+                        <div class="period-label">
+                            🌆 Evening (5-9 PM)
+                            
+                        </div>
                         <div class="period-bar-container">
                             <div class="period-bar success" data-width="10.0" title="Evening (5-9 PM) • Avg: 15.4 min">
                                 <span class="period-value">15.4 min</span>
@@ -1078,7 +1095,11 @@
                     
                     <div class="distribution-row">
                         <div class="distribution-label">
-                            <span class="distribution-name">Very Fast (< 30 min)</span>
+                            
+                            
+                                <span class="distribution-name">⚡ Lightning Fast</span>
+                                <span class="distribution-range" style="color: var(--success-2);">Under 30 minutes</span>
+                            
                         </div>
                         <div class="distribution-bar-container">
                             <div class="distribution-bar success" data-width="16" title="Very Fast (< 30 min) • 23 emails (16%)">
@@ -1090,7 +1111,11 @@
                     
                     <div class="distribution-row">
                         <div class="distribution-label">
-                            <span class="distribution-name">Fast (30-60 min)</span>
+                            
+                            
+                                <span class="distribution-name">🚀 Fast Response</span>
+                                <span class="distribution-range" style="color: var(--success-2);">30-60 minutes</span>
+                            
                         </div>
                         <div class="distribution-bar-container">
                             <div class="distribution-bar success" data-width="18" title="Fast (30-60 min) • 26 emails (18%)">
@@ -1102,7 +1127,11 @@
                     
                     <div class="distribution-row">
                         <div class="distribution-label">
-                            <span class="distribution-name">Moderate (60-120 min)</span>
+                            
+                            
+                                <span class="distribution-name">⏱️ Moderate</span>
+                                <span class="distribution-range" style="color: var(--warning-2);">60-120 minutes</span>
+                            
                         </div>
                         <div class="distribution-bar-container">
                             <div class="distribution-bar warning" data-width="58" title="Moderate (60-120 min) • 84 emails (58%)">
@@ -1114,7 +1143,11 @@
                     
                     <div class="distribution-row">
                         <div class="distribution-label">
-                            <span class="distribution-name">Slow (120-180 min)</span>
+                            
+                            
+                                <span class="distribution-name">🐢 Slow</span>
+                                <span class="distribution-range" style="color: var(--warning-2);">120-180 minutes</span>
+                            
                         </div>
                         <div class="distribution-bar-container">
                             <div class="distribution-bar warning" data-width="9" title="Slow (120-180 min) • 13 emails (9%)">
@@ -1126,7 +1159,11 @@
                     
                     <div class="distribution-row">
                         <div class="distribution-label">
-                            <span class="distribution-name">Very Slow (180-300 min)</span>
+                            
+                            
+                                <span class="distribution-name">⚠️ Very Slow</span>
+                                <span class="distribution-range" style="color: var(--danger-2);">180-300 minutes</span>
+                            
                         </div>
                         <div class="distribution-bar-container">
                             <div class="distribution-bar danger" data-width="0" title="Very Slow (180-300 min) • 0 emails (0%)">
@@ -1138,7 +1175,11 @@
                     
                     <div class="distribution-row">
                         <div class="distribution-label">
-                            <span class="distribution-name">Critical (> 300 min)</span>
+                            
+                            
+                                <span class="distribution-name">🔴 Critical</span>
+                                <span class="distribution-range" style="color: var(--danger-2);">Over 300 minutes</span>
+                            
                         </div>
                         <div class="distribution-bar-container">
                             <div class="distribution-bar danger" data-width="0" title="Critical (> 300 min) • 0 emails (0%)">
@@ -1236,148 +1277,202 @@
                 <div class="chart-title">2-Hour Email Metrics</div>
                 <div class="chart-subtitle">Aggregated metrics across 2-hour blocks (7 AM – 9 PM)</div>
 
-                <div class="two-hour-table">
-                    <div class="two-hour-row header">
-                        <div class="two-hour-cell header">Block</div>
-                        <div class="two-hour-cell header">Emails</div>
-                        <div class="two-hour-cell header">Avg Unread</div>
-                        <div class="two-hour-cell header">SLA</div>
-                        <div class="two-hour-cell header">Avg Response</div>
-                        <div class="two-hour-cell header">Median Time</div>
+                <div class="a-table">
+                    <div class="a-row header">
+                        <div>Block</div><div>Emails</div><div>Avg Unread</div><div>SLA</div><div>Avg Response</div><div>Median Time</div>
                     </div>
 
                     
-                    <div class="two-hour-row" title="7 AM – 9 AM • Emails: 9 • Avg Unread: 25.5 • SLA: Met • Avg Response: 27.0 min • Median: 31.2 min">
-                        <div class="two-hour-cell">7 AM – 9 AM</div>
-                        <div class="two-hour-cell">
-                            <div class="microbar"><div class="fill emails" data-width="16.0"></div></div>
-                            <span class="weak">9</span>
-                        </div>
-                        <div class="two-hour-cell">25.5</div>
-                        <div class="two-hour-cell">
+                    <div class="a-row" title="7 AM – 9 AM • Emails: 9 • Avg Unread: 25.5 • SLA: Met • Avg Response: 27.0 min • Median: 31.2 min">
+                        <div class="a-cell">
                             
-                                <span class="badge success"><span class="status-indicator status-good"></span>Met</span>
+                            
+                                <div class="distribution-name">🌅 Early Morning</div>
+                            
+                            <div class="distribution-range">7 AM – 9 AM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="16.0"></div></div> <span class="weak">9</span></div>
+                        <div class="a-cell">25.5</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
                             
                         </div>
-                        <div class="two-hour-cell">
+                        <div class="a-cell">
+                            
+                            
+                                
+                                    <span class="badge success">⚡ Lightning Fast</span>
+                                
+                            
                             <div class="microbar"><div class="fill response" data-width="45.0"></div></div>
                             <span class="weak">27.0 min</span>
                         </div>
-                        <div class="two-hour-cell">31.2 min</div>
+                        <div class="a-cell">31.2 min</div>
                     </div>
                     
-                    <div class="two-hour-row" title="9 AM – 11 AM • Emails: 28 • Avg Unread: 19.5 • SLA: Met • Avg Response: 44.9 min • Median: 43.3 min">
-                        <div class="two-hour-cell">9 AM – 11 AM</div>
-                        <div class="two-hour-cell">
-                            <div class="microbar"><div class="fill emails" data-width="49.0"></div></div>
-                            <span class="weak">28</span>
-                        </div>
-                        <div class="two-hour-cell">19.5</div>
-                        <div class="two-hour-cell">
+                    <div class="a-row" title="9 AM – 11 AM • Emails: 28 • Avg Unread: 19.5 • SLA: Met • Avg Response: 44.9 min • Median: 43.3 min">
+                        <div class="a-cell">
                             
-                                <span class="badge success"><span class="status-indicator status-good"></span>Met</span>
+                            
+                                <div class="distribution-name">☀️ Morning</div>
+                            
+                            <div class="distribution-range">9 AM – 11 AM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="49.0"></div></div> <span class="weak">28</span></div>
+                        <div class="a-cell">19.5</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
                             
                         </div>
-                        <div class="two-hour-cell">
+                        <div class="a-cell">
+                            
+                            
+                                
+                                    <span class="badge success">🚀 Fast Response</span>
+                                
+                            
                             <div class="microbar"><div class="fill response" data-width="75.0"></div></div>
                             <span class="weak">44.9 min</span>
                         </div>
-                        <div class="two-hour-cell">43.3 min</div>
+                        <div class="a-cell">43.3 min</div>
                     </div>
                     
-                    <div class="two-hour-row" title="11 AM – 1 PM • Emails: 55 • Avg Unread: 22.0 • SLA: Met • Avg Response: 75.9 min • Median: 73.6 min">
-                        <div class="two-hour-cell">11 AM – 1 PM</div>
-                        <div class="two-hour-cell">
-                            <div class="microbar"><div class="fill emails" data-width="96.0"></div></div>
-                            <span class="weak">55</span>
-                        </div>
-                        <div class="two-hour-cell">22.0</div>
-                        <div class="two-hour-cell">
+                    <div class="a-row" title="11 AM – 1 PM • Emails: 55 • Avg Unread: 22.0 • SLA: Met • Avg Response: 75.9 min • Median: 73.6 min">
+                        <div class="a-cell">
                             
-                                <span class="badge success"><span class="status-indicator status-good"></span>Met</span>
+                            
+                                <div class="distribution-name">☀️ Morning</div>
+                            
+                            <div class="distribution-range">11 AM – 1 PM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="96.0"></div></div> <span class="weak">55</span></div>
+                        <div class="a-cell">22.0</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
                             
                         </div>
-                        <div class="two-hour-cell">
+                        <div class="a-cell">
+                            
+                            
+                                
+                                    <span class="badge warning">⏱️ Moderate</span>
+                                
+                            
                             <div class="microbar"><div class="fill response" data-width="127.0"></div></div>
                             <span class="weak">75.9 min</span>
                         </div>
-                        <div class="two-hour-cell">73.6 min</div>
+                        <div class="a-cell">73.6 min</div>
                     </div>
                     
-                    <div class="two-hour-row" title="1 PM – 3 PM • Emails: 43 • Avg Unread: 30.0 • SLA: Not Met • Avg Response: 113.4 min • Median: 89.9 min">
-                        <div class="two-hour-cell">1 PM – 3 PM</div>
-                        <div class="two-hour-cell">
-                            <div class="microbar"><div class="fill emails" data-width="75.0"></div></div>
-                            <span class="weak">43</span>
-                        </div>
-                        <div class="two-hour-cell">30.0</div>
-                        <div class="two-hour-cell">
+                    <div class="a-row" title="1 PM – 3 PM • Emails: 43 • Avg Unread: 30.0 • SLA: Not Met • Avg Response: 113.4 min • Median: 89.9 min">
+                        <div class="a-cell">
                             
-                                <span class="badge danger"><span class="status-indicator status-danger"></span>Not Met</span>
+                            
+                                <div class="distribution-name">🌤️ Afternoon</div>
+                            
+                            <div class="distribution-range">1 PM – 3 PM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="75.0"></div></div> <span class="weak">43</span></div>
+                        <div class="a-cell">30.0</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge danger">Not Met</span>
                             
                         </div>
-                        <div class="two-hour-cell">
+                        <div class="a-cell">
+                            
+                            
+                                
+                                    <span class="badge warning">⏱️ Moderate</span>
+                                
+                            
                             <div class="microbar"><div class="fill response" data-width="189.0"></div></div>
                             <span class="weak">113.4 min</span>
                         </div>
-                        <div class="two-hour-cell">89.9 min</div>
+                        <div class="a-cell">89.9 min</div>
                     </div>
                     
-                    <div class="two-hour-row" title="3 PM – 5 PM • Emails: 57 • Avg Unread: 37.0 • SLA: Not Met • Avg Response: 87.6 min • Median: 89.5 min">
-                        <div class="two-hour-cell">3 PM – 5 PM</div>
-                        <div class="two-hour-cell">
-                            <div class="microbar"><div class="fill emails" data-width="100.0"></div></div>
-                            <span class="weak">57</span>
-                        </div>
-                        <div class="two-hour-cell">37.0</div>
-                        <div class="two-hour-cell">
+                    <div class="a-row" title="3 PM – 5 PM • Emails: 57 • Avg Unread: 37.0 • SLA: Not Met • Avg Response: 87.6 min • Median: 89.5 min">
+                        <div class="a-cell">
                             
-                                <span class="badge danger"><span class="status-indicator status-danger"></span>Not Met</span>
+                            
+                                <div class="distribution-name">🌤️ Afternoon</div>
+                            
+                            <div class="distribution-range">3 PM – 5 PM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="100.0"></div></div> <span class="weak">57</span></div>
+                        <div class="a-cell">37.0</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge danger">Not Met</span>
                             
                         </div>
-                        <div class="two-hour-cell">
+                        <div class="a-cell">
+                            
+                            
+                                
+                                    <span class="badge warning">⏱️ Moderate</span>
+                                
+                            
                             <div class="microbar"><div class="fill response" data-width="146.0"></div></div>
                             <span class="weak">87.6 min</span>
                         </div>
-                        <div class="two-hour-cell">89.5 min</div>
+                        <div class="a-cell">89.5 min</div>
                     </div>
                     
-                    <div class="two-hour-row" title="5 PM – 7 PM • Emails: 45 • Avg Unread: 51.5 • SLA: Not Met • Avg Response: 15.4 min • Median: 15.4 min">
-                        <div class="two-hour-cell">5 PM – 7 PM</div>
-                        <div class="two-hour-cell">
-                            <div class="microbar"><div class="fill emails" data-width="79.0"></div></div>
-                            <span class="weak">45</span>
-                        </div>
-                        <div class="two-hour-cell">51.5</div>
-                        <div class="two-hour-cell">
+                    <div class="a-row" title="5 PM – 7 PM • Emails: 45 • Avg Unread: 51.5 • SLA: Not Met • Avg Response: 15.4 min • Median: 15.4 min">
+                        <div class="a-cell">
                             
-                                <span class="badge danger"><span class="status-indicator status-danger"></span>Not Met</span>
+                            
+                                <div class="distribution-name">🌆 Evening</div>
+                            
+                            <div class="distribution-range">5 PM – 7 PM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="79.0"></div></div> <span class="weak">45</span></div>
+                        <div class="a-cell">51.5</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge danger">Not Met</span>
                             
                         </div>
-                        <div class="two-hour-cell">
+                        <div class="a-cell">
+                            
+                            
+                                
+                                    <span class="badge success">⚡ Lightning Fast</span>
+                                
+                            
                             <div class="microbar"><div class="fill response" data-width="26.0"></div></div>
                             <span class="weak">15.4 min</span>
                         </div>
-                        <div class="two-hour-cell">15.4 min</div>
+                        <div class="a-cell">15.4 min</div>
                     </div>
                     
-                    <div class="two-hour-row" title="7 PM – 9 PM • Emails: 17 • Avg Unread: 27.5 • SLA: Met • Avg Response: N/A min • Median: N/A min">
-                        <div class="two-hour-cell">7 PM – 9 PM</div>
-                        <div class="two-hour-cell">
-                            <div class="microbar"><div class="fill emails" data-width="30.0"></div></div>
-                            <span class="weak">17</span>
-                        </div>
-                        <div class="two-hour-cell">27.5</div>
-                        <div class="two-hour-cell">
+                    <div class="a-row" title="7 PM – 9 PM • Emails: 17 • Avg Unread: 27.5 • SLA: Met • Avg Response: N/A min • Median: N/A min">
+                        <div class="a-cell">
                             
-                                <span class="badge success"><span class="status-indicator status-good"></span>Met</span>
+                            
+                                <div class="distribution-name">🌆 Evening</div>
+                            
+                            <div class="distribution-range">7 PM – 9 PM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="30.0"></div></div> <span class="weak">17</span></div>
+                        <div class="a-cell">27.5</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
                             
                         </div>
-                        <div class="two-hour-cell">
+                        <div class="a-cell">
+                            
+                            
                             <div class="microbar"><div class="fill response" data-width="0.0"></div></div>
                             <span class="weak">—</span>
                         </div>
-                        <div class="two-hour-cell">—</div>
+                        <div class="a-cell">—</div>
                     </div>
                     
                 </div>

@@ -523,6 +523,20 @@ class DashboardGenerator:
         response_time_target = (self.sla_config or {}).get('kpi_targets', {}).get('response_time_target_minutes', 60)
         sla_compliance_target = (self.sla_config or {}).get('kpi_targets', {}).get('sla_compliance_target_percent', 85)
 
+        # Compute business-hours weighted avg response time; fallback to daily summary minutes if present
+        weighted_sum = 0
+        total_weight = 0
+        for h in business_data:
+            rt = h.get('avg_response_time')
+            w = h.get('emails_replied') or 0
+            if rt is not None and w > 0:
+                weighted_sum += rt * w
+                total_weight += w
+        computed_avg_rt = round(weighted_sum / total_weight, 1) if total_weight > 0 else None
+        avg_response_time_val = daily_data.get('avg_response_time_minutes')
+        if avg_response_time_val is None:
+            avg_response_time_val = computed_avg_rt if computed_avg_rt is not None else 0
+
         # Median (P50) for quick reference in KPI card
         median_response_time = next((p['value'] for p in response_time_percentiles if p['label'] == 'P50'), 0)
 
@@ -532,7 +546,7 @@ class DashboardGenerator:
             'daily_data': daily_data,
             'total_emails': total_emails_val,
             'avg_unread_count': daily_data.get('avg_unread_count', 0),
-            'avg_response_time': daily_data.get('avg_response_time', 0),
+            'avg_response_time': avg_response_time_val,
             'median_response_time': median_response_time,
             'sla_compliance': sla_compliance,
             'hourly_data': hourly_data,
