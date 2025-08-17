@@ -245,6 +245,65 @@ class DashboardGenerator:
             'sla_target': self.sla_config['kpi_targets']['response_time_target_minutes'] if self.sla_config else 60
         }
     
+    def aggregate_two_hour_intervals(self, hourly_data):
+        """Aggregate hourly metrics into 2-hour blocks from 7-9 AM to 7-9 PM.
+        Computes totals/averages per block:
+        - emails: sum of emails_received
+        - avg_unread: mean of unread_count (ignoring None)
+        - sla_met: True only if all measured hours in the block met SLA; None if no data
+        - avg_response_time: weighted average by emails_replied
+        - median_response_time: weighted median using per-hour avg_response_time expanded by emails_replied
+        - avg_mean_time: same as avg_response_time (business minutes)
+        """
+        intervals = []
+        for start in [7, 9, 11, 13, 15, 17, 19]:
+            end = start + 2
+            hours = [h for h in hourly_data if h.get('hour') in (start, start + 1)]
+
+            emails_sum = sum((h.get('emails_received') or 0) for h in hours)
+
+            unread_vals = [h.get('unread_count') for h in hours if h.get('unread_count') is not None]
+            avg_unread = round(sum(unread_vals) / len(unread_vals), 1) if unread_vals else None
+
+            sla_vals = [h.get('sla_met') for h in hours if h.get('sla_met') is not None]
+            if not sla_vals:
+                sla_met = None
+            else:
+                sla_met = all(sla_vals)
+
+            weighted_sum = 0
+            total_weight = 0
+            for h in hours:
+                rt = h.get('avg_response_time')
+                w = h.get('emails_replied') or 0
+                if rt is not None and w > 0:
+                    weighted_sum += rt * w
+                    total_weight += w
+            avg_rt = round(weighted_sum / total_weight, 1) if total_weight > 0 else None
+
+            # Weighted median approximation by expanding per-hour averages by emails_replied
+            rt_samples = []
+            for h in hours:
+                rt = h.get('avg_response_time')
+                w = h.get('emails_replied') or 0
+                if rt is not None and w > 0:
+                    rt_samples.extend([rt] * int(w))
+            median_rt = round(statistics.median(rt_samples), 1) if rt_samples else None
+
+            intervals.append({
+                'label': f"{self.format_hour_label(start)} – {self.format_hour_label(end)}",
+                'start_hour': start,
+                'end_hour': end,
+                'emails': int(emails_sum),
+                'avg_unread': avg_unread,
+                'sla_met': sla_met,
+                'avg_response_time': avg_rt,
+                'avg_mean_time': avg_rt,
+                'median_response_time': median_rt
+            })
+
+        return intervals
+    
     def calculate_svg_coordinates(self, data_points, max_value, is_emails=True):
         """Calculate SVG coordinates for line chart data"""
         coordinates = []
@@ -406,6 +465,12 @@ class DashboardGenerator:
         response_time_by_hour = self.calculate_response_time_by_hour(day_data['hourly_data'])
         response_time_distribution = self.calculate_response_time_distribution(day_data['hourly_data'])
         response_time_percentiles_data = self.calculate_response_time_percentiles(day_data['hourly_data'])
+        two_hour_metrics = self.aggregate_two_hour_intervals(day_data['hourly_data'])
+        # For scaling microbars in the two-hour table
+        if two_hour_metrics:
+            two_hour_max_emails = max(item['emails'] for item in two_hour_metrics)
+        else:
+            two_hour_max_emails = 1
         
         # Extract percentiles list and quartile counts from the response
         response_time_percentiles = response_time_percentiles_data.get('percentiles', [])
@@ -479,6 +544,8 @@ class DashboardGenerator:
             'response_time_distribution': response_time_distribution,
             'response_time_percentiles': response_time_percentiles,
             'quartile_counts': quartile_counts,
+            'two_hour_metrics': two_hour_metrics,
+            'two_hour_max_emails': two_hour_max_emails,
             'email_path': email_path,
             'unread_path': unread_path,
             'email_area_path': email_area_path,

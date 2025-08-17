@@ -502,6 +502,24 @@
         .summary{ margin:28px 0 40px; border:1px solid var(--border); border-radius:14px; background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.06)); padding:16px; text-align:center; color: var(--text-secondary); position:relative; overflow:hidden; font-size: 12px }
         .summary::after{ content:''; position:absolute; left:-100%; top:0; width:200%; height:1px; background: linear-gradient(90deg,transparent, var(--accent-2), transparent); animation: scan 4s linear infinite }
 
+        /* Two-Hour Metrics Table */
+        .two-hour-table { margin-top: 16px; display: flex; flex-direction: column; gap: 10px }
+        .two-hour-row { display:grid; grid-template-columns: 1.2fr .7fr .9fr .9fr .9fr .9fr; align-items:center; gap:12px; padding:12px 16px; border:1px solid var(--border); border-radius:12px; background: linear-gradient(135deg, var(--bg-primary) 0%, #F8FAFF 100%); box-shadow: var(--shadow-sm) }
+        .two-hour-row.header { background: var(--bg-tertiary); border-color: var(--border); box-shadow:none }
+        .two-hour-cell { font-size:13px; font-weight:600; color: var(--text-primary) }
+        .two-hour-cell.header { color: var(--text-secondary); font-weight:800; text-transform: uppercase; font-size:12px }
+        .badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-weight:800; font-size:12px }
+        .badge.success { color: var(--success); background: #10B98120 }
+        .badge.danger { color: var(--danger); background: #EF444420 }
+        .badge.muted { color: var(--text-secondary); background: var(--bg-tertiary) }
+
+        /* Microbar styles for Design A */
+        .microbar { height:8px; background:#e5e7eb; border-radius:999px; width:100%; position:relative; overflow:hidden }
+        .microbar .fill { height:100%; border-radius:999px }
+        .microbar .fill.emails { background: linear-gradient(90deg, var(--emails), #0284c7) }
+        .microbar .fill.response { background: linear-gradient(90deg, var(--accent), var(--accent-dark)) }
+        .weak { color: var(--text-muted); font-weight:600 }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .grid-4 {
@@ -749,6 +767,8 @@
             </div>
         </section>
 
+        <!-- 2-Hour Email Metrics moved to bottom -->
+
         <!-- Response Time by Hour -->
         <section class="chart-section">
             <div class="card">
@@ -826,6 +846,50 @@
             </div>
         </section>
 
+        <!-- 2-Hour Email Metrics (Bottom) -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">2-Hour Email Metrics</div>
+                <div class="chart-subtitle">Aggregated metrics across 2-hour blocks (7 AM – 9 PM)</div>
+
+                <div class="two-hour-table">
+                    <div class="two-hour-row header">
+                        <div class="two-hour-cell header">Block</div>
+                        <div class="two-hour-cell header">Emails</div>
+                        <div class="two-hour-cell header">Avg Unread</div>
+                        <div class="two-hour-cell header">SLA</div>
+                        <div class="two-hour-cell header">Avg Response</div>
+                        <div class="two-hour-cell header">Median Time</div>
+                    </div>
+
+                    {% for row in two_hour_metrics %}
+                    <div class="two-hour-row" title="{{ row.label }} • Emails: {{ row.emails }} • Avg Unread: {{ row.avg_unread if row.avg_unread is not none else 'N/A' }} • SLA: {{ 'Met' if row.sla_met else ('Not Met' if row.sla_met is not none else 'N/A') }} • Avg Response: {{ row.avg_response_time if row.avg_response_time is not none else 'N/A' }} min • Median: {{ row.median_response_time if row.median_response_time is not none else 'N/A' }} min">
+                        <div class="two-hour-cell">{{ row.label }}</div>
+                        <div class="two-hour-cell">
+                            <div class="microbar"><div class="fill emails" data-width="{{ (row.emails / (two_hour_max_emails or 1) * 100) | round(0) }}"></div></div>
+                            <span class="weak">{{ row.emails }}</span>
+                        </div>
+                        <div class="two-hour-cell">{{ row.avg_unread if row.avg_unread is not none else '—' }}</div>
+                        <div class="two-hour-cell">
+                            {% if row.sla_met is none %}
+                                <span class="badge muted">N/A</span>
+                            {% elif row.sla_met %}
+                                <span class="badge success"><span class="status-indicator status-good"></span>Met</span>
+                            {% else %}
+                                <span class="badge danger"><span class="status-indicator status-danger"></span>Not Met</span>
+                            {% endif %}
+                        </div>
+                        <div class="two-hour-cell">
+                            <div class="microbar"><div class="fill response" data-width="{{ ( (row.avg_response_time or 0) / (response_time_target or 60) * 100 ) | round(0) }}"></div></div>
+                            <span class="weak">{% if row.avg_response_time is not none %}{{ row.avg_response_time }} min{% else %}—{% endif %}</span>
+                        </div>
+                        <div class="two-hour-cell">{% if row.median_response_time is not none %}{{ row.median_response_time }} min{% else %}—{% endif %}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
         <!-- Data Summary -->
         <div class="card summary">
             <div>
@@ -865,6 +929,7 @@
             applyWidths('.period-bar[data-width]');
             applyWidths('.distribution-bar[data-width]');
             applyWidths('.percentile-bar[data-width]');
+            applyWidths('.microbar .fill[data-width]');
         });
     </script>
 </body>

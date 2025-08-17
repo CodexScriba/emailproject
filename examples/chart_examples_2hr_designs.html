@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>chart_examples.com — 2‑Hour Metrics Design A/B/C</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --emails: #0ea5e9;
+    }
+    * { box-sizing: border-box }
+    body { margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif; color: var(--text); background: var(--bg); }
+    .header { background: linear-gradient(135deg, #fff 0%, #eef2ff 100%); border-bottom:1px solid var(--border); padding:28px 20px; }
+    .header .brand { max-width:1200px; margin:0 auto; display:flex; justify-content:space-between; align-items:center }
+    .title { font-size:20px; font-weight:900; letter-spacing:-.02em; background: linear-gradient(135deg, #1e3a8a, #3b82f6); -webkit-background-clip:text; background-clip:text; color:transparent }
+    .subtitle { color: var(--muted); font-size:13px }
+
+    .container { max-width:1200px; margin: 24px auto; padding: 0 16px }
+    .section { margin: 28px 0 }
+    .card { background: var(--card); border:1px solid var(--border); border-radius:16px; box-shadow: 0 1px 2px rgba(0,0,0,.05); padding:20px }
+    .section h2 { margin:0 0 6px; font-size:20px; font-weight:900 }
+    .section p { margin:0 0 14px; color: var(--muted); font-size:13px }
+
+    /* Common bits */
+    .badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-weight:800; font-size:12px }
+    .badge.success { color: var(--success); background: #10B98120 }
+    .badge.warning { color: var(--warning); background: #F59E0B20 }
+    .badge.danger { color: var(--danger); background: #EF444420 }
+    .chip { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:10px; background:#f1f5f9; font-weight:700; font-size:12px; color:var(--text) }
+
+    /* A. Compact Enhanced Table */
+    .a-table { display:flex; flex-direction:column; gap:10px }
+    .a-row { display:grid; grid-template-columns: 1.2fr .7fr .9fr .9fr .9fr .9fr; gap:12px; align-items:center; padding:12px 14px; border:1px solid var(--border); border-radius:12px; background: #fff }
+    .a-row.header { background:#f1f5f9; font-weight:800; color: var(--muted); text-transform:uppercase; font-size:12px }
+    .a-cell { font-size:13px; font-weight:600 }
+    .microbar { height:8px; background:#e5e7eb; border-radius:999px; width:100%; position:relative; overflow:hidden }
+    .microbar .fill { height:100%; border-radius:999px }
+    .fill.emails { background: linear-gradient(90deg, var(--emails), #0284c7) }
+    .fill.response { background: linear-gradient(90deg, var(--primary), var(--primary-dark)) }
+    .weak { color: var(--muted); font-weight:600 }
+
+    /* B. Card List */
+    .b-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:14px }
+    .b-card { position:relative; border-left:6px solid var(--border); background:#fff; border:1px solid var(--border); border-left-color: var(--primary); border-radius:12px; padding:14px }
+    .b-card.success { border-left-color: var(--success) }
+    .b-card.warning { border-left-color: var(--warning) }
+    .b-card.danger { border-left-color: var(--danger) }
+    .b-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px }
+    .b-title { font-weight:900; letter-spacing:-.01em }
+    .b-chips { display:flex; flex-wrap:wrap; gap:8px }
+    .b-chip-strong { background:#eef2ff; color:#1e3a8a }
+
+    /* C. Heatmap Rows */
+    .c-table { display:flex; flex-direction:column; gap:10px }
+    .c-row { display:grid; grid-template-columns: 1.2fr 1fr 1fr 1fr; gap:12px; align-items:stretch }
+    .c-block { display:flex; align-items:center; padding:10px 12px; background:#fff; border:1px solid var(--border); border-radius:10px; font-weight:800 }
+    .c-cell { position:relative; border:1px solid var(--border); border-radius:10px; overflow:hidden; background:#fff }
+    .c-slab { position:absolute; inset:0; opacity:.95 }
+    .c-label { position:absolute; bottom:6px; left:8px; right:8px; display:flex; justify-content:space-between; color:#0b1020; font-size:12px; font-weight:900; text-shadow:0 1px 0 #ffffff }
+
+    /* Heat palettes */
+    .emails-low { background: rgba(14,165,233,.25) }
+    .emails-mid { background: rgba(14,165,233,.45) }
+    .emails-high { background: rgba(14,165,233,.70) }
+    .emails-max { background: rgba(14,165,233,.90) }
+
+    .unread-good { background: rgba(16,185,129,.35) }
+    .unread-warn { background: rgba(245,158,11,.45) }
+    .unread-bad  { background: rgba(239,68,68,.55) }
+
+    .resp-good { background: rgba(16,185,129,.35) }
+    .resp-warn { background: rgba(245,158,11,.45) }
+    .resp-bad  { background: rgba(239,68,68,.55) }
+
+    /* Small helpers */
+    .muted { color: var(--muted) }
+    .spacer { height:8px }
+    .hr { height:1px; background: var(--border); margin:12px 0 }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="brand">
+      <div>
+        <div class="title">chart_examples.com</div>
+        <div class="subtitle">2‑Hour Email Metrics — Minimal Design A/B/C</div>
+      </div>
+      <div class="subtitle">Fake data preview</div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- DESIGN A -->
+    <section class="section">
+      <h2>Design A — Compact Enhanced Table</h2>
+      <p>A tabular layout with micro‑bars for Emails (volume) and Avg Response (vs target).</p>
+      <div class="card">
+        <div class="a-table">
+          <div class="a-row header">
+            <div>Block</div><div>Emails</div><div>Avg Unread</div><div>SLA</div><div>Avg Response</div><div>Avg Mean Time</div>
+          </div>
+
+          <!-- Fake data: max emails = 30, response target ~60 min for mental model -->
+          <div class="a-row">
+            <div class="a-cell">7–9 AM</div>
+            <div class="a-cell"><div class="microbar"><div class="fill emails" style="width:40%"></div></div> <span class="weak">12</span></div>
+            <div class="a-cell">14</div>
+            <div class="a-cell"><span class="badge success">Met</span></div>
+            <div class="a-cell"><div class="microbar"><div class="fill response" style="width:35%"></div></div> <span class="weak">21 min</span></div>
+            <div class="a-cell">21 min</div>
+          </div>
+          <div class="a-row">
+            <div class="a-cell">9–11 AM</div>
+            <div class="a-cell"><div class="microbar"><div class="fill emails" style="width:80%"></div></div> <span class="weak">24</span></div>
+            <div class="a-cell">18</div>
+            <div class="a-cell"><span class="badge success">Met</span></div>
+            <div class="a-cell"><div class="microbar"><div class="fill response" style="width:55%"></div></div> <span class="weak">33 min</span></div>
+            <div class="a-cell">33 min</div>
+          </div>
+          <div class="a-row">
+            <div class="a-cell">11–1 PM</div>
+            <div class="a-cell"><div class="microbar"><div class="fill emails" style="width:60%"></div></div> <span class="weak">18</span></div>
+            <div class="a-cell">22</div>
+            <div class="a-cell"><span class="badge warning">N/A</span></div>
+            <div class="a-cell"><div class="microbar"><div class="fill response" style="width:80%"></div></div> <span class="weak">48 min</span></div>
+            <div class="a-cell">48 min</div>
+          </div>
+          <div class="a-row">
+            <div class="a-cell">1–3 PM</div>
+            <div class="a-cell"><div class="microbar"><div class="fill emails" style="width:100%"></div></div> <span class="weak">30</span></div>
+            <div class="a-cell">27</div>
+            <div class="a-cell"><span class="badge danger">Not Met</span></div>
+            <div class="a-cell"><div class="microbar"><div class="fill response" style="width:120%"></div></div> <span class="weak">72 min</span></div>
+            <div class="a-cell">72 min</div>
+          </div>
+          <div class="a-row">
+            <div class="a-cell">3–5 PM</div>
+            <div class="a-cell"><div class="microbar"><div class="fill emails" style="width:73%"></div></div> <span class="weak">22</span></div>
+            <div class="a-cell">30</div>
+            <div class="a-cell"><span class="badge danger">Not Met</span></div>
+            <div class="a-cell"><div class="microbar"><div class="fill response" style="width:150%"></div></div> <span class="weak">90 min</span></div>
+            <div class="a-cell">90 min</div>
+          </div>
+          <div class="a-row">
+            <div class="a-cell">5–7 PM</div>
+            <div class="a-cell"><div class="microbar"><div class="fill emails" style="width:50%"></div></div> <span class="weak">15</span></div>
+            <div class="a-cell">19</div>
+            <div class="a-cell"><span class="badge success">Met</span></div>
+            <div class="a-cell"><div class="microbar"><div class="fill response" style="width:45%"></div></div> <span class="weak">27 min</span></div>
+            <div class="a-cell">27 min</div>
+          </div>
+          <div class="a-row">
+            <div class="a-cell">7–9 PM</div>
+            <div class="a-cell"><div class="microbar"><div class="fill emails" style="width:33%"></div></div> <span class="weak">10</span></div>
+            <div class="a-cell">12</div>
+            <div class="a-cell"><span class="badge success">Met</span></div>
+            <div class="a-cell"><div class="microbar"><div class="fill response" style="width:20%"></div></div> <span class="weak">12 min</span></div>
+            <div class="a-cell">12 min</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DESIGN B -->
+    <section class="section">
+      <h2>Design B — Card List</h2>
+      <p>Compact cards with SLA‑colored accents and metric chips.</p>
+      <div class="card">
+        <div class="b-grid">
+          <div class="b-card success">
+            <div class="b-top"><div class="b-title">7–9 AM</div><span class="badge success">SLA Met</span></div>
+            <div class="b-chips">
+              <span class="chip b-chip-strong">24 emails</span>
+              <span class="chip">Avg Unread: 18</span>
+              <span class="chip">Avg Response: 33 min</span>
+            </div>
+          </div>
+          <div class="b-card success">
+            <div class="b-top"><div class="b-title">9–11 AM</div><span class="badge success">SLA Met</span></div>
+            <div class="b-chips">
+              <span class="chip b-chip-strong">18 emails</span>
+              <span class="chip">Avg Unread: 22</span>
+              <span class="chip">Avg Response: 48 min</span>
+            </div>
+          </div>
+          <div class="b-card danger">
+            <div class="b-top"><div class="b-title">11–1 PM</div><span class="badge danger">Not Met</span></div>
+            <div class="b-chips">
+              <span class="chip b-chip-strong">30 emails</span>
+              <span class="chip">Avg Unread: 27</span>
+              <span class="chip">Avg Response: 72 min</span>
+            </div>
+          </div>
+          <div class="b-card danger">
+            <div class="b-top"><div class="b-title">1–3 PM</div><span class="badge danger">Not Met</span></div>
+            <div class="b-chips">
+              <span class="chip b-chip-strong">22 emails</span>
+              <span class="chip">Avg Unread: 30</span>
+              <span class="chip">Avg Response: 90 min</span>
+            </div>
+          </div>
+          <div class="b-card success">
+            <div class="b-top"><div class="b-title">3–5 PM</div><span class="badge success">SLA Met</span></div>
+            <div class="b-chips">
+              <span class="chip b-chip-strong">15 emails</span>
+              <span class="chip">Avg Unread: 19</span>
+              <span class="chip">Avg Response: 27 min</span>
+            </div>
+          </div>
+          <div class="b-card success">
+            <div class="b-top"><div class="b-title">5–7 PM</div><span class="badge success">SLA Met</span></div>
+            <div class="b-chips">
+              <span class="chip b-chip-strong">10 emails</span>
+              <span class="chip">Avg Unread: 12</span>
+              <span class="chip">Avg Response: 12 min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DESIGN C -->
+    <section class="section">
+      <h2>Design C — Heatmap Rows</h2>
+      <p>Quickly spot hot windows via intensity bands for Emails, Unread, and Response.</p>
+      <div class="card">
+        <div class="c-table">
+          <div class="c-row">
+            <div class="c-block">7–9 AM</div>
+            <div class="c-cell">
+              <div class="c-slab emails-mid"></div>
+              <div class="c-label"><span>Emails</span><span>24</span></div>
+            </div>
+            <div class="c-cell">
+              <div class="c-slab unread-good"></div>
+              <div class="c-label"><span>Unread</span><span>18</span></div>
+            </div>
+            <div class="c-cell">
+              <div class="c-slab resp-good"></div>
+              <div class="c-label"><span>Resp</span><span>33m</span></div>
+            </div>
+          </div>
+
+          <div class="c-row">
+            <div class="c-block">9–11 AM</div>
+            <div class="c-cell">
+              <div class="c-slab emails-high"></div>
+              <div class="c-label"><span>Emails</span><span>30</span></div>
+            </div>
+            <div class="c-cell">
+              <div class="c-slab unread-warn"></div>
+              <div class="c-label"><span>Unread</span><span>27</span></div>
+            </div>
+            <div class="c-cell">
+              <div class="c-slab resp-bad"></div>
+              <div class="c-label"><span>Resp</span><span>72m</span></div>
+            </div>
+          </div>
+
+          <div class="c-row">
+            <div class="c-block">11–1 PM</div>
+            <div class="c-cell">
+              <div class="c-slab emails-max"></div>
+              <div class="c-label"><span>Emails</span><span>34</span></div>
+            </div>
+            <div class="c-cell">
+              <div class="c-slab unread-bad"></div>
+              <div class="c-label"><span>Unread</span><span>34</span></div>
+            </div>
+            <div class="c-cell">
+              <div class="c-slab resp-bad"></div>
+              <div class="c-label"><span>Resp</span><span>95m</span></div>
+            </div>
+          </div>
+
+          <div class="c-row">
+            <div class="c-block">1–3 PM</div>
+            <div class="c-cell">
+              <div class="c-slab emails-mid"></div>
+              <div class="c-label"><span>Emails</span><span>18</span></div>
+            </div>
+            <div class="c-cell">
+              <div class="c-slab unread-good"></div>
+              <div class="c-label"><span>Unread</span><span>16</span></div>
+            </div>
+            <div class="c-cell">
+              <div class="c-slab resp-warn"></div>
+              <div class="c-label"><span>Resp</span><span>62m</span></div>
+            </div>
+          </div>
+
+          <div class="c-row">
+            <div class="c-block">3–5 PM</div>
+            <div class="c-cell">
+              <div class="c-slab emails-low"></div>
+              <div class="c-label"><span>Emails</span><span>12</span></div>
+            </div>
+            <div class="c-cell">
+              <div class="c-slab unread-good"></div>
+              <div class="c-label"><span>Unread</span><span>10</span></div>
+            </div>
+            <div class="c-cell">
+              <div class="c-slab resp-good"></div>
+              <div class="c-label"><span>Resp</span><span>25m</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="hr"></div>
+    <p class="muted">Note: This page is static and uses fake values to preview component styles only.</p>
+  </div>
+</body>
+</html>
