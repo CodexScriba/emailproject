@@ -63,11 +63,11 @@ class DashboardGenerator:
         raise ValueError("No complete day found with both email and SLA data")
     
     def extract_business_hours_data(self, hourly_data):
-        """Extract data for business hours (7 AM to 6 PM)"""
+        """Extract data for business hours (7 AM to 9 PM)"""
         business_hours = []
         for hour_data in hourly_data:
             hour = hour_data['hour']
-            if 7 <= hour <= 18:  # 7 AM to 6 PM
+            if 7 <= hour <= 21:  # 7 AM to 9 PM
                 business_hours.append({
                     'hour': hour,
                     'emails': hour_data.get('emails_received', 0) or 0,
@@ -84,7 +84,7 @@ class DashboardGenerator:
             'Early Morning (6-9 AM)': {'hours': [6, 7, 8], 'total_time': 0, 'count': 0, 'color': 'success'},
             'Morning (9 AM-1 PM)': {'hours': [9, 10, 11, 12], 'total_time': 0, 'count': 0, 'color': 'warning'},
             'Afternoon (1-5 PM)': {'hours': [13, 14, 15, 16], 'total_time': 0, 'count': 0, 'color': 'danger'},
-            'Evening (5-9 PM)': {'hours': [17, 18, 19, 20], 'total_time': 0, 'count': 0, 'color': 'warning'}
+            'Evening (5-9 PM)': {'hours': [17, 18, 19, 20, 21], 'total_time': 0, 'count': 0, 'color': 'warning'}
         }
         
         for hour_data in hourly_data:

@@ -8,12 +8,12 @@ This script processes two data sources to create a unified JSON database:
 
 Features:
 - Email classification (Replied, Completed, Pending)
-- Business hours response time calculations (7 AM - 6 PM, Monday-Friday)
+- Business hours response time calculations (configurable via config/sla_config.json; default 7 AM – 9 PM, Monday–Friday)
 - Daily SLA compliance rate calculations (≤30 emails = SLA MET)
 - Multi-day unified JSON database with both email and SLA metrics
 - Dashboard-ready data structure for KPI generation
 
-Business Hours: Monday-Friday, 7:00 AM - 6:00 PM
+Business Hours: Configurable via config/sla_config.json (default 7:00 AM – 9:00 PM, Monday–Friday)
 SLA Threshold: 30 unread emails
 """
 
@@ -63,7 +63,7 @@ class EmailClassifier:
                     'unread_email_threshold': 30,
                     'business_hours': {
                         'start_hour': 7,
-                        'end_hour': 18,
+                        'end_hour': 21,
                         'business_days': [0, 1, 2, 3, 4]
                     }
                 }
@@ -93,7 +93,7 @@ class EmailClassifier:
     def calculate_business_minutes(self, start_time, end_time):
         """
         Calculate business minutes between two timestamps.
-        Only counts time during business hours (7 AM - 6 PM, Monday-Friday).
+        Only counts time within configured business hours (default 7 AM – 9 PM, Monday–Friday).
         """
         if pd.isna(start_time) or pd.isna(end_time):
             return None

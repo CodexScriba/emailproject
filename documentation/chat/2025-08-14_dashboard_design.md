@@ -6,7 +6,7 @@ After analyzing all available CSV data files, we've identified severe data captu
 ## Data Analysis Summary
 
 ### Files Analyzed
-1. **UnreadCount.csv** - Reliable hourly SLA compliance data (7 AM - 9 PM)
+1. **UnreadCount.csv** - Reliable hourly SLA compliance data (historical 7 AM - 9 PM window; dashboards use configured business hours)
 2. **Complete_List_Raw.csv** - Email arrival timestamps (limited sample)
 3. **DailySummary.csv** - 3 months of daily volumes, but 95% missing response time data
 4. **Reserve.csv** - Confirms massive data loss (only ~6% of emails captured)
@@ -47,6 +47,7 @@ After analyzing all available CSV data files, we've identified severe data captu
 - Must be emailable as single file
 - Python-generated visualizations embedded as HTML/CSS
 - Professional appearance for leadership consumption
+- Business hours configurable via `config/sla_config.json` (default 7 AM – 9 PM, Monday–Friday)
 
 ## Next Steps
 - Build daily dashboard template

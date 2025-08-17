@@ -51,8 +51,8 @@ The email dashboard system demonstrates robust data processing, accurate calcula
 - **Finding:** ✅ Classification logic correctly implemented and follows documented rules
 
 #### Stage 3: Response Time Calculation
-- **Business Hours:** 7 AM - 6 PM, Monday-Friday (verified in config)
-- **Calculation:** Only business minutes counted between receipt and response
+- **Business Hours:** Configurable via `config/sla_config.json` (default 7 AM – 9 PM, Monday–Friday)
+- **Calculation:** Only minutes within the configured business hours are counted between receipt and response
 - **Finding:** ✅ Business hours calculation correctly excludes weekends and non-business hours
 
 #### Stage 4: Unified Database Generation
@@ -126,7 +126,7 @@ The email dashboard system demonstrates robust data processing, accurate calcula
 ## 4. Visual Elements Verification
 
 ### Hourly Email Distribution Chart
-- **X-axis:** Business hours 7 AM - 6 PM ✅
+- **X-axis:** Configured business hours (default 7 AM – 9 PM) ✅
 - **Y-axis:** Dynamic scaling to max value (53) ✅
 - **Email Line:** Blue gradient, correct data points ✅
 - **Unread Line:** Red gradient, correct data points ✅
@@ -134,7 +134,7 @@ The email dashboard system demonstrates robust data processing, accurate calcula
 - **SLA Indicators:** Green ✓ for met, Red ✗ for not met ✅
 
 ### 2-Hour Metrics Table
-- **Time Blocks:** 7 AM-9 AM through 7 PM-9 PM ✅
+- **Time Blocks:** Configured 2-hour windows within business hours (e.g., 7–9 AM through 7–9 PM by default) ✅
 - **Aggregations:** Correct totals and weighted averages ✅
 - **SLA Status:** Met/Not Met badges correctly applied ✅
 - **Visual Indicators:** Microbars scale proportionally ✅
@@ -158,7 +158,7 @@ The email dashboard system demonstrates robust data processing, accurate calcula
 ### Data Integrity Checks
 ✅ No missing or null values in critical paths  
 ✅ Date consistency maintained (August 13, 2025)  
-✅ Business hours correctly identified (7 AM - 6 PM)  
+✅ Business hours correctly identified per configuration (default 7 AM – 9 PM)  
 ✅ All percentages sum to 100% where applicable
 
 ---
@@ -209,7 +209,7 @@ The email dashboard system demonstrates robust data processing, accurate calcula
 ✅ **Response Time Target:** 60 minutes (warning threshold)  
 ✅ **Response Time Threshold:** 120 minutes (SLA breach)  
 ✅ **SLA Compliance Target:** 85% (correctly displayed)  
-✅ **Business Hours:** 7 AM - 6 PM, Mon-Fri (consistently applied)
+✅ **Business Hours:** Configurable (default 7 AM – 9 PM, Mon–Fri) and consistently applied
 
 ---
 

@@ -36,7 +36,7 @@ This project addresses a data recovery and analytics challenge where tracking sy
 - **Unread SLA Threshold: 30 emails** (configurable)
 - SLA MET: TotalUnread ≤ threshold
 - SLA NOT MET: TotalUnread > threshold  
-- **Business Hours: 7 AM - 6 PM, Monday-Friday** (configurable)
+- **Business Hours:** Configurable via `config/sla_config.json` (default 7 AM – 9 PM, Monday–Friday)
 - **Measured hourly during business operations** (7 AM - 9 PM in historical data)
 
 ### Data Patterns Identified
@@ -111,7 +111,7 @@ Based on available data analysis, the dashboard will focus on:
 
 ### Core Functionality
 - **Email Matching Algorithm**: Matches 262 inbox emails with their corresponding replies or completion events
-- **Business Hours Calculation**: Calculates response times in business minutes (7 AM - 6 PM, Monday-Friday)
+- **Business Hours Calculation**: Calculates response times within the configured business hours (default 7 AM – 9 PM, Monday–Friday)
 - **Status Classification**: Automatically categorizes emails as Replied, Completed, or Pending
 - **SLA Processing**: Processes 1,303 SLA records across 88 days with hourly compliance tracking
 - **Multi-Source Integration**: Unified schema supporting both email lifecycle and SLA compliance data
@@ -131,7 +131,7 @@ Based on available data analysis, the dashboard will focus on:
 - **68.58% Average SLA Compliance** across all measured days
 - **Range**: 12.5% to 100% daily compliance (significant variation)
 - **August 13 SLA**: 66.67% compliance with 29.5 avg unread emails
-- **Complete hourly tracking**: 7 AM - 9 PM business operations
+- **Complete hourly tracking (historical measurement window)**: 7 AM - 9 PM; dashboards apply configured business hours
 
 ### Database Scale & Performance
 - **88 days of unified data**: From May 18 - August 13, 2025

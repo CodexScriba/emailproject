@@ -605,7 +605,6 @@
             </div>
             <div class="header-meta">
                 <div>{{ formatted_date }}</div>
-                <div>Last Updated: {{ generated_at }}</div>
             </div>
         </div>
     </div>
@@ -663,7 +662,7 @@
         <section class="chart-section">
             <div class="card">
                 <div class="chart-title">Hourly Email Distribution</div>
-                <div class="chart-subtitle">Email volume vs unread count throughout the day - {{ formatted_date }}</div>
+                <div class="chart-subtitle">Email volume vs unread count during {{ business_hours_label }} — {{ formatted_date }}</div>
                 
                 <div class="chart-legend">
                     <div class="legend-item">
@@ -676,7 +675,7 @@
                     </div>
                 </div>
 
-                <!-- Business Hours: 7 AM - 9 PM -->
+                <!-- Business Hours: {{ business_hours_label }} -->
                 <div class="chart-container">
                     <div class="line-chart-wrapper">
                         <svg class="line-chart-svg" viewBox="0 0 {{ chart_width }} {{ chart_height }}" preserveAspectRatio="xMidYMid meet">
@@ -882,7 +881,7 @@
         <section class="chart-section">
             <div class="card">
                 <div class="chart-title">2-Hour Email Metrics</div>
-                <div class="chart-subtitle">Aggregated metrics across 2-hour blocks (7 AM – 9 PM)</div>
+                <div class="chart-subtitle">Aggregated metrics across 2-hour blocks ({{ business_hours_label }})</div>
 
                 <div class="a-table">
                     <div class="a-row header">
@@ -948,7 +947,7 @@
                 <strong>Data Source:</strong> Unified JSON database | 
                 <strong>Email Data:</strong> {{ formatted_date }} ({{ total_emails }} emails) | 
                 <strong>SLA Threshold:</strong> {{ unread_threshold }} unread emails | 
-                <strong>Business Hours:</strong> 7 AM - 6 PM, Monday–Friday
+                <strong>Business Hours:</strong> {{ business_start_label }} to {{ business_end_label }}
             </div>
         </div>
     </div>

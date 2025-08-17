@@ -39,6 +39,25 @@ class DashboardGenerator:
         self.plot_width = self.chart_width - self.chart_left_margin - self.chart_right_margin
         self.plot_height = self.chart_height - self.chart_top_margin - self.chart_bottom_margin
         
+    def get_business_hour_bounds(self):
+        """Return (start_hour, end_hour) from SLA config if available, else defaults (7, 21).
+        Ensures values are clamped to 0–23.
+        """
+        cfg = (self.sla_config or {}).get('sla_thresholds', {}).get('business_hours', {})
+        start_hour = cfg.get('start_hour', 7)
+        end_hour = cfg.get('end_hour', 21)
+        try:
+            start_hour = int(start_hour)
+        except Exception:
+            start_hour = 7
+        try:
+            end_hour = int(end_hour)
+        except Exception:
+            end_hour = 21
+        start_hour = max(0, min(23, start_hour))
+        end_hour = max(0, min(23, end_hour))
+        return start_hour, end_hour
+        
     def load_sla_config(self):
         """Load SLA configuration from JSON file."""
         try:
@@ -63,11 +82,12 @@ class DashboardGenerator:
         raise ValueError("No complete day found with both email and SLA data")
     
     def extract_business_hours_data(self, hourly_data):
-        """Extract data for business hours (7 AM to 6 PM)"""
+        """Extract data for configured business hours (from SLA config or defaults)."""
         business_hours = []
+        start_hour, end_hour = self.get_business_hour_bounds()
         for hour_data in hourly_data:
             hour = hour_data['hour']
-            if 7 <= hour <= 18:  # 7 AM to 6 PM
+            if start_hour <= hour <= end_hour:  # configurable business hours
                 business_hours.append({
                     'hour': hour,
                     'emails': hour_data.get('emails_received', 0) or 0,
@@ -84,7 +104,7 @@ class DashboardGenerator:
             'Early Morning (6-9 AM)': {'hours': [6, 7, 8], 'total_time': 0, 'count': 0, 'color': 'success'},
             'Morning (9 AM-1 PM)': {'hours': [9, 10, 11, 12], 'total_time': 0, 'count': 0, 'color': 'warning'},
             'Afternoon (1-5 PM)': {'hours': [13, 14, 15, 16], 'total_time': 0, 'count': 0, 'color': 'danger'},
-            'Evening (5-9 PM)': {'hours': [17, 18, 19, 20], 'total_time': 0, 'count': 0, 'color': 'warning'}
+            'Evening (5-9 PM)': {'hours': [17, 18, 19, 20, 21], 'total_time': 0, 'count': 0, 'color': 'warning'}
         }
         
         for hour_data in hourly_data:
@@ -196,21 +216,33 @@ class DashboardGenerator:
         
         response_times.sort()
         total_count = len(response_times)
-        
+
+        # Helper to compute percentiles accurately
+        def get_percentile(arr, p):
+            # P50 should match true median for even/odd counts
+            if p == 50:
+                return statistics.median(arr)
+            # Use inclusive method to match common dashboard expectations
+            try:
+                qs = statistics.quantiles(arr, n=100, method='inclusive')
+                return qs[p - 1]
+            except Exception:
+                # Fallback: nearest-rank style using bounds
+                idx = int(round((p / 100) * (len(arr) - 1)))
+                idx = max(0, min(idx, len(arr) - 1))
+                return arr[idx]
+
         percentiles = []
         for p_value, p_label in [(25, 'P25'), (50, 'P50'), (75, 'P75'), (90, 'P90'), (95, 'P95')]:
-            index = int((p_value / 100) * total_count)
-            if index >= total_count:
-                index = total_count - 1
-            value = response_times[index]
-            
+            value = get_percentile(response_times, p_value)
+
             if value <= 60:
                 color = 'success'
             elif value <= 120:
                 color = 'warning'
             else:
                 color = 'danger'
-            
+
             percentiles.append({
                 'label': p_label,
                 'value': round(value, 1),
@@ -246,7 +278,7 @@ class DashboardGenerator:
         }
     
     def aggregate_two_hour_intervals(self, hourly_data):
-        """Aggregate hourly metrics into 2-hour blocks from 7-9 AM to 7-9 PM.
+        """Aggregate hourly metrics into 2-hour blocks across configured business hours.
         Computes totals/averages per block:
         - emails: sum of emails_received
         - avg_unread: mean of unread_count (ignoring None)
@@ -256,8 +288,9 @@ class DashboardGenerator:
         - avg_mean_time: same as avg_response_time (business minutes)
         """
         intervals = []
-        for start in [7, 9, 11, 13, 15, 17, 19]:
-            end = start + 2
+        start_hour, end_hour = self.get_business_hour_bounds()
+        for start in range(start_hour, end_hour, 2):
+            end = min(start + 2, end_hour)
             hours = [h for h in hourly_data if h.get('hour') in (start, start + 1)]
 
             emails_sum = sum((h.get('emails_received') or 0) for h in hours)
@@ -311,6 +344,7 @@ class DashboardGenerator:
         # Calculate X positions (evenly spaced across plot width)
         hours_count = len(data_points)
         x_step = self.plot_width / (hours_count - 1) if hours_count > 1 else 0
+        start_hour, _ = self.get_business_hour_bounds()
         
         for i, value in enumerate(data_points):
             # X coordinate
@@ -327,7 +361,7 @@ class DashboardGenerator:
                 'x': round(x),
                 'y': round(y),
                 'value': value,
-                'hour': 7 + i  # Starting from 7 AM
+                'hour': start_hour + i  # Starting from configured business-hour start
             })
         
         return coordinates
@@ -453,8 +487,9 @@ class DashboardGenerator:
         
         # Generate X-axis labels
         x_labels = []
+        start_hour, _ = self.get_business_hour_bounds()
         for i, coord in enumerate(email_coords):
-            hour = 7 + i
+            hour = start_hour + i
             x_labels.append({
                 'hour': hour,
                 'label': self.format_hour_label(hour),
@@ -464,7 +499,8 @@ class DashboardGenerator:
         # Calculate response time components
         response_time_by_hour = self.calculate_response_time_by_hour(day_data['hourly_data'])
         response_time_distribution = self.calculate_response_time_distribution(day_data['hourly_data'])
-        response_time_percentiles_data = self.calculate_response_time_percentiles(day_data['hourly_data'])
+        # Use business hours for percentiles to match KPI avg scope
+        response_time_percentiles_data = self.calculate_response_time_percentiles(business_data)
         two_hour_metrics = self.aggregate_two_hour_intervals(day_data['hourly_data'])
         # For scaling microbars in the two-hour table
         if two_hour_metrics:
@@ -533,12 +569,20 @@ class DashboardGenerator:
                 weighted_sum += rt * w
                 total_weight += w
         computed_avg_rt = round(weighted_sum / total_weight, 1) if total_weight > 0 else None
-        avg_response_time_val = daily_data.get('avg_response_time_minutes')
-        if avg_response_time_val is None:
-            avg_response_time_val = computed_avg_rt if computed_avg_rt is not None else 0
+        # Prefer business-hours computed average to keep scope consistent with percentiles/median
+        if computed_avg_rt is not None:
+            avg_response_time_val = computed_avg_rt
+        else:
+            avg_response_time_val = daily_data.get('avg_response_time_minutes') or 0
 
         # Median (P50) for quick reference in KPI card
         median_response_time = next((p['value'] for p in response_time_percentiles if p['label'] == 'P50'), 0)
+
+        # Business hour labels for template (dynamic from SLA config)
+        bh_start, bh_end = self.get_business_hour_bounds()
+        bh_start_label = self.format_hour_label(bh_start)
+        bh_end_label = self.format_hour_label(bh_end)
+        bh_range_label = f"{bh_start_label} – {bh_end_label}"
 
         context = {
             'formatted_date': formatted_date,
@@ -577,7 +621,13 @@ class DashboardGenerator:
             'chart_top_margin': self.chart_top_margin,
             'chart_bottom_margin': self.chart_bottom_margin,
             'plot_width': self.plot_width,
-            'plot_height': self.plot_height
+            'plot_height': self.plot_height,
+            # Dynamic business-hour metadata for template usage
+            'business_start_hour': bh_start,
+            'business_end_hour': bh_end,
+            'business_start_label': bh_start_label,
+            'business_end_label': bh_end_label,
+            'business_hours_label': bh_range_label
         }
         
         return context

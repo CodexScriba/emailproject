@@ -4,7 +4,7 @@
     "response_time_threshold_minutes": 120,
     "business_hours": {
       "start_hour": 7,
-      "end_hour": 18,
+      "end_hour": 21,
       "business_days": [0, 1, 2, 3, 4]
     }
   },
