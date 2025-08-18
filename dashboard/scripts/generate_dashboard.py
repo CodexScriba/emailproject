@@ -586,6 +586,7 @@ class DashboardGenerator:
 
         context = {
             'formatted_date': formatted_date,
+            'date_str': date_str,
             'generated_at': generated_at,
             'daily_data': daily_data,
             'total_emails': total_emails_val,
@@ -690,7 +691,7 @@ def main():
     rendered_html = generator.render_template(context)
     
     # Save dashboard
-    date_str = datetime.now().strftime("%Y-%m-%d")
+    date_str = context.get('date_str') or datetime.now().strftime("%Y-%m-%d")
     output_path = generator.save_dashboard(rendered_html, date_str)
     
     print(f"✓ Dashboard generation complete!")

@@ -33,6 +33,7 @@ Business hours are configurable in `config/sla_config.json` under:
 
 - `sla_thresholds.business_hours.start_hour` (default: 7)
 - `sla_thresholds.business_hours.end_hour` (default: 21)
+- `sla_thresholds.business_hours.business_days` (default: [0,1,2,3,4,5,6] where 0=Mon, 6=Sun)
 
 These values drive the x-axis labels, business-hours filtering, and 2-hour aggregation windows.
 

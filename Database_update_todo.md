@@ -43,7 +43,7 @@ Consumers:
   - Hour of the Day → hour index (int 0–23)
   - TotalUnread → `unread_count`
   - Title == "SLA MET" → `sla_met` true else false
-- DailySummary.csv (optional):
+- DailySummary.csv (optional)
   - InboxTotal → daily_summary.total_emails (fallback only)
   - CompletedTotal → daily completions (cross-check)
   - AvgResponseInMinutes → daily_summary.avg_response_time_minutes (fallback only)
@@ -103,14 +103,13 @@ Consumers:
 
 # TODO checklist (for approval)
 
-- [ ] Update classifier to accept multiple event CSV inputs (CLI arg or config) and implement `load_event_data()`
-- [ ] Generalize hourly analyses to return per-day results (`analyze_*_by_day`)
-- [ ] Refactor `save_to_unified_json()` to iterate all days and merge SLA + events per day
-- [ ] Add optional `DailySummary.csv` loader and selective fallback/cross-check wiring
-- [ ] Ensure deduplication across files and idempotent re-generation of `email_database.json`
-- [ ] Extend `metadata.data_sources` and update earliest/latest dates and totals
-- [ ] Validate three new days (Aug 14–16): counts, flags, hourly merges, summaries
-- [ ] Regenerate dashboard and verify latest complete day selection and charts
+- [x] Update classifier to accept multiple event CSV inputs (CLI arg or config) and implement `load_event_data()`
+- [x] Generalize hourly analyses to return per-day results (`analyze_*_by_day`)
+- [x] Refactor `save_to_unified_json()` to iterate all days and merge SLA + events per day
+- [x] Ensure deduplication across files and idempotent re-generation of `email_database.json`
+- [x] Extend `metadata.data_sources` and update earliest/latest dates and totals
+- [x] Validate three new days (Aug 14–16): counts, flags, hourly merges, summaries
+- [x] Regenerate dashboard and verify latest complete day selection and charts
 - [ ] Update `documentation/architecture.md` stats and examples to reflect new range/days
 
 If this plan looks good, I’ll implement in small, reviewable commits starting with ingestion + per-day save, then validation and docs.

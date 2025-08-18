@@ -51,14 +51,14 @@ The email dashboard system demonstrates robust data processing, accurate calcula
 - **Finding:** ✅ Classification logic correctly implemented and follows documented rules
 
 #### Stage 3: Response Time Calculation
-- **Business Hours:** Configurable via `config/sla_config.json` (default 7 AM – 9 PM, Monday–Friday)
+- **Business Hours:** Configurable via `config/sla_config.json` (default 7 AM – 9 PM, Monday–Sunday)
 - **Calculation:** Only minutes within the configured business hours are counted between receipt and response
-- **Finding:** ✅ Business hours calculation correctly excludes weekends and non-business hours
+- **Finding:** ✅ Business hours calculation correctly applies configured business days (Mon–Sun by default) and excludes non-business hours
 
 #### Stage 4: Unified Database Generation
 - **Output:** `email_database.json` with multi-day aggregated data
 - **Structure:** Metadata + daily data arrays with hourly metrics
-- **Finding:** ✅ Database structure matches documentation, contains 88 days of data
+- **Finding:** ✅ Database structure matches documentation, contains 93 days of data
 
 #### Stage 5: Dashboard Generation
 - **Process:** `generate_dashboard.py` reads JSON and renders template
@@ -209,7 +209,7 @@ The email dashboard system demonstrates robust data processing, accurate calcula
 ✅ **Response Time Target:** 60 minutes (warning threshold)  
 ✅ **Response Time Threshold:** 120 minutes (SLA breach)  
 ✅ **SLA Compliance Target:** 85% (correctly displayed)  
-✅ **Business Hours:** Configurable (default 7 AM – 9 PM, Mon–Fri) and consistently applied
+✅ **Business Hours:** Configurable (default 7 AM – 9 PM, Mon–Sun) and consistently applied
 
 ---
 

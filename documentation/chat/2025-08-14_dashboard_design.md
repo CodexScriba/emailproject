@@ -47,7 +47,7 @@ After analyzing all available CSV data files, we've identified severe data captu
 - Must be emailable as single file
 - Python-generated visualizations embedded as HTML/CSS
 - Professional appearance for leadership consumption
-- Business hours configurable via `config/sla_config.json` (default 7 AM – 9 PM, Monday–Friday)
+- Business hours configurable via `config/sla_config.json` (default 7 AM – 9 PM, Monday–Sunday)
 
 ## Next Steps
 - Build daily dashboard template
