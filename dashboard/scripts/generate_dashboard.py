@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from jinja2 import Template
 import statistics
+import argparse
 
 class DashboardGenerator:
     def __init__(self, json_path, template_path, output_path, sla_config_path=None):
@@ -88,10 +89,12 @@ class DashboardGenerator:
         for hour_data in hourly_data:
             hour = hour_data['hour']
             if start_hour <= hour <= end_hour:  # configurable business hours
+                # Handle null unread_count by preserving None instead of converting to 0
+                unread_count = hour_data.get('unread_count')
                 business_hours.append({
                     'hour': hour,
                     'emails': hour_data.get('emails_received', 0) or 0,
-                    'unread': hour_data.get('unread_count', 0) or 0,
+                    'unread': unread_count,  # Keep None for missing data
                     'sla_met': hour_data.get('sla_met', False),
                     'avg_response_time': hour_data.get('avg_response_time', None),
                     'emails_replied': hour_data.get('emails_replied', 0) or 0
@@ -380,14 +383,21 @@ class DashboardGenerator:
     def create_smooth_svg_path(self, coordinates, tension: float = 1.0):
         """Create a smoothed SVG path using Catmull–Rom to cubic Bezier conversion.
         If fewer than 2 points, returns a move command only.
+        Handles missing data by skipping points marked as missing_data.
         """
         if not coordinates:
             return ""
-        if len(coordinates) == 1:
-            return f"M {coordinates[0]['x']},{coordinates[0]['y']}"
+        
+        # Filter out missing data points
+        valid_coords = [c for c in coordinates if not c.get('is_missing_data', False)]
+        
+        if not valid_coords:
+            return ""
+        if len(valid_coords) == 1:
+            return f"M {valid_coords[0]['x']},{valid_coords[0]['y']}"
 
-        # Extract points
-        pts = [(c['x'], c['y']) for c in coordinates]
+        # Extract points from valid coordinates only
+        pts = [(c['x'], c['y']) for c in valid_coords]
         path = [f"M {pts[0][0]},{pts[0][1]}"]
 
         for i in range(len(pts) - 1):
@@ -411,11 +421,18 @@ class DashboardGenerator:
         """Create a closed area path under the line down to the given baseline (x-axis)."""
         if not coordinates:
             return ""
+        
+        # Filter out missing data for area path too
+        valid_coords = [c for c in coordinates if not c.get('is_missing_data', False)]
+        
+        if not valid_coords:
+            return ""
+            
         line_path = (
             self.create_smooth_svg_path(coordinates, tension) if use_smooth else self.create_svg_path(coordinates)
         )
-        first_x = coordinates[0]['x']
-        last_x = coordinates[-1]['x']
+        first_x = valid_coords[0]['x']
+        last_x = valid_coords[-1]['x']
         # Close down to baseline and back to start
         area_path = f"{line_path} L {last_x},{baseline_y} L {first_x},{baseline_y} Z"
         return area_path
@@ -450,19 +467,30 @@ class DashboardGenerator:
         
         # Extract data series
         email_values = [item['emails'] for item in business_data]
-        unread_values = [item['unread'] for item in business_data]
+        # For unread values, handle missing data properly
+        unread_raw_values = [item['unread'] for item in business_data]
         
         # Targets and thresholds needed for scaling and template
         unread_threshold = (self.sla_config or {}).get('sla_thresholds', {}).get('unread_email_threshold', 30)
 
         # Calculate max values for scaling (ensure SLA threshold is visible on chart)
+        # Only use non-null unread values for max calculation
+        valid_unread_values = [v for v in unread_raw_values if v is not None]
         max_emails = max(email_values) if email_values else 1
-        max_unread = max(unread_values) if unread_values else 1
+        max_unread = max(valid_unread_values) if valid_unread_values else 1
         overall_max = max(max_emails, max_unread, unread_threshold)
         
-        # Calculate coordinates
+        # Calculate coordinates - use 0 for display but track original values
+        unread_display_values = [v if v is not None else 0 for v in unread_raw_values]
         email_coords = self.calculate_svg_coordinates(email_values, overall_max, True)
-        unread_coords = self.calculate_svg_coordinates(unread_values, overall_max, False)
+        unread_coords = self.calculate_svg_coordinates(unread_display_values, overall_max, False)
+        
+        # Mark coordinates that represent missing data
+        for i, coord in enumerate(unread_coords):
+            coord['is_missing_data'] = unread_raw_values[i] is None
+            
+        # Filter out missing data coordinates for template rendering (data points)
+        unread_coords_filtered = [coord for coord in unread_coords if not coord.get('is_missing_data', False)]
         
         # SLA threshold Y position (horizontal line)
         if overall_max > 0:
@@ -610,7 +638,7 @@ class DashboardGenerator:
             'email_area_path': email_area_path,
             'unread_area_path': unread_area_path,
             'email_coords': email_coords,
-            'unread_coords': unread_coords,
+            'unread_coords': unread_coords_filtered,
             'sla_line_y': sla_line_y,
             'y_labels': y_labels,
             'x_labels': x_labels,
@@ -651,8 +679,10 @@ class DashboardGenerator:
         # it will just return the content as-is
         return html_content
     
-    def save_dashboard(self, rendered_html, date_str):
-        """Save the rendered dashboard to output file"""
+    def save_dashboard(self, rendered_html, date_str, write_latest: bool = True):
+        """Save the rendered dashboard to output file.
+        Optionally also write a convenient 'latest.html' alias in the same directory.
+        """
         output_filename = f"email_dashboard_{date_str}.html"
         output_path = os.path.join(self.output_path, output_filename)
         
@@ -661,11 +691,31 @@ class DashboardGenerator:
         with open(output_path, 'w') as f:
             f.write(rendered_html)
         
-        print(f"Dashboard saved to: {output_path}")
+        # Also write a 'latest.html' alias to quickly open the most recently generated dashboard
+        if write_latest:
+            latest_path = os.path.join(self.output_path, "latest.html")
+            try:
+                with open(latest_path, 'w') as f:
+                    f.write(rendered_html)
+                print(f"Dashboard saved to: {output_path} (alias: {latest_path})")
+            except Exception as e:
+                # Still consider main save successful
+                print(f"Dashboard saved to: {output_path}")
+                print(f"Warning: Could not write latest alias: {e}")
+        else:
+            print(f"Dashboard saved to: {output_path}")
         return output_path
 
 def main():
     """Main function to generate dashboard"""
+    parser = argparse.ArgumentParser(description="Generate email dashboard HTML from unified JSON data.")
+    parser.add_argument("--date", dest="date", help="Target date in YYYY-MM-DD. If omitted, uses latest complete day.")
+    parser.add_argument("--validate-only", dest="validate_only", action="store_true",
+                        help="Validate KPIs for the selected date; print summary and exit non-zero if required fields are missing.")
+    parser.add_argument("--list-dates", dest="list_dates", action="store_true",
+                        help="List available dates from email_database.json and whether each is complete.")
+    args = parser.parse_args()
+
     # Get script directory
     script_dir = Path(__file__).parent
     project_root = script_dir.parent.parent
@@ -684,8 +734,56 @@ def main():
         sla_config_path=str(sla_config_path)
     )
     
+    # Handle "list dates" mode
+    if args.list_dates:
+        try:
+            data = generator.load_data()
+            days = data.get('days', {})
+            for date_key in sorted(days.keys()):
+                day = days[date_key]
+                complete = day.get('has_email_data', False) and day.get('has_sla_data', False)
+                total = (day.get('daily_summary') or {}).get('total_emails', 0)
+                status = "complete" if complete else "incomplete"
+                print(f"{date_key}  {status}  total_emails={total}")
+            print(f"Found {len(days)} dates.")
+            sys.exit(0)
+        except Exception as e:
+            print(f"Error listing dates: {e}", file=sys.stderr)
+            sys.exit(2)
+    
+    # Handle validation mode
+    if args.validate_only:
+        try:
+            context = generator.generate_dashboard(target_date=args.date)
+        except Exception as e:
+            print(f"Validation error: {e}", file=sys.stderr)
+            sys.exit(2)
+        dd = context.get('daily_data') or {}
+        hourly = context.get('hourly_data')
+        missing = []
+        if 'avg_unread_count' not in dd or dd.get('avg_unread_count') is None:
+            missing.append('daily_data.avg_unread_count')
+        if 'sla_compliance_rate' not in dd or dd.get('sla_compliance_rate') is None:
+            missing.append('daily_data.sla_compliance_rate')
+        if not hourly:
+            missing.append('hourly_data')
+        
+        print("Validation KPIs")
+        print(f"  Date: {context.get('date_str')}")
+        print(f"  Total Emails: {context.get('total_emails')}")
+        print(f"  Avg Unread Count: {context.get('avg_unread_count')}")
+        print(f"  SLA Compliance: {context.get('sla_compliance')}%")
+        print(f"  Avg Response Time: {context.get('avg_response_time')} min")
+        
+        if missing:
+            print("Missing fields: " + ", ".join(missing), file=sys.stderr)
+            sys.exit(1)
+        else:
+            print("\u2713 Validation passed")
+            sys.exit(0)
+    
     # Generate dashboard context
-    context = generator.generate_dashboard()
+    context = generator.generate_dashboard(target_date=args.date)
     
     # Render template
     rendered_html = generator.render_template(context)
@@ -694,7 +792,7 @@ def main():
     date_str = context.get('date_str') or datetime.now().strftime("%Y-%m-%d")
     output_path = generator.save_dashboard(rendered_html, date_str)
     
-    print(f"✓ Dashboard generation complete!")
+    print(f"\u2713 Dashboard generation complete!")
     print(f"  Output: {output_path}")
 
 if __name__ == "__main__":

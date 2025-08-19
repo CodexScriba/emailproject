@@ -298,6 +298,23 @@ The unified database provides direct access to all required KPI metrics:
 6. **No JavaScript**: All visualizations must be generated as static HTML/CSS by Python
 7. **Data Quality Issues**: Multiple empty columns and inconsistent event tracking
 
+## Validation & Success Tests
+
+### KPI Visibility Test — Avg Unread Count & SLA Compliance
+- __Objective__: Confirm the dashboard clearly displays the "Avg Unread Count" and "SLA Compliance" KPI cards with correct labels and values.
+- __Artifact__: `dashboard/output/email_dashboard_2025-08-15.html`
+
+- __Steps__:
+  - Open the HTML in a browser or text editor.
+  - Verify presence of:
+    - "Avg Unread Count" KPI label and a numeric value.
+    - "SLA Compliance" KPI label and a percentage value.
+  - Optional: Confirm the SLA dashed line and label "SLA" on the Hourly Email Distribution chart.
+
+- __Aug 15, 2025 Result (snapshot)__:
+  - Avg Unread Count displayed as "19.1" with label "Avg Unread Count" and subtitle "≤30 unread emails threshold".
+  - SLA Compliance displayed as "85.7%" with label "SLA Compliance" and subtitle "Target: ≥85%".
+
 ---
 
 *Last Updated: 2025-08-15*
