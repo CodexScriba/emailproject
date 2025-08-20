@@ -48,13 +48,17 @@ emailproject/
 │   │   ├── ingest_and_update.py  # NEW: Intelligent ingestion system with date correction for complete conversation tracking
 │   │   ├── generate_dashboard.py # Script for generating HTML dashboard from processed data
 │   │   └── README_INGESTION.md   # Documentation for the new ingestion system
-├── dashboard/
-│   ├── templates/
-│   │   └── kpi_cards.html        # Jinja2 template for the dashboard HTML structure and styling
-│   ├── output/
-│   │   ├── email_dashboard_[date].html # Generated dashboard HTML files with date stamps
-│   │   └── latest.html           # Symlink to the most recent dashboard file
-│   └── README.md                 # Documentation for dashboard usage and features
+│   └── dashboard/
+│       ├── templates/
+│       │   └── kpi_cards.html    # Jinja2 template for the dashboard HTML structure and styling
+│       ├── output/
+│       │   ├── email_dashboard_[date].html # Generated dashboard HTML files with date stamps
+│       │   └── latest.html       # Symlink to the most recent dashboard file
+│       └── README.md             # Documentation for dashboard usage and features
+├── weekly/
+│   ├── scripts/                  # Weekly dashboard generation scripts (future)
+│   ├── templates/                # Weekly dashboard templates (future)
+│   └── output/                   # Weekly dashboard output files (future)
 ├── data/
 │   ├── backup/                   # Automatic timestamped backups of all processed files
 │   ├── ingest/                   # DROP ZONE: Place Complete_List_Raw.csv and UnreadCount.csv here
@@ -97,9 +101,9 @@ emailproject/
 1. **`daily/scripts/generate_dashboard.py`** reads the processed data from:
    - `database/email_database.json` (main data source)
    - `config/sla_config.json` (for business hours and KPI targets)
-2. It uses the template file `dashboard/templates/kpi_cards.html` to render the dashboard
-3. Generated HTML dashboards are saved in `dashboard/output/` with date-stamped filenames
-4. A symlink `dashboard/output/latest.html` is created pointing to the most recent dashboard
+2. It uses the template file `daily/dashboard/templates/kpi_cards.html` to render the dashboard
+3. Generated HTML dashboards are saved in `daily/dashboard/output/` with date-stamped filenames
+4. A symlink `daily/dashboard/output/latest.html` is created pointing to the most recent dashboard
 
 ### Configuration Flow
 - `config/sla_config.json` provides configurable parameters used by both processing systems
