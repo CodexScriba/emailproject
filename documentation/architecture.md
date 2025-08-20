@@ -59,9 +59,13 @@ emailproject/
 │       │   └── latest.html       # Symlink to the most recent dashboard file
 │       └── README.md             # Documentation for dashboard usage and features
 ├── weekly/
-│   ├── scripts/                  # Weekly dashboard generation scripts (future)
-│   ├── templates/                # Weekly dashboard templates (future)
-│   └── output/                   # Weekly dashboard output files (future)
+│   ├── scripts/                  # Weekly dashboard generation scripts
+│   │   └── generate_weekly_dashboard.py # Main weekly dashboard generator (planned)
+│   ├── templates/                # Weekly dashboard templates
+│   │   └── weekly.html           # Main weekly dashboard template (planned)
+│   └── output/                   # Weekly dashboard output files
+│       ├── weekly_dashboard_YYYY-Www.html # Generated weekly dashboards (planned)
+│       └── latest.html           # Symlink to most recent weekly dashboard (planned)
 ├── data/
 │   ├── backup/                   # Automatic timestamped backups of all processed files
 │   ├── ingest/                   # DROP ZONE: Place Complete_List_Raw.csv and UnreadCount.csv here
@@ -142,5 +146,36 @@ Resolved dashboard generation issue where the generator expected database at pro
 - **Issue**: Dashboard generator looked for `email_database.json` at project root
 - **Solution**: Database is now copied/symlinked to expected location during processing
 - **Impact**: Dashboard generation works seamlessly with the ingestion system
+
+## Weekly Dashboard System (Planned)
+
+### Architecture Overview
+The weekly dashboard system extends the existing daily dashboard architecture to provide weekly aggregated views and analytics. It follows the same HTML/CSS-only constraint and reuses core processing logic from the daily system.
+
+### Weekly Dashboard Components
+1. **Weekly KPIs**: Total emails, average per day, weekly SLA compliance, response time metrics
+2. **Daily Volume Chart**: Bar chart showing email volume across 7 days
+3. **Hour×Day Heatmap**: Visual pattern analysis of email distribution
+4. **Response Time Analytics**: Weekly aggregated response time analysis
+5. **Performance Summary Cards**: Best/worst day identification
+6. **AI Analysis Section**: Automated insights and recommendations
+
+### Data Processing Flow
+```
+database/email_database.json → Weekly Aggregation → Weekly Dashboard Template → HTML Output
+                                      ↓
+                              weekly/output/weekly_dashboard_YYYY-Www.html
+```
+
+### CLI Interface (Planned)
+- `--week YYYY-Www`: Generate dashboard for specific ISO week
+- `--last-7-days`: Generate dashboard for last 7 calendar days
+- `--validate-only`: Check data availability without generating
+- `--list-weeks`: Show available weeks in database
+
+### Integration with Daily System
+- Reuses `config/sla_config.json` for business hours and thresholds
+- Leverages existing KPI calculation logic from `daily/scripts/generate_dashboard.py`
+- Maintains consistent styling and color coding from `daily/dashboard/templates/kpi_cards.html`
 
 This architecture ensures complete conversation tracking while maintaining data integrity through automatic backups, intelligent merging, and robust date handling.
