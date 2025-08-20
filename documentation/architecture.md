@@ -18,6 +18,9 @@ Key functionalities include:
 The dashboard visualizes critical email performance metrics including total email volume, average unread count, average response time, and SLA compliance percentage. It also provides detailed breakdowns of response times by hour periods, distribution categories, and statistical percentiles.
 
 ## Tech Stack and Dependencies
+## Limitations
+Only use HTML/CSS for dashboards. no javascript. 
+
 
 ### Core Technologies
 - **Python 3**: Main programming language for data processing scripts
