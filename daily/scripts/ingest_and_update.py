@@ -152,6 +152,9 @@ class IntelligentIngester:
         df = pd.read_csv(self.complete_list_path)
         df['TimeStamp'] = pd.to_datetime(df['TimeStamp'])
         
+        # Fix year issue: Convert 2025 dates to 2024
+        df['TimeStamp'] = df['TimeStamp'].apply(lambda x: x.replace(year=2024) if x.year == 2025 else x)
+        
         # Sort by conversation and timestamp
         df = df.sort_values(['Conversation-Id', 'TimeStamp'])
         
@@ -252,6 +255,10 @@ class IntelligentIngester:
         
         # Convert date/time columns
         df['Date'] = pd.to_datetime(df['Date'])
+        
+        # Fix year issue: Convert 2025 dates to 2024
+        df['Date'] = df['Date'].apply(lambda x: x.replace(year=2024) if x.year == 2025 else x)
+        
         df['Hour'] = pd.to_numeric(df['Hour'])
         
         # Calculate SLA compliance

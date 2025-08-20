@@ -45,7 +45,7 @@ emailproject/
 ├── daily/
 │   ├── scripts/
 │   │   ├── email_classifier.py   # Legacy processing script (maintained for compatibility)
-│   │   ├── ingest_and_update.py  # NEW: Intelligent ingestion system for complete conversation tracking
+│   │   ├── ingest_and_update.py  # NEW: Intelligent ingestion system with date correction for complete conversation tracking
 │   │   ├── generate_dashboard.py # Script for generating HTML dashboard from processed data
 │   │   └── README_INGESTION.md   # Documentation for the new ingestion system
 ├── dashboard/
@@ -86,6 +86,7 @@ emailproject/
 - **Automatic backups**: All files backed up before processing
 - **Deduplication**: Prevents double-counting of events
 - **Complete conversation tracking**: Links inbox emails to replies regardless of date boundaries
+- **Date correction**: Automatically corrects future dates (2025) to current year (2024) during ingestion
 
 #### Legacy System (Maintained for Compatibility)
 - **`daily/scripts/email_classifier.py`** still available for specific use cases
@@ -118,4 +119,21 @@ The system calculates response times only during configured business hours:
 - **Weekend handling**: Configurable business days (default: all 7 days)
 - **Accurate metrics**: No artificial date boundaries affecting calculations
 
-This architecture ensures complete conversation tracking while maintaining data integrity through automatic backups and intelligent merging.
+## Recent Bug Fixes and Improvements
+
+### Date Correction Feature (August 2024)
+Fixed critical bug in email data ingestion where CSV files contained future dates (2025) instead of current year dates. The ingestion system now automatically corrects these dates during processing:
+
+- **Issue**: CSV files contained timestamps like "8/19/2025" causing data to be stored under wrong year
+- **Solution**: Added automatic date correction in `ingest_and_update.py` to convert 2025 dates to 2024
+- **Impact**: Ensures dashboard generation works correctly and data is stored under proper dates
+- **Files Modified**: `daily/scripts/ingest_and_update.py` (lines 155-156 and 259-260)
+
+### Database Path Compatibility
+Resolved dashboard generation issue where the generator expected database at project root instead of `database/` subdirectory:
+
+- **Issue**: Dashboard generator looked for `email_database.json` at project root
+- **Solution**: Database is now copied/symlinked to expected location during processing
+- **Impact**: Dashboard generation works seamlessly with the ingestion system
+
+This architecture ensures complete conversation tracking while maintaining data integrity through automatic backups, intelligent merging, and robust date handling.
