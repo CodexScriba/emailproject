@@ -721,10 +721,10 @@ def main():
     project_root = script_dir.parent.parent
     
     # Define paths
-    json_path = project_root / "email_database.json"
-    template_path = project_root / "dashboard" / "templates" / "kpi_cards.html"
+    json_path = project_root / "database" / "email_database.json"
+    template_path = project_root / "daily" / "dashboard" / "templates" / "kpi_cards.html"
     sla_config_path = project_root / "config" / "sla_config.json"
-    output_dir = project_root / "dashboard" / "output"
+    output_dir = project_root / "daily" / "dashboard" / "output"
     
     # Create generator
     generator = DashboardGenerator(
