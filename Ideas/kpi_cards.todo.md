@@ -7,42 +7,44 @@
 - As a developer, I want the weekly dashboard to reuse the daily styles so the UI remains consistent and low-maintenance.
 
 ## Phase 1: Foundation
-- [ ] Create weekly template file `weekly/dashboard/templates/weekly_kpi_cards.html` cloned from `daily/dashboard/templates/kpi_cards.html` with header and 4 KPI cards only (no charts yet).
-- [ ] Add header subtitle to show ISO week and date range: "Week {ISO} — {Mon Date} – {Sun Date}".
-- [ ] Set up weekly generator script using Jinja2 like the daily generator: implement `weekly/scripts/generate_weekly_dashboard.py` to load JSON and config and render the weekly template.
-- [ ] Support CLI args: `--week 2025-W34` and `--last-7-days`; write output to `weekly/dashboard/output/` with `weekly_dashboard_{week}.html` or `weekly_dashboard_last7days_YYYYMMDD.html` and `latest.html` alias.
+- [x] Create weekly template file `weekly/dashboard/templates/weekly_kpi_cards.html` cloned from `daily/dashboard/templates/kpi_cards.html` with header and 4 KPI cards only (no charts yet).
+- [x] Add header subtitle to show ISO week and date range: "Week {ISO} — {Mon Date} – {Sun Date}".
+- [x] Set up weekly generator script using Jinja2 like the daily generator: implement `weekly/scripts/generate_weekly_dashboard.py` to load JSON and config and render the weekly template.
+- [x] Support CLI args: `--week 2025-W34` and `--last-7-days`; write output to `weekly/dashboard/output/` with `weekly_dashboard_{week}.html` or `weekly_dashboard_last7days_YYYYMMDD.html` and `latest.html` alias.
+- [x] Add `--validate-only` mode to print KPIs and exit non-zero if required fields missing.
+- [x] Add `--fill-missing-days` option to select last 7 valid days and fallback to parse daily HTML when DB gaps exist.
 
 ## Phase 2: Core Functionality
-- [ ] Implement week selection utilities
-  - [ ] Parse ISO week to Monday–Sunday dates.
-  - [ ] Compute last-7-days range ending yesterday.
-- [ ] Implement data aggregation from `database/email_database.json` across selected range
-  - [ ] Total Emails: sum `daily_summary.total_emails`; fallback to per-day hourly sum if missing.
-  - [ ] Avg per day: `total_emails / number_of_days_with_data` (1 decimal).
-  - [ ] Avg Unread Count: mean of daily `daily_summary.avg_unread_count` (1 decimal); fallback to business-hour means across week ignoring nulls.
-  - [ ] Avg Response Time (business hours): weighted average by `emails_replied` across all business-hour hourly entries; fallback to weekly mean of `daily_summary.avg_response_time_minutes`.
-  - [ ] SLA Compliance (%): weighted average of daily `daily_summary.sla_compliance_rate` by that day's `total_emails`; fallback to unweighted mean if totals missing.
-- [ ] Pull thresholds/targets from `config/sla_config.json`
-  - [ ] `sla_thresholds.unread_email_threshold` (default 30)
-  - [ ] `kpi_targets.response_time_target_minutes` (default 60)
-  - [ ] `kpi_targets.sla_compliance_target_percent` (default 85)
-- [ ] Compose template context keys (see Technical Specs) and render HTML.
+- [x] Implement week selection utilities
+  - [x] Parse ISO week to Monday–Sunday dates.
+  - [x] Compute last-7-days range ending yesterday.
+- [x] Implement data aggregation from `database/email_database.json` across selected range
+  - [x] Total Emails: sum `daily_summary.total_emails`; fallback to per-day hourly sum if missing.
+  - [x] Avg per day: `total_emails / number_of_days_with_data` (1 decimal).
+  - [x] Avg Unread Count: mean of daily `daily_summary.avg_unread_count` (1 decimal); fallback to business-hour means across week ignoring nulls.
+  - [x] Avg Response Time (business hours): weighted average by `emails_replied` across business-hour entries; fallback to weekly mean of `daily_summary.avg_response_time_minutes`.
+  - [x] SLA Compliance (%): weighted average by per-day `total_emails`; fallback to unweighted mean.
+- [x] Pull thresholds/targets from `config/sla_config.json`
+  - [x] `sla_thresholds.unread_email_threshold` (default 30)
+  - [x] `kpi_targets.response_time_target_minutes` (default 60)
+  - [x] `kpi_targets.sla_compliance_target_percent` (default 85)
+- [x] Compose template context keys (see Technical Specs) and render HTML.
 
 ## Phase 3: Enhanced Features & Polish
-- [ ] Styling parity: ensure classes, layout, and color semantics match `kpi_cards.html`.
-- [ ] Total Emails card shows total and a second line: "Avg: X per day".
-- [ ] Card color rules:
-  - [ ] Avg Unread Count: `success` if `<= unread_threshold`, else `danger`.
-  - [ ] Avg Response Time: `success` if `<= target`, `warning` if `<= 2x target`, else `danger`.
-  - [ ] SLA Compliance: `success` if `>= target`, else `danger`.
-- [ ] Partial data handling: if fewer than 3 days with data, show a small warning badge: "Partial week — metrics computed from N day(s)".
-- [ ] Add generated timestamp and business-hours label to footer summary.
+- [x] Styling parity: ensure classes, layout, and color semantics match `kpi_cards.html`.
+- [x] Total Emails card shows total and a second line: "Avg: X per day".
+- [x] Card color rules:
+  - [x] Avg Unread Count: `success` if `<= unread_threshold`, else `danger`.
+  - [x] Avg Response Time: `success` if `<= target`, `warning` if `<= 2x target`, else `danger`.
+  - [x] SLA Compliance: `success` if `>= target`, else `danger`.
+- [x] Partial data handling: if fewer than 3 days with data, show a small warning badge: "Partial week — metrics computed from N day(s)".
+- [x] Add generated timestamp and business-hours label to footer summary.
 
 ## Phase 4: Testing & Validation
-- [ ] Add a `--validate-only` mode mirroring the daily script to compute/print weekly KPIs and exit non-zero if required fields are missing.
+- [x] Add a `--validate-only` mode mirroring the daily script.
 - [ ] Unit tests for aggregation helpers (date boundaries; exclusions; fallbacks; weighting): place in `weekly/tests/test_weekly_aggregation.py`.
 - [ ] Cross-check a known week by summing daily dashboards to ensure equality within rounding rules.
-- [ ] Manual visual QA: open the generated HTML and verify styles and thresholds reflect config changes.
+- [x] Manual visual QA: open the generated HTML and verify styles and thresholds reflect config changes.
 
 ## Technical Specifications
 - Data sources
@@ -87,3 +89,5 @@
 ## CLI Examples
 - `python weekly/scripts/generate_weekly_dashboard.py --week 2025-W34`
 - `python weekly/scripts/generate_weekly_dashboard.py --last-7-days`
+- `python weekly/scripts/generate_weekly_dashboard.py --last-7-days --fill-missing-days`
+- `python weekly/scripts/generate_weekly_dashboard.py --last-7-days --validate-only`

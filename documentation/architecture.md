@@ -36,7 +36,7 @@ Only use HTML/CSS for dashboards. no javascript.
 - **JSON**: Configuration files and unified database storage
 
 ### Output Technologies
-- **HTML/CSS/JS**: Dashboard output with modern, interactive visualizations
+- **HTML/CSS**: Dashboard output with modern visual styling
 - **SVG**: Vector graphics for chart rendering in the dashboard
 
 ## File Tree and Descriptions
@@ -59,13 +59,14 @@ emailproject/
 │       │   └── latest.html       # Symlink to the most recent dashboard file
 │       └── README.md             # Documentation for dashboard usage and features
 ├── weekly/
-│   ├── scripts/                  # Weekly dashboard generation scripts
-│   │   └── generate_weekly_dashboard.py # Main weekly dashboard generator (planned)
-│   ├── templates/                # Weekly dashboard templates
-│   │   └── weekly.html           # Main weekly dashboard template (planned)
-│   └── output/                   # Weekly dashboard output files
-│       ├── weekly_dashboard_YYYY-Www.html # Generated weekly dashboards (planned)
-│       └── latest.html           # Symlink to most recent weekly dashboard (planned)
+│   ├── scripts/                                  # Weekly dashboard generation scripts
+│   │   └── generate_weekly_dashboard.py          # Main weekly dashboard generator
+│   ├── dashboard/
+│   │   ├── templates/
+│   │   │   └── weekly_kpi_cards.html             # Weekly KPI cards template (HTML/CSS-only)
+│   │   └── output/
+│   │       ├── weekly_dashboard_[identifier].html # Generated weekly dashboards
+│   │       └── latest.html                       # Latest weekly dashboard
 ├── data/
 │   ├── backup/                   # Automatic timestamped backups of all processed files
 │   ├── ingest/                   # DROP ZONE: Place Complete_List_Raw.csv and UnreadCount.csv here
@@ -105,12 +106,15 @@ emailproject/
 - May miss cross-day conversations
 
 ### Dashboard Generation Pipeline
-1. **`daily/scripts/generate_dashboard.py`** reads the processed data from:
-   - `database/email_database.json` (main data source)
-   - `config/sla_config.json` (for business hours and KPI targets)
-2. It uses the template file `daily/dashboard/templates/kpi_cards.html` to render the dashboard
-3. Generated HTML dashboards are saved in `daily/dashboard/output/` with date-stamped filenames
-4. A symlink `daily/dashboard/output/latest.html` is created pointing to the most recent dashboard
+1. **Daily (`daily/scripts/generate_dashboard.py`)**
+   - Reads `database/email_database.json` and `config/sla_config.json`
+   - Renders `daily/dashboard/templates/kpi_cards.html`
+   - Outputs to `daily/dashboard/output/email_dashboard_[date].html` and updates `latest.html`
+2. **Weekly (`weekly/scripts/generate_weekly_dashboard.py`)**
+   - Reads `database/email_database.json` and `config/sla_config.json`
+   - Renders `weekly/dashboard/templates/weekly_kpi_cards.html`
+   - Outputs to `weekly/dashboard/output/weekly_dashboard_[identifier].html` and updates `latest.html`
+   - Fallback: if some days are missing or flagged in DB, parses KPI values from existing daily HTML in `daily/dashboard/output` to complete the week
 
 ### Configuration Flow
 - `config/sla_config.json` provides configurable parameters used by both processing systems
@@ -147,35 +151,33 @@ Resolved dashboard generation issue where the generator expected database at pro
 - **Solution**: Database is now copied/symlinked to expected location during processing
 - **Impact**: Dashboard generation works seamlessly with the ingestion system
 
-## Weekly Dashboard System (Planned)
+## Weekly Dashboard System
 
 ### Architecture Overview
-The weekly dashboard system extends the existing daily dashboard architecture to provide weekly aggregated views and analytics. It follows the same HTML/CSS-only constraint and reuses core processing logic from the daily system.
+The weekly dashboard extends the daily architecture to aggregate over ISO weeks or last-7-days windows, reusing the daily design while computing weekly KPIs.
 
-### Weekly Dashboard Components
-1. **Weekly KPIs**: Total emails, average per day, weekly SLA compliance, response time metrics
-2. **Daily Volume Chart**: Bar chart showing email volume across 7 days
-3. **Hour×Day Heatmap**: Visual pattern analysis of email distribution
-4. **Response Time Analytics**: Weekly aggregated response time analysis
-5. **Performance Summary Cards**: Best/worst day identification
-6. **AI Analysis Section**: Automated insights and recommendations
+### Weekly KPIs
+- Total emails; average per day
+- Average unread count; threshold comparison
+- Average response time (business hours); target comparison
+- SLA compliance (%); target comparison
 
 ### Data Processing Flow
 ```
-database/email_database.json → Weekly Aggregation → Weekly Dashboard Template → HTML Output
-                                      ↓
-                              weekly/output/weekly_dashboard_YYYY-Www.html
+database/email_database.json → Weekly Aggregation → Weekly Template → weekly/dashboard/output/
 ```
 
-### CLI Interface (Planned)
-- `--week YYYY-Www`: Generate dashboard for specific ISO week
-- `--last-7-days`: Generate dashboard for last 7 calendar days
-- `--validate-only`: Check data availability without generating
-- `--list-weeks`: Show available weeks in database
+### CLI Interface
+- `--week YYYY-Www`: Generate a specific ISO week (Mon–Sun)
+- `--last-7-days`: Generate for the last 7 days (ending yesterday)
+- `--fill-missing-days`: Select the most recent 7 valid days if some are missing/flagged in DB (uses daily HTML fallback)
+- `--validate-only`: Print KPIs and exit non-zero if required fields missing
+
+### Fallback Behavior
+If DB entries are missing or marked `has_email_data=false`/`has_sla_data=false`, the weekly generator parses KPI values from daily HTML outputs in `daily/dashboard/output` to ensure completeness.
 
 ### Integration with Daily System
-- Reuses `config/sla_config.json` for business hours and thresholds
-- Leverages existing KPI calculation logic from `daily/scripts/generate_dashboard.py`
-- Maintains consistent styling and color coding from `daily/dashboard/templates/kpi_cards.html`
+- Reuses `config/sla_config.json` for business hours, thresholds, and targets
+- Maintains design parity with `daily/dashboard/templates/kpi_cards.html`
 
-This architecture ensures complete conversation tracking while maintaining data integrity through automatic backups, intelligent merging, and robust date handling.
+This architecture preserves data integrity and continuity while providing robust weekly aggregation with graceful degradation when DB gaps exist.

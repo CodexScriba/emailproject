@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Dashboard - Weekly KPI Overview</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            /* Modern Color Palette - Reused from daily kpi_cards.html */
+            --primary: #0F172A;
+            --primary-light: #1E293B;
+            --accent: #3B82F6;
+            --accent-dark: #2563EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --muted: #64748B;
+            --text-muted: #94A3B8;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8FAFC;
+            --bg-tertiary: #F1F5F9;
+            --border: #E2E8F0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --chart-height: 320px;
+            /* GPT5 Pro Light additions */
+            --primary-2: #3B82F6;
+            --accent-2: #DBEAFE;
+            --accent-3: #93C5FD;
+            --emails: #0EA5E9;
+            --success-2: #10B981;
+            --warning-2: #F59E0B;
+            --danger-2: #EF4444;
+            --glow-accent: 0 0 28px rgba(99,102,241,0.28);
+            --glow-success: 0 0 28px rgba(16,185,129,0.22);
+            --glow-warning: 0 0 28px rgba(245,158,11,0.22);
+            --glow-danger: 0 0 28px rgba(239,68,68,0.22);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 32px 24px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #FFFFFF 0%, #EEF2FF 100%);
+            color: var(--text-primary);
+            margin: -32px -24px 40px -24px;
+            padding: 48px 28px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        .header::before { content:''; position:absolute; top:0; left:-100%; height:2px; width:200%; background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent); opacity:.9; animation: scan 3s linear infinite }
+        @keyframes scan { to { left: 100%; } }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 34px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin: 0 0 6px 0;
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+        @keyframes titleGlow { 0%,100%{filter: brightness(1);} 50%{filter: brightness(1.15);} }
+
+        .brand-title {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            text-shadow: none;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: #94A3B8;
+            font-weight: 400;
+        }
+
+        .header-meta {
+            text-align: right;
+            font-size: 13px;
+            color: #94A3B8;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+
+        /* Cards */
+        .card {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #F8FAFF 100%);
+            border: 1px solid #F1F5F9;
+            border-radius: 18px;
+            position: relative;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+            backdrop-filter: saturate(140%) blur(6px);
+            animation: fadeIn .6s ease-out forwards; opacity: 0;
+        }
+        .card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 12px 28px rgba(15,23,42,.08); border-color: var(--border) }
+        .card::before { content:''; position:absolute; left:0; right:0; top:0; height:1px; background: linear-gradient(90deg,transparent,var(--accent-2),transparent); opacity:0; transition: opacity .25s }
+        .card:hover::before { opacity: 1 }
+        @keyframes fadeIn { from{opacity:0; transform: translateY(18px)} to{opacity:1; transform:none} }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* KPI Cards */
+        .kpi-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::after { content:''; position:absolute; inset:-2px; border-radius:20px; background: linear-gradient(45deg, var(--accent), var(--accent-3)); filter: blur(18px); opacity:0; z-index:-1; transition: opacity .3s }
+        .kpi-card:hover::after { opacity:.45 }
+        .kpi-card.success::after { background: linear-gradient(45deg, var(--success-2), var(--success)) }
+        .kpi-card.warning::after { background: linear-gradient(45deg, var(--warning-2), var(--warning)) }
+        .kpi-card.danger::after { background: linear-gradient(45deg, var(--danger-2), var(--danger)) }
+
+        .kpi-icon { position:absolute; right:20px; top:20px; width:46px; height:46px; border-radius:12px; display:grid; place-items:center; font-size:22px; background: linear-gradient(135deg, rgba(79,70,229,.10), rgba(79,70,229,.06)) }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .kpi-card.success::before { background: var(--success); }
+        .kpi-card.warning::before { background: var(--warning); }
+        .kpi-card.danger::before { background: var(--danger); }
+
+        .kpi-value {
+            font-size: 40px;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg,#1E3A8A 0%,#3B82F6 100%);
+            -webkit-background-clip:text; background-clip:text; color: transparent;
+            animation: valueFloat 3s ease-in-out infinite;
+        }
+        @keyframes valueFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+        .kpi-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .kpi-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        .kpi-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 12px;
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .kpi-change.positive { 
+            color: var(--success); 
+            background: #10B98120; 
+        }
+        
+        .kpi-change.negative { 
+            color: var(--danger); 
+            background: #EF444420; 
+        }
+
+        .kpi-change.neutral { 
+            color: var(--text-secondary); 
+            background: var(--bg-tertiary); 
+        }
+
+        /* Status Indicators */
+        .status-indicator { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:8px; animation: statusPulse 2s infinite }
+        .status-good{ background: var(--success-2); box-shadow: var(--glow-success) }
+        .status-warning{ background: var(--warning-2); box-shadow: var(--glow-warning) }
+        .status-danger{  background: var(--danger-2);  box-shadow: var(--glow-danger) }
+        @keyframes statusPulse { 0%,100%{ box-shadow: 0 0 0 0 currentColor } 50%{ box-shadow: 0 0 0 6px transparent } }
+
+        /* Summary styling */
+        .summary{ margin:28px 0 40px; border:1px solid var(--border); border-radius:14px; background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.06)); padding:16px; text-align:center; color: var(--text-secondary); position:relative; overflow:hidden; font-size: 12px }
+        .summary::after{ content:''; position:absolute; left:-100%; top:0; width:200%; height:1px; background: linear-gradient(90deg,transparent, var(--accent-2), transparent); animation: scan 4s linear infinite }
+
+        .badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-weight:800; font-size:12px }
+        .badge.success { color: var(--success); background: #10B98120 }
+        .badge.warning { color: var(--warning); background: #F59E0B20 }
+        .badge.danger { color: var(--danger); background: #EF444420 }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            
+            .header {
+                margin: -16px -16px 32px -16px;
+                padding: 24px 16px;
+            }
+            
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+            
+            .header-meta {
+                text-align: center;
+            }
+            
+            .kpi-value {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="brand-title">Email Performance Dashboard</h1>
+                <div class="header-subtitle">Last 7 Days — Aug 14, 2025 – Aug 20, 2025</div>
+            </div>
+            <div class="header-meta">
+                <div>2025-08-21 14:34</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        
+
+        <!-- KPI Cards Section -->
+        <div class="grid grid-4">
+            <!-- Total Emails Card -->
+            <div class="card kpi-card">
+                <div class="kpi-value">1257</div>
+                <div class="kpi-label">Total Emails</div>
+                <div class="kpi-subtitle">Avg: 179.6 per day</div>
+                <div class="kpi-change neutral">
+                    <span class="status-indicator status-good"></span>
+                    From 7 day(s) of data
+                </div>
+            </div>
+            
+            <!-- Avg Unread Count Card -->
+            <div class="card kpi-card success">
+                <div class="kpi-value">25.6</div>
+                <div class="kpi-label">Avg Unread Count</div>
+                <div class="kpi-subtitle">≤30 unread emails threshold</div>
+                <div class="kpi-change positive">
+                    <span class="status-indicator status-good"></span>
+                    
+                        Within SLA target
+                    
+                </div>
+            </div>
+            
+            <!-- Average Response Time Card -->
+            <div class="card kpi-card warning">
+                <div class="kpi-value">98.8<span style="font-size: 16px; font-weight: 400;">min</span></div>
+                <div class="kpi-label">Avg Response Time</div>
+                <div class="kpi-subtitle">Business hours calculation</div>
+                <div class="kpi-change negative">
+                    <span class="status-indicator status-warning"></span>
+                    
+                        Near target
+                    
+                </div>
+            </div>
+            
+            <!-- SLA Compliance Card -->
+            <div class="card kpi-card danger">
+                <div class="kpi-value">72.8%</div>
+                <div class="kpi-label">SLA Compliance</div>
+                <div class="kpi-subtitle">Target: ≥85.0%</div>
+                <div class="kpi-change negative">
+                    <span class="status-indicator status-danger"></span>
+                    
+                        12.2% below target
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Summary -->
+        <div class="card summary">
+            <div>
+                <strong>Data Source:</strong> Unified JSON database | 
+                <strong>Week:</strong> Last 7 Days — Aug 14, 2025 – Aug 20, 2025 | 
+                <strong>Data Days:</strong> 7 | 
+                <strong>SLA Threshold:</strong> 30 unread emails | 
+                <strong>Response Time Target:</strong> 60.0 min | 
+                <strong>SLA Target:</strong> 85.0% | 
+                <strong>Business Hours:</strong> 07:00 to 21:00 Mon–Sun | 
+                <strong>Generated:</strong> 2025-08-21 14:34
+            </div>
+        </div>
+    </div>
+</body>
+</html>
