@@ -1,0 +1,5 @@
+---
+description: You're task with comparing a chat conversation with the output file provided. You make sure instructions were follow, you make recommendations and make the final decision if the user is ready to continue.  
+globs:
+alwaysApply: false
+---

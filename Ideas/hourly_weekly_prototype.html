@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weekly Hourly Email Volume - Visualization Comparison</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        :root {
+            --primary: #0F172A;
+            --primary-light: #1E293B;
+            --accent: #3B82F6;
+            --accent-dark: #2563EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --muted: #64748B;
+            --text-muted: #94A3B8;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8FAFC;
+            --bg-tertiary: #F1F5F9;
+            --border: #E2E8F0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --chart-height: 320px;
+            --primary-2: #3B82F6;
+            --accent-2: #DBEAFE;
+            --accent-3: #93C5FD;
+            --emails: #0EA5E9;
+            --success-2: #10B981;
+            --warning-2: #F59E0B;
+            --danger-2: #EF4444;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 32px 24px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #FFFFFF 0%, #EEF2FF 100%);
+            color: var(--text-primary);
+            margin: -32px -24px 40px -24px;
+            padding: 32px 24px;
+            box-shadow: var(--shadow-md);
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .brand-title {
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #F8FAFF 100%);
+            border: 1px solid #F1F5F9;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-title { font-size: 18px; font-weight: 900; margin-bottom: 8px; }
+        .chart-subtitle { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; }
+
+        .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+        .legend-item { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-secondary) }
+        .legend-swatch { width: 16px; height: 6px; border-radius: 4px }
+
+        .chart-container { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px; overflow: auto }
+        .chart-wrapper { position: relative; width: 100%; min-width: 860px; height: 420px }
+        .chart-svg { width: 100%; height: 100%; overflow: visible }
+
+        .grid-line { stroke: #E5E7EB; stroke-width: 1; stroke-dasharray: 4,4 }
+        .axis-line { stroke: #94A3B8; stroke-width: 2; opacity: .7 }
+        .y-axis-label { font: 500 11px Inter, sans-serif; fill: var(--text-muted) }
+        .x-axis-label { font: 600 12px Inter, sans-serif; fill: var(--text-primary) }
+
+        .data-point { opacity: .9; transition: transform .2s ease; }
+        .data-point:hover { transform: scale(1.6); }
+
+        .line { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round }
+
+        /* Day colors (Tue->Mon) */
+        .c-tue { stroke: var(--emails) }
+        .c-wed { stroke: var(--accent) }
+        .c-thu { stroke: var(--success) }
+        .c-fri { stroke: var(--warning) }
+        .c-sat { stroke: var(--danger) }
+        .c-sun { stroke: var(--accent-3) }
+        .c-mon { stroke: var(--primary-2) }
+
+        /* Bar colors reuse the same palette as fills */
+        .b-tue { fill: var(--emails) }
+        .b-wed { fill: var(--accent) }
+        .b-thu { fill: var(--success) }
+        .b-fri { fill: var(--warning) }
+        .b-sat { fill: var(--danger) }
+        .b-sun { fill: var(--accent-3) }
+        .b-mon { fill: var(--primary-2) }
+
+        @media (max-width: 1024px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="brand-title">Weekly Hourly Email Volume - Visualization Comparison</div>
+            <div class="chart-subtitle">Timeframe: Aug 13–19, 2024 • Business hours: 7 AM–9 PM • Mock data</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid-2">
+            <div class="card">
+                <div class="chart-title">Option A: 7 Lines (one per day)</div>
+                <div class="legend" id="legend-lines"></div>
+                <div class="chart-container">
+                    <div class="chart-wrapper">
+                        <svg id="lines-svg" class="chart-svg" viewBox="0 0 900 420" preserveAspectRatio="xMidYMid meet"></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="chart-title">Option B: Grouped Bars (hours × days)</div>
+                <div class="legend" id="legend-bars"></div>
+                <div class="chart-container">
+                    <div class="chart-wrapper">
+                        <svg id="bars-svg" class="chart-svg" viewBox="0 0 980 420" preserveAspectRatio="xMidYMid meet"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock data: 7 days (Tue->Mon), 15 hours: 07..21
+        const days = [
+            { key: '2024-08-13', label: 'Tue', cls: 'tue' },
+            { key: '2024-08-14', label: 'Wed', cls: 'wed' },
+            { key: '2024-08-15', label: 'Thu', cls: 'thu' },
+            { key: '2024-08-16', label: 'Fri', cls: 'fri' },
+            { key: '2024-08-17', label: 'Sat', cls: 'sat' },
+            { key: '2024-08-18', label: 'Sun', cls: 'sun' },
+            { key: '2024-08-19', label: 'Mon', cls: 'mon' },
+        ];
+
+        const hours = Array.from({ length: 15 }, (_, i) => 7 + i); // 7..21
+
+        // Generate mock volumes with morning/afternoon peaks
+        function mockVolume(hour, dayIndex) {
+            const base =
+                (hour >= 9 && hour <= 11 ? 22 : 0) +
+                (hour >= 14 && hour <= 16 ? 26 : 0) +
+                (hour >= 18 && hour <= 19 ? 12 : 0);
+            const dayMod = [2, 0, 4, 6, -2, -4, 1][dayIndex];
+            const noise = Math.floor(Math.random() * 4) - 2; // -2..+1
+            return Math.max(0, Math.min(40, base + dayMod + noise));
+        }
+
+        const data = {};
+        days.forEach((d, di) => {
+            data[d.key] = {};
+            hours.forEach(h => { data[d.key][String(h).padStart(2, '0')] = mockVolume(h, di); });
+        });
+
+        // Shared chart dimensions
+        const W = 900, H = 420;
+        const left = 60, right = 20, top = 20, bottom = 40;
+        const innerW = W - left - right;
+        const innerH = H - top - bottom;
+
+        // Scales
+        const xScale = (hour) => left + (innerW) * (hour - 7) / (21 - 7);
+        const yMax = 50;
+        const yScale = (v) => top + innerH - (innerH * v / yMax);
+
+        const hourLabel = (h) => {
+            const ampm = h < 12 ? 'AM' : 'PM';
+            const hh = ((h + 11) % 12) + 1;
+            return `${hh} ${ampm}`;
+        };
+
+        function drawGrid(svg) {
+            // Y grid
+            [0, 10, 20, 30, 40, 50].forEach(val => {
+                const y = yScale(val);
+                svg.insertAdjacentHTML('beforeend', `<line x1="${left}" y1="${y}" x2="${W - right}" y2="${y}" class="grid-line"/>`);
+                svg.insertAdjacentHTML('beforeend', `<text x="${left - 10}" y="${y + 4}" class="y-axis-label">${val}</text>`);
+            });
+            // Axes
+            svg.insertAdjacentHTML('beforeend', `<line x1="${left}" y1="${H - bottom}" x2="${W - right}" y2="${H - bottom}" class="axis-line"/>`);
+            svg.insertAdjacentHTML('beforeend', `<line x1="${left}" y1="${top}" x2="${left}" y2="${H - bottom}" class="axis-line"/>`);
+            // X labels
+            hours.forEach(h => {
+                const x = xScale(h);
+                svg.insertAdjacentHTML('beforeend', `<text x="${x}" y="${H - bottom + 16}" text-anchor="middle" class="x-axis-label">${hourLabel(h)}</text>`);
+            });
+        }
+
+        function buildLegend(containerId) {
+            const el = document.getElementById(containerId);
+            el.innerHTML = '';
+            days.forEach(d => {
+                const swatch = document.createElement('span');
+                swatch.className = 'legend-swatch';
+                swatch.style.background = getColorForDay(d.cls);
+                const label = document.createElement('span');
+                label.textContent = d.label;
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.appendChild(swatch);
+                item.appendChild(label);
+                el.appendChild(item);
+            });
+        }
+
+        function getColorForDay(cls) {
+            const map = {
+                tue: 'var(--emails)',
+                wed: 'var(--accent)',
+                thu: 'var(--success)',
+                fri: 'var(--warning)',
+                sat: 'var(--danger)',
+                sun: 'var(--accent-3)',
+                mon: 'var(--primary-2)'
+            };
+            return map[cls];
+        }
+
+        // Lines chart
+        (function renderLines() {
+            const svg = document.getElementById('lines-svg');
+            drawGrid(svg);
+
+            days.forEach((d, di) => {
+                const pts = hours.map(h => ({ x: xScale(h), y: yScale(data[d.key][String(h).padStart(2, '0')]), v: data[d.key][String(h).padStart(2, '0')], h }));
+                const dAttr = pts.map((p, i) => (i === 0 ? `M ${p.x},${p.y}` : `L ${p.x},${p.y}`)).join(' ');
+                const color = getColorForDay(d.cls);
+                svg.insertAdjacentHTML('beforeend', `<path d="${dAttr}" class="line" style="stroke:${color}"/>`);
+                pts.forEach(p => {
+                    svg.insertAdjacentHTML('beforeend', `<circle cx="${p.x}" cy="${p.y}" r="3.5" class="data-point" style="fill:${color}" title="${d.label} • ${hourLabel(p.h)} • ${p.v}"></circle>`);
+                });
+            });
+
+            buildLegend('legend-lines');
+        })();
+
+        // Bars chart (grouped)
+        (function renderBars() {
+            const svg = document.getElementById('bars-svg');
+            // Slightly wider inner area for bar grouping
+            const Wb = 980, Hb = 420;
+            const leftb = 60, rightb = 20, topb = 20, bottomb = 40;
+            const innerWb = Wb - leftb - rightb;
+            const innerHb = Hb - topb - bottomb;
+
+            const xScaleB = (hour) => leftb + (innerWb) * (hour - 7) / (21 - 7);
+            const yScaleB = (v) => topb + innerHb - (innerHb * v / yMax);
+
+            // Draw grid/axes/labels for bars
+            [0, 10, 20, 30, 40, 50].forEach(val => {
+                const y = yScaleB(val);
+                svg.insertAdjacentHTML('beforeend', `<line x1="${leftb}" y1="${y}" x2="${Wb - rightb}" y2="${y}" class="grid-line"/>`);
+                svg.insertAdjacentHTML('beforeend', `<text x="${leftb - 10}" y="${y + 4}" class="y-axis-label">${val}</text>`);
+            });
+            svg.insertAdjacentHTML('beforeend', `<line x1="${leftb}" y1="${Hb - bottomb}" x2="${Wb - rightb}" y2="${Hb - bottomb}" class="axis-line"/>`);
+            svg.insertAdjacentHTML('beforeend', `<line x1="${leftb}" y1="${topb}" x2="${leftb}" y2="${Hb - bottomb}" class="axis-line"/>`);
+            hours.forEach(h => {
+                const x = xScaleB(h);
+                svg.insertAdjacentHTML('beforeend', `<text x="${x}" y="${Hb - bottomb + 16}" text-anchor="middle" class="x-axis-label">${hourLabel(h)}</text>`);
+            });
+
+            // For each hour, render a group of 7 bars side-by-side
+            const groupWidth = innerWb / (hours.length - 1); // spacing per hour label
+            const barWidth = Math.max(6, Math.min(14, groupWidth / 9));
+            const groupOffset = barWidth * 4; // half (approx) group width
+
+            hours.forEach(h => {
+                const xCenter = xScaleB(h);
+                days.forEach((d, di) => {
+                    const v = data[d.key][String(h).padStart(2, '0')];
+                    const barH = Math.max(0, (innerHb * v / yMax));
+                    const x = xCenter - groupOffset + di * (barWidth + 2);
+                    const y = (topb + innerHb) - barH;
+                    const color = getColorForDay(d.cls);
+                    svg.insertAdjacentHTML('beforeend', `<rect x="${x}" y="${y}" width="${barWidth}" height="${barH}" style="fill:${color}" title="${d.label} • ${hourLabel(h)} • ${v}"></rect>`);
+                });
+            });
+
+            buildLegend('legend-bars');
+        })();
+    </script>
+</body>
+</html>
+
+
