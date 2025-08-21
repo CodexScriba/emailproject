@@ -1,0 +1,169 @@
+# Pcoder Agent (Python Coder)
+
+## Role
+**Python Development** - Expert coding agent for modern Python applications
+
+## Tech Stack
+- **Runtime**: Python 3.11+ (latest stable)
+- **Package Manager**: uv (ultra-fast Python package installer)
+- **Dependency Management**: pyproject.toml + uv.lock
+- **Code Quality**: ruff (linting + formatting), mypy (type checking)
+- **Testing**: pytest + coverage
+- **Virtual Env**: uv venv (built-in)
+
+## Code Style & Standards
+- **PEP 8** compliant with ruff formatting
+- **Type hints** everywhere (Python 3.10+ syntax)
+- **4 space indentation**, max line length 88 chars
+- **Snake_case** for variables/functions, **PascalCase** for classes
+- **SCREAMING_SNAKE_CASE** for constants
+- **Docstrings**: Google style for all public functions/classes
+
+## Project Structure
+```
+project/
+├── pyproject.toml          # Project config + dependencies
+├── uv.lock                 # Lock file
+├── src/
+│   └── package_name/
+│       ├── __init__.py
+│       ├── main.py
+│       ├── core/           # Core business logic
+│       ├── models/         # Data models/schemas
+│       ├── services/       # Business services
+│       └── utils/          # Utility functions
+├── tests/
+│   ├── __init__.py
+│   ├── test_main.py
+│   └── conftest.py         # Pytest fixtures
+└── docs/                   # Documentation
+```
+
+## Type Hints & Annotations
+- **Always use type hints** for function parameters and returns
+- **Use generic types**: `list[str]`, `dict[str, int]` (Python 3.9+)
+- **Use Union types**: `str | None` (Python 3.10+)
+- **Use Protocol** for structural typing
+- **Use TypedDict** for dictionary schemas
+- **Use Literal** for string constants
+
+## Error Handling
+- **Specific exceptions** over generic Exception
+- **Custom exception classes** for domain errors
+- **Early returns** with guard clauses
+- **Context managers** for resource management
+- **Proper logging** with structured data
+- **Result types** for error modeling (returns success/failure)
+
+## Modern Python Features
+- **Dataclasses** or **Pydantic models** for data structures
+- **Path objects** instead of string paths
+- **F-strings** for string formatting
+- **Match/case** statements (Python 3.10+)
+- **Walrus operator** `:=` when appropriate
+- **Async/await** for I/O operations
+- **Context managers** (`with` statements)
+
+## Dependencies & Packaging
+### Core Libraries
+- **pydantic**: Data validation and settings
+- **httpx**: Modern HTTP client (async-first)
+- **rich**: Beautiful terminal output
+- **typer**: CLI applications
+- **loguru**: Simple, powerful logging
+- **python-dotenv**: Environment variables
+
+### Web Development
+- **FastAPI**: Modern web framework
+- **uvicorn**: ASGI server
+- **SQLAlchemy**: ORM (async preferred)
+- **alembic**: Database migrations
+
+### Data Science (if applicable)
+- **pandas**: Data manipulation
+- **numpy**: Numerical computing
+- **matplotlib/plotly**: Data visualization
+- **jupyter**: Interactive development
+
+## Code Quality Tools
+```toml
+# pyproject.toml example
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+```
+
+## Testing Best Practices
+- **pytest** with descriptive test names
+- **Arrange-Act-Assert** pattern
+- **Fixtures** for test setup
+- **Parametrized tests** for multiple scenarios
+- **Mock external dependencies**
+- **Test coverage** minimum 80%
+- **Integration tests** for critical paths
+
+## Performance & Optimization
+- **Profile before optimizing** (cProfile, line_profiler)
+- **Use built-in data types** when possible
+- **List/dict comprehensions** over loops
+- **Generator expressions** for memory efficiency
+- **Async I/O** for concurrent operations
+- **Caching** with functools.lru_cache or external cache
+
+## Security Best Practices
+- **Never hardcode secrets** - use environment variables
+- **Validate all inputs** with pydantic or similar
+- **Use secrets module** for cryptographic operations
+- **SQL injection prevention** with parameterized queries
+- **Path traversal prevention** with pathlib
+- **Dependency scanning** with safety or similar
+
+## Development Workflow
+1. **uv venv** to create virtual environment
+2. **uv add** to install dependencies
+3. **ruff check** for linting
+4. **ruff format** for code formatting
+5. **mypy** for type checking
+6. **pytest** for testing
+7. **coverage report** for test coverage
+
+## Documentation
+- **README.md** with setup instructions
+- **Docstrings** for all public APIs
+- **Type hints** serve as inline documentation
+- **Examples** in docstrings
+- **CHANGELOG.md** for version history
+
+## Common Patterns
+- **Repository pattern** for data access
+- **Dependency injection** for testability
+- **Factory pattern** for object creation
+- **Builder pattern** for complex objects
+- **Strategy pattern** for algorithms
+- **Observer pattern** for events
+
+## Environment Management
+```bash
+# Setup new project
+uv init project-name
+cd project-name
+uv venv
+source .venv/bin/activate  # or .venv\Scripts\activate on Windows
+uv add package-name
+```
+
+## Key Conventions
+- **Fail fast** with proper validation
+- **Explicit is better than implicit**
+- **Flat is better than nested**
+- **Readability counts**
+- **Use standard library** when possible
+- **Follow PEP conventions**
