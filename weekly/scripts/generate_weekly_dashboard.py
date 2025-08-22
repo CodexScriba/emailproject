@@ -12,7 +12,7 @@ import sys
 from datetime import datetime, timedelta, date
 import argparse
 from pathlib import Path
-from statistics import mean
+from statistics import mean, median
 from typing import Dict, Any, List, Optional, Tuple
 import re
 
@@ -390,6 +390,120 @@ def compute_weekly_kpis(
     return context
 
 
+def compute_two_hour_metrics_week(
+    db: Dict[str, Any],
+    config: Dict[str, Any],
+    start_date: date,
+    end_date: date,
+    specific_dates: Optional[List[date]] = None,
+) -> Tuple[List[Dict[str, Any]], int]:
+    """Aggregate weekly metrics into 2-hour blocks across included days.
+
+    Output list per 2-hour block with keys:
+      - label (e.g., "07:00–08:59")
+      - start_hour (int)
+      - emails (int) — weekly sum across days/hours in block
+      - avg_unread (float | None) — mean of unread snapshots across hours/days
+      - avg_response_time (float | None) — weighted avg by emails_replied, fallback to emails
+      - median_response_time (float | None) — weighted median by emails_replied (fallback to emails)
+    Returns (blocks, two_hour_max_emails_week)
+    """
+    days_data: Dict[str, Any] = db.get('days', {}) or {}
+
+    # Business hours bounds
+    sla_thresholds = config.get('sla_thresholds', {}) or {}
+    bh = sla_thresholds.get('business_hours', {}) or {}
+    start_hour_b = int(bh.get('start_hour', 7))
+    end_hour_b = int(bh.get('end_hour', 21))
+
+    # Helper: format block label like 07:00–08:59
+    def format_block_label(h_start: int, h_end_exclusive: int) -> str:
+        h_last = max(h_start, min(h_end_exclusive, 24) - 1)
+        return f"{h_start:02d}:00–{h_last:02d}:59"
+
+    # Prepare containers per 2-hour start
+    blocks: List[Dict[str, Any]] = []
+
+    # Build list of dates to include
+    date_iterable: List[date] = specific_dates if specific_dates is not None else daterange(start_date, end_date)
+
+    # Pre-collect hourly data per included date
+    hourly_by_date: Dict[str, List[Dict[str, Any]]] = {}
+    for d in date_iterable:
+        key = d.strftime('%Y-%m-%d')
+        day_obj: Optional[Dict[str, Any]] = days_data.get(key) or {}
+        hourly_by_date[key] = list(day_obj.get('hourly_data') or [])
+
+    # Iterate 2-hour blocks within business hours (end exclusive)
+    # Example: 07..21 -> starts at 7,9,11,13,15,17,19
+    for h_start in range(start_hour_b, end_hour_b, 2):
+        h_end_exclusive = min(h_start + 2, end_hour_b)
+
+        total_emails: int = 0
+        unread_samples: List[float] = []
+        rt_weighted_sum: float = 0.0
+        rt_weight_total: float = 0.0
+        rt_samples_for_median: List[float] = []
+
+        for key, hourly_items in hourly_by_date.items():
+            for item in hourly_items:
+                try:
+                    hour_int = int(item.get('hour'))
+                except Exception:
+                    continue
+                # include hour if within current block and business hours
+                if hour_int < h_start or hour_int >= h_end_exclusive:
+                    continue
+
+                emails_received = item.get('emails_received')
+                if not isinstance(emails_received, (int, float)):
+                    emails_received = item.get('emails')
+                emails_val = int(emails_received) if isinstance(emails_received, (int, float)) else 0
+                total_emails += emails_val
+
+                unread_val = item.get('unread_count')
+                if isinstance(unread_val, (int, float)):
+                    unread_samples.append(float(unread_val))
+
+                # Response time and weights
+                rt = (
+                    item.get('avg_response_time')
+                    if item.get('avg_response_time') is not None
+                    else item.get('avg_response_time_minutes')
+                )
+                replies = item.get('emails_replied')
+                if not isinstance(replies, (int, float)):
+                    replies = item.get('replies')
+                weight = float(replies) if isinstance(replies, (int, float)) and replies > 0 else None
+
+                # Fallback to emails as weight when replies missing
+                if weight is None and emails_val > 0:
+                    weight = float(emails_val)
+
+                if isinstance(rt, (int, float)) and weight is not None and weight > 0:
+                    rt_weighted_sum += float(rt) * weight
+                    rt_weight_total += weight
+                    # Median approximation by expansion
+                    # Cap expansion to avoid pathological blow-up
+                    capped = int(min(200, max(1, round(weight))))
+                    rt_samples_for_median.extend([float(rt)] * capped)
+
+        avg_unread: Optional[float] = round(sum(unread_samples) / len(unread_samples), 1) if unread_samples else None
+        avg_rt: Optional[float] = round(rt_weighted_sum / rt_weight_total, 1) if rt_weight_total > 0 else None
+        median_rt: Optional[float] = round(median(rt_samples_for_median), 1) if rt_samples_for_median else None
+
+        blocks.append({
+            'label': format_block_label(h_start, h_end_exclusive),
+            'start_hour': h_start,
+            'emails': int(total_emails),
+            'avg_unread': avg_unread,
+            'avg_response_time': avg_rt,
+            'median_response_time': median_rt,
+        })
+
+    two_hour_max_emails_week = max((b['emails'] for b in blocks), default=0)
+    return blocks, int(two_hour_max_emails_week)
+
 def select_last_n_valid_dates(
     db: Dict[str, Any],
     config: Dict[str, Any],
@@ -547,6 +661,17 @@ def main():
         'generated_timestamp': generated_timestamp,
         'week_data': week_data,
     }
+
+    # Compute weekly two-hour metrics table
+    two_hour_metrics_week, two_hour_max_emails_week = compute_two_hour_metrics_week(
+        db,
+        sla_config,
+        start_date,
+        end_date,
+        specific_dates=specific_dates,
+    )
+    context['two_hour_metrics_week'] = two_hour_metrics_week
+    context['two_hour_max_emails_week'] = two_hour_max_emails_week
 
     if args.validate_only:
         # Print KPIs and exit non-zero if required fields missing

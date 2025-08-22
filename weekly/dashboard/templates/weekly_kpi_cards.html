@@ -249,6 +249,19 @@
         .badge.warning { color: var(--warning); background: #F59E0B20 }
         .badge.danger { color: var(--danger); background: #EF444420 }
 
+        /* Two-Hour Metrics Table — parity with daily */
+        .a-table { display:flex; flex-direction:column; gap:10px; margin-top: 16px }
+        .a-row { display:grid; grid-template-columns: 1.2fr .7fr .9fr .9fr .9fr; gap:12px; align-items:center; padding:12px 14px; border:1px solid var(--border); border-radius:12px; background:#fff }
+        .a-row.header { background:#f1f5f9; font-weight:800; color: var(--muted); text-transform:uppercase; font-size:12px }
+        .a-cell { font-size:13px; font-weight:600 }
+
+        .microbar { height:8px; background:#e5e7eb; border-radius:999px; width:100%; position:relative; overflow:hidden; margin-top:4px }
+        .microbar .fill { height:100%; border-radius:999px }
+        .microbar .fill.emails { background: linear-gradient(90deg, var(--emails), #0284c7) }
+        .microbar .fill.response { background: linear-gradient(90deg, #3b82f6, #2563eb) }
+        .microbar .fill.unread { background: linear-gradient(90deg, var(--danger-2), #dc2626) }
+        .weak { color: var(--muted); font-weight:600 }
+
         /* Heatmap Styles */
         .heatmap-card-title { font-weight: 800; font-size: 16px; color: var(--text-primary); margin-bottom: 14px }
         .heatmap-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 16px }
@@ -433,6 +446,87 @@
                 <strong>Generated:</strong> {{ generated_timestamp }}
             </div>
         </div>
+
+        <!-- Weekly 2-Hour Email Metrics -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="heatmap-card-title">Weekly 2-Hour Email Metrics</div>
+                <div class="heatmap-subtitle">Aggregated across {{ business_hours_label }} ({{ data_days_count }} day{% if data_days_count != 1 %}s{% endif %})</div>
+
+                <div class="a-table">
+                    <div class="a-row header">
+                        <div>Block</div><div>Emails</div><div>Avg Unread</div><div>Avg Response</div><div>Median Time</div>
+                    </div>
+
+                    {% for row in two_hour_metrics_week %}
+                    {% set s = row.start_hour %}
+                    {% set emails_width = ((row.emails / (two_hour_max_emails_week or 1) * 100) | round(0)) %}
+                    {% if emails_width < 0 %}{% set emails_width = 0 %}{% elif emails_width > 100 %}{% set emails_width = 100 %}{% endif %}
+                    {% set au = row.avg_unread %}
+                    {% set au_div = (unread_threshold or 1) %}
+                    {% set unread_width = (((au or 0) / au_div * 100) | round(0)) %}
+                    {% if unread_width < 0 %}{% set unread_width = 0 %}{% elif unread_width > 100 %}{% set unread_width = 100 %}{% endif %}
+                    {% set art = row.avg_response_time %}
+                    {% set rt_div = (response_time_target or 60) %}
+                    {% set rt_width = (((art or 0) / rt_div * 100) | round(0)) %}
+                    {% if rt_width < 0 %}{% set rt_width = 0 %}{% elif rt_width > 100 %}{% set rt_width = 100 %}{% endif %}
+
+                    <div class="a-row" title="{{ row.label }} • Emails: {{ row.emails }} • Avg Unread: {{ row.avg_unread if row.avg_unread is not none else 'N/A' }} • Avg Response: {{ row.avg_response_time if row.avg_response_time is not none else 'N/A' }} min • Median: {{ row.median_response_time if row.median_response_time is not none else 'N/A' }} min">
+                        <div class="a-cell">
+                            {% if s <= 8 %}
+                                <div class="distribution-name">🌅 Early Morning</div>
+                            {% elif s <= 12 %}
+                                <div class="distribution-name">☀️ Morning</div>
+                            {% elif s <= 16 %}
+                                <div class="distribution-name">🌤️ Afternoon</div>
+                            {% else %}
+                                <div class="distribution-name">🌆 Evening</div>
+                            {% endif %}
+                            <div class="distribution-range">{{ row.label }}</div>
+                        </div>
+                        <div class="a-cell">
+                            <div class="microbar"><div class="fill emails" style="width: {{ emails_width }}%"></div></div>
+                            <span class="weak">{{ row.emails }}</span>
+                        </div>
+                        <div class="a-cell">
+                            {% if row.avg_unread is not none %}
+                                {% if unread_threshold is not none and row.avg_unread <= unread_threshold %}
+                                    <span class="badge success">{{ row.avg_unread | round(1) }}</span>
+                                {% elif unread_threshold is not none %}
+                                    <span class="badge danger">{{ row.avg_unread | round(1) }}</span>
+                                {% else %}
+                                    <span class="weak">{{ row.avg_unread | round(1) }}</span>
+                                {% endif %}
+                                <div class="microbar"><div class="fill unread" style="width: {{ unread_width }}%"></div></div>
+                            {% else %}
+                                <span class="weak">—</span>
+                            {% endif %}
+                        </div>
+                        <div class="a-cell">
+                            {% if art is not none %}
+                                {% if art < 30 %}
+                                    <span class="badge success">⚡ Lightning Fast</span>
+                                {% elif art < 60 %}
+                                    <span class="badge success">🚀 Fast Response</span>
+                                {% elif art < 120 %}
+                                    <span class="badge warning">⏱️ Moderate</span>
+                                {% elif art < 180 %}
+                                    <span class="badge warning">🐢 Slow</span>
+                                {% elif art < 300 %}
+                                    <span class="badge danger">⚠️ Very Slow</span>
+                                {% else %}
+                                    <span class="badge danger">🔴 Critical</span>
+                                {% endif %}
+                            {% endif %}
+                            <div class="microbar"><div class="fill response" style="width: {{ rt_width }}%"></div></div>
+                            <span class="weak">{% if row.avg_response_time is not none %}{{ row.avg_response_time }} min{% else %}—{% endif %}</span>
+                        </div>
+                        <div class="a-cell">{% if row.median_response_time is not none %}{{ row.median_response_time }} min{% else %}—{% endif %}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
     </div>
 <script>
     (function(){
