@@ -116,6 +116,60 @@ def daterange(start_date: date, end_date: date) -> List[date]:
     return days
 
 
+def build_week_data(
+    db: Dict[str, Any],
+    config: Dict[str, Any],
+    start_date: date,
+    end_date: date,
+    specific_dates: Optional[List[date]] = None,
+) -> Dict[str, Dict[str, int]]:
+    """Construct heatmap-ready week_data mapping dates -> {"HH": count}.
+
+    - Uses business hours from config; includes end hour inclusive for a 15-hour window (e.g., 07..21).
+    - Falls back to 0 for missing hours or missing day/hourly data.
+    - Accepts optional specific_dates to override the inclusive date range.
+    """
+    days_data: Dict[str, Any] = db.get('days', {}) or {}
+
+    sla_thresholds = config.get('sla_thresholds', {}) or {}
+    bh = sla_thresholds.get('business_hours', {}) or {}
+    start_hour_cfg = int(bh.get('start_hour', 7))
+    end_hour_cfg = int(bh.get('end_hour', 21))
+
+    # Ensure inclusive end hour for heatmap (e.g., 07..21 -> 15 hours)
+    hours_range: List[int] = list(range(start_hour_cfg, end_hour_cfg + 1))
+    hours_labels: List[str] = [f"{h:02d}" for h in hours_range]
+
+    result: Dict[str, Dict[str, int]] = {}
+
+    date_iterable: List[date] = specific_dates if specific_dates is not None else daterange(start_date, end_date)
+    for d in date_iterable:
+        key = d.strftime('%Y-%m-%d')
+        day_obj: Optional[Dict[str, Any]] = days_data.get(key)
+        hourly_items: List[Dict[str, Any]] = []
+        if day_obj and isinstance(day_obj.get('hourly_data'), list):
+            hourly_items = list(day_obj.get('hourly_data') or [])
+
+        # Build map for this day
+        hour_to_count: Dict[str, int] = {hh: 0 for hh in hours_labels}
+        for item in hourly_items:
+            hour_val = item.get('hour')
+            try:
+                hour_int = int(hour_val)
+            except Exception:
+                continue
+            if hour_int < hours_range[0] or hour_int > hours_range[-1]:
+                continue
+            emails_count = item.get('emails_received')
+            if not isinstance(emails_count, (int, float)):
+                emails_count = item.get('emails')
+            if isinstance(emails_count, (int, float)):
+                hour_to_count[f"{hour_int:02d}"] = int(emails_count)
+
+        result[key] = hour_to_count
+
+    return result
+
 def compute_weekly_kpis(
     db: Dict[str, Any],
     config: Dict[str, Any],
@@ -476,12 +530,22 @@ def main():
         fallback_daily_output=True,
     )
 
+    # Build heatmap week_data
+    week_data: Dict[str, Dict[str, int]] = build_week_data(
+        db,
+        sla_config,
+        start_date,
+        end_date,
+        specific_dates=specific_dates,
+    )
+
     # Compose context
     context: Dict[str, Any] = {
         **kpis,
         'week_title': week_title,
         'business_hours_label': business_hours_label,
         'generated_timestamp': generated_timestamp,
+        'week_data': week_data,
     }
 
     if args.validate_only:
