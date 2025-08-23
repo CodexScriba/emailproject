@@ -344,6 +344,18 @@
             margin-bottom: 32px;
         }
 
+        /* New: Weekly Total Emails by Day (Vertical Bars) */
+        .vbar-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .vbar-card { padding-bottom: 12px }
+        .vbar-svg { width: 100%; height: 240px; display: block }
+        .vbar-axis { font: 700 12px Inter, sans-serif; fill: var(--text-secondary) }
+        .vbar-grid line { stroke: var(--border); stroke-width: 1 }
+        .vbar-bar { fill: var(--emails) }
+        .vbar-bar:hover { filter: brightness(0.95) }
+        .vbar-value { font: 800 12px Inter, sans-serif; fill: var(--text-primary) }
+        .vbar-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 16px }
+        .vbar-title { font-weight: 800; font-size: 16px; color: var(--text-primary); margin-bottom: 6px }
+
         .chart-title {
             font-size: 16px;
             font-weight: 800;
@@ -481,6 +493,56 @@
         </div>
 
         <!-- Data Summary (moved below heatmap) -->
+
+        <!-- Weekly Total Emails by Day: Vertical Bar Chart -->
+        <section class="chart-section">
+            <div class="card vbar-card" role="img" aria-label="Weekly total emails per day">
+                <div class="vbar-title">Weekly Total Emails by Day</div>
+                <div class="vbar-subtitle">{{ week_title }}</div>
+
+                {% set has_data = emails_per_day is defined and emails_per_day and (max_daily_emails or 0) > 0 %}
+                {% if not has_data %}
+                <div class="weak" style="padding: 8px 2px">No data</div>
+                {% else %}
+                <div class="vbar-wrap">
+                    {% set chart_h = 240 %}
+                    {% set bar_w = 44 %}
+                    {% set gap = 16 %}
+                    {% set n = emails_per_day | length %}
+                    {% set chart_w = (n * bar_w) + ((n - 1) * gap) + 32 %}
+                    <svg class="vbar-svg" viewBox="0 0 {{ chart_w }} {{ chart_h }}" preserveAspectRatio="xMinYMin meet" aria-hidden="false" focusable="false">
+                        <!-- Optional horizontal grid lines at 0/25/50/75/100% -->
+                        {% set levels = [0, 0.25, 0.5, 0.75, 1.0] %}
+                        <g class="vbar-grid">
+                            {% for lv in levels %}
+                                {% set y = (chart_h - 28) - (lv * (chart_h - 60)) %}
+                                <line x1="0" y1="{{ y | round(0, 'floor') }}" x2="{{ chart_w }}" y2="{{ y | round(0, 'floor') }}"></line>
+                            {% endfor %}
+                        </g>
+
+                        <!-- Bars -->
+                        {% set y_base = chart_h - 28 %}
+                        {% set h_avail = chart_h - 60 %}
+                        {% for day in emails_per_day %}
+                            {% set count = day.count %}
+                            {% set ratio = (count / (max_daily_emails or 1)) %}
+                            {% if ratio < 0 %}{% set ratio = 0 %}{% elif ratio > 1 %}{% set ratio = 1 %}{% endif %}
+                            {% set h = (ratio * h_avail) | round(0, 'floor') %}
+                            {% set x = 16 + loop.index0 * (bar_w + gap) %}
+                            {% set y = y_base - h %}
+                            <g>
+                                <rect class="vbar-bar" x="{{ x }}" y="{{ y }}" width="{{ bar_w }}" height="{{ h }}" rx="6" ry="6">
+                                    <title>{{ day.label }} • {{ count }} emails</title>
+                                </rect>
+                                <text class="vbar-value" x="{{ x + (bar_w/2) }}" y="{{ (y - 6) | round(0, 'floor') }}" text-anchor="middle">{{ count }}</text>
+                                <text class="vbar-axis" x="{{ x + (bar_w/2) }}" y="{{ y_base + 14 }}" text-anchor="middle">{{ day.label }}</text>
+                            </g>
+                        {% endfor %}
+                    </svg>
+                </div>
+                {% endif %}
+            </div>
+        </section>
 
         <!-- Weekly Email Heatmap -->
         <div class="card" id="weekly-heatmap" role="region" aria-label="Email volume heatmap">

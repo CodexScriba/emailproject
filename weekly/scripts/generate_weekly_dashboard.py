@@ -581,6 +581,69 @@ def compute_weekly_response_time_distribution(
     
     return result
 
+
+def compute_emails_per_day(
+    db: Dict[str, Any],
+    start_date: date,
+    end_date: date,
+    specific_dates: Optional[List[date]] = None,
+) -> Tuple[List[Dict[str, Any]], int]:
+    """Compute total emails per available day within the selected period.
+
+    Returns a tuple of:
+      - ordered list (Mon..Sun) of { label: 'Mon'..'Sun', count: int }
+        including only days with available email data
+      - max_daily_emails (>= 1)
+    """
+    days_data: Dict[str, Any] = db.get('days', {}) or {}
+
+    # Build date iterable
+    date_iterable: List[date] = specific_dates if specific_dates is not None else daterange(start_date, end_date)
+
+    weekday_to_label = {0: 'Mon', 1: 'Tue', 2: 'Wed', 3: 'Thu', 4: 'Fri', 5: 'Sat', 6: 'Sun'}
+    collected: List[Tuple[int, str, int]] = []
+
+    for d in date_iterable:
+        key = d.strftime('%Y-%m-%d')
+        day_obj: Optional[Dict[str, Any]] = days_data.get(key)
+
+        # Consider day available if it exists and is not explicitly flagged as missing email data
+        if not day_obj or day_obj.get('has_email_data') is False:
+            continue
+
+        daily_summary: Dict[str, Any] = day_obj.get('daily_summary', {}) or {}
+        hourly_data: List[Dict[str, Any]] = day_obj.get('hourly_data', []) or []
+
+        count_val: Optional[int] = None
+        te = daily_summary.get('total_emails')
+        if isinstance(te, (int, float)):
+            count_val = int(te)
+        else:
+            # Fallback: sum hourly emails
+            total = 0
+            for h in hourly_data:
+                v = h.get('emails_received')
+                if not isinstance(v, (int, float)):
+                    v = h.get('emails')
+                if isinstance(v, (int, float)):
+                    total += int(v)
+            count_val = total
+
+        weekday_index = d.weekday()  # 0=Mon .. 6=Sun
+        label = weekday_to_label.get(weekday_index, 'Mon')
+        collected.append((weekday_index, label, int(count_val or 0)))
+
+    # Order by weekday (Mon..Sun) and include only days we collected (available)
+    collected.sort(key=lambda t: t[0])
+    emails_per_day: List[Dict[str, Any]] = [
+        { 'label': label, 'count': count } for _, label, count in collected
+    ]
+
+    max_daily_emails_raw = max((c for _, _, c in collected), default=0)
+    max_daily_emails = int(max(1, max_daily_emails_raw))
+
+    return emails_per_day, max_daily_emails
+
 def select_last_n_valid_dates(
     db: Dict[str, Any],
     config: Dict[str, Any],
@@ -673,12 +736,56 @@ def save_dashboard(html_content: str, week_identifier: str, is_last_7_days: bool
     
     return output_path
 
+
+def parse_flexible_date(date_str: str) -> date:
+    """Parse a date from common formats: YYYY-MM-DD, MM/DD/YYYY, MM/DD, MM-DD.
+
+    For MM/DD and MM-DD, the current year is assumed.
+    """
+    s = (date_str or '').strip()
+    # YYYY-MM-DD
+    m = re.match(r"^(\d{4})-(\d{2})-(\d{2})$", s)
+    if m:
+        return date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+
+    # MM/DD/YYYY
+    m = re.match(r"^(\d{1,2})/(\d{1,2})/(\d{4})$", s)
+    if m:
+        return date(int(m.group(3)), int(m.group(1)), int(m.group(2)))
+
+    # MM/DD
+    m = re.match(r"^(\d{1,2})/(\d{1,2})$", s)
+    if m:
+        year = datetime.now().year
+        return date(year, int(m.group(1)), int(m.group(2)))
+
+    # MM-DD
+    m = re.match(r"^(\d{1,2})-(\d{1,2})$", s)
+    if m:
+        year = datetime.now().year
+        return date(year, int(m.group(1)), int(m.group(2)))
+
+    raise ValueError(f"Unrecognized date format: '{date_str}'")
+
+
+def parse_date_range(date_range: str) -> Tuple[date, date]:
+    """Parse 'START:END' where each part uses parse_flexible_date formats."""
+    if ':' not in (date_range or ''):
+        raise ValueError("--date-range must be in 'START:END' format, e.g., 2025-08-13:2025-08-20 or 08/13:08/20")
+    start_str, end_str = [p.strip() for p in date_range.split(':', 1)]
+    start = parse_flexible_date(start_str)
+    end = parse_flexible_date(end_str)
+    if start > end:
+        raise ValueError('Start date must be on or before end date')
+    return start, end
+
 def main():
     """Main function"""
     parser = argparse.ArgumentParser(description='Generate Weekly Email Dashboard')
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--week', help='ISO week format (e.g., 2025-W34)')
     group.add_argument('--last-7-days', action='store_true', help='Generate for last 7 days')
+    group.add_argument('--date-range', help="Custom date range 'START:END' (YYYY-MM-DD or MM/DD)")
     parser.add_argument('--validate-only', action='store_true', help='Compute KPIs and print, do not write files')
     parser.add_argument('--fill-missing-days', action='store_true', help='If enabled, selects the last 7 valid days ending at end_date when some days are missing')
     
@@ -693,13 +800,24 @@ def main():
         start_date, end_date = get_last_7_days()
         week_identifier = f"last7days_{datetime.now().strftime('%Y%m%d')}"
         is_last_7_days = True
+    elif args.date_range:
+        try:
+            start_date, end_date = parse_date_range(args.date_range)
+        except Exception as e:
+            print(f"Error: {e}")
+            sys.exit(1)
+        week_identifier = f"range_{start_date.isoformat()}_{end_date.isoformat()}"
+        is_last_7_days = False
     else:
         start_date, end_date = get_week_dates(args.week)
         week_identifier = args.week
         is_last_7_days = False
     
     # Format week title
-    week_title = format_week_title(start_date, end_date, is_last_7_days)
+    if args.date_range:
+        week_title = f"{start_date.strftime('%b %d, %Y')} – {end_date.strftime('%b %d, %Y')}"
+    else:
+        week_title = format_week_title(start_date, end_date, is_last_7_days)
     generated_timestamp = datetime.now().strftime('%Y-%m-%d %H:%M')
 
     # Load DB
@@ -738,6 +856,16 @@ def main():
         'generated_timestamp': generated_timestamp,
         'week_data': week_data,
     }
+
+    # Compute daily totals for vertical bar chart
+    emails_per_day, max_daily_emails = compute_emails_per_day(
+        db,
+        start_date,
+        end_date,
+        specific_dates=specific_dates,
+    )
+    context['emails_per_day'] = emails_per_day
+    context['max_daily_emails'] = max_daily_emails
 
     # Compute weekly two-hour metrics table
     two_hour_metrics_week, two_hour_max_emails_week = compute_two_hour_metrics_week(
