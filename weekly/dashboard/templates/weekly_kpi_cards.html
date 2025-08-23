@@ -243,6 +243,9 @@
         /* Summary styling */
         .summary{ margin:28px 0 40px; border:1px solid var(--border); border-radius:14px; background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.06)); padding:16px; text-align:center; color: var(--text-secondary); position:relative; overflow:hidden; font-size: 12px }
         .summary::after{ content:''; position:absolute; left:-100%; top:0; width:200%; height:1px; background: linear-gradient(90deg,transparent, var(--accent-2), transparent); animation: scan 4s linear infinite }
+        
+        /* Footer summary - positioned at bottom */
+        .footer-summary { margin-top: 40px; margin-bottom: 20px; }
 
         .badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-weight:800; font-size:12px }
         .badge.success { color: var(--success); background: #10B98120 }
@@ -494,20 +497,6 @@
             <div class="heatmap" id="heatmap-grid" role="grid" aria-label="Weekly email volume by day and hour"></div>
         </div>
 
-        <!-- Data Summary -->
-        <div class="card summary">
-            <div>
-                <strong>Data Source:</strong> Unified JSON database | 
-                <strong>Week:</strong> {{ week_title }} | 
-                <strong>Data Days:</strong> {{ data_days_count }} | 
-                <strong>SLA Threshold:</strong> {{ unread_threshold }} unread emails | 
-                <strong>Response Time Target:</strong> {{ response_time_target }} min | 
-                <strong>SLA Target:</strong> {{ sla_compliance_target }}% | 
-                <strong>Business Hours:</strong> {{ business_hours_label }} | 
-                <strong>Generated:</strong> {{ generated_timestamp }}
-            </div>
-        </div>
-
         <!-- Weekly 2-Hour Email Metrics -->
         <section class="chart-section">
             <div class="card">
@@ -633,6 +622,20 @@
                 </div>
             </div>
         </section>
+
+        <!-- Data Summary Footer -->
+        <div class="card summary footer-summary">
+            <div>
+                <strong>Data Source:</strong> Unified JSON database | 
+                <strong>Week:</strong> {{ week_title }} | 
+                <strong>Data Days:</strong> {{ data_days_count }} | 
+                <strong>SLA Threshold:</strong> {{ unread_threshold }} unread emails | 
+                <strong>Response Time Target:</strong> {{ response_time_target }} min | 
+                <strong>SLA Target:</strong> {{ sla_compliance_target }}% | 
+                <strong>Business Hours:</strong> {{ business_hours_label }} | 
+                <strong>Generated:</strong> {{ generated_timestamp }}
+            </div>
+        </div>
     </div>
 <script>
     (function(){
