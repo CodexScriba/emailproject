@@ -1,0 +1,17 @@
+# Email Project Dependencies
+# Core data processing libraries
+pandas>=1.5.0
+numpy>=1.24.0
+
+# Template engine for HTML dashboard generation
+jinja2>=3.1.0
+
+# Standard library modules (included with Python, listed for reference)
+# datetime - for time and date handling
+# json - for configuration and data storage
+# argparse - for command-line argument parsing
+# logging - for application logging
+# pathlib - for modern file path handling
+# shutil - for file operations
+# hashlib - for data hashing
+# statistics - for statistical calculations
