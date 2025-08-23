@@ -258,6 +258,16 @@
         .a-row.header { background:#f1f5f9; font-weight:800; color: var(--muted); text-transform:uppercase; font-size:12px }
         .a-cell { font-size:13px; font-weight:600 }
 
+        /* Two-Hour Metrics alignment tweaks */
+        .a-row:not(.header) .a-cell:nth-child(2) { display:grid; grid-template-columns: 1fr 64px; align-items:center; column-gap:10px }
+        .a-row:not(.header) .a-cell:nth-child(2) .microbar { margin:0; min-width:160px; grid-column:1 }
+        .a-row:not(.header) .a-cell:nth-child(2) .weak { grid-column:2; text-align:right }
+        .a-row:not(.header) .a-cell:nth-child(3) { display:grid; grid-template-columns: 92px 1fr; align-items:center; column-gap:10px }
+        .a-row:not(.header) .a-cell:nth-child(3) .microbar { margin:0; min-width:160px; grid-column:2 }
+        .a-row:not(.header) .a-cell:nth-child(4) { display:grid; grid-template-columns: 92px 1fr 72px; align-items:center; column-gap:10px }
+        .a-row:not(.header) .a-cell:nth-child(4) .microbar { margin:0; min-width:160px; grid-column:2 }
+        .a-row:not(.header) .a-cell:nth-child(4) .weak { grid-column:3; text-align:right }
+
         .microbar { height:8px; background:#e5e7eb; border-radius:999px; width:100%; position:relative; overflow:hidden; margin-top:4px }
         .microbar .fill { height:100%; border-radius:999px }
         .microbar .fill.emails { background: linear-gradient(90deg, var(--emails), #0284c7) }
@@ -420,7 +430,7 @@
                 <div class="header-subtitle">Last 7 Days — Aug 16, 2025 – Aug 22, 2025</div>
             </div>
             <div class="header-meta">
-                <div>2025-08-23 02:59</div>
+                <div>2025-08-23 03:33</div>
             </div>
         </div>
     </div>
@@ -1078,7 +1088,7 @@
                 <strong>Response Time Target:</strong> 60.0 min | 
                 <strong>SLA Target:</strong> 85.0% | 
                 <strong>Business Hours:</strong> 07:00 to 21:00 Mon–Sun | 
-                <strong>Generated:</strong> 2025-08-23 02:59
+                <strong>Generated:</strong> 2025-08-23 03:33
             </div>
         </div>
     </div>

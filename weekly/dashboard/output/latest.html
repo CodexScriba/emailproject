@@ -262,10 +262,11 @@
         .a-row:not(.header) .a-cell:nth-child(2) { display:grid; grid-template-columns: 1fr 64px; align-items:center; column-gap:10px }
         .a-row:not(.header) .a-cell:nth-child(2) .microbar { margin:0; min-width:160px; grid-column:1 }
         .a-row:not(.header) .a-cell:nth-child(2) .weak { grid-column:2; text-align:right }
-        .a-row:not(.header) .a-cell:nth-child(3),
-        .a-row:not(.header) .a-cell:nth-child(4) { display:grid; grid-template-columns: 92px 1fr; align-items:center; column-gap:10px }
-        .a-row:not(.header) .a-cell:nth-child(3) .microbar,
+        .a-row:not(.header) .a-cell:nth-child(3) { display:grid; grid-template-columns: 92px 1fr; align-items:center; column-gap:10px }
+        .a-row:not(.header) .a-cell:nth-child(3) .microbar { margin:0; min-width:160px; grid-column:2 }
+        .a-row:not(.header) .a-cell:nth-child(4) { display:grid; grid-template-columns: 92px 1fr 72px; align-items:center; column-gap:10px }
         .a-row:not(.header) .a-cell:nth-child(4) .microbar { margin:0; min-width:160px; grid-column:2 }
+        .a-row:not(.header) .a-cell:nth-child(4) .weak { grid-column:3; text-align:right }
 
         .microbar { height:8px; background:#e5e7eb; border-radius:999px; width:100%; position:relative; overflow:hidden; margin-top:4px }
         .microbar .fill { height:100%; border-radius:999px }
@@ -338,14 +339,13 @@
             gap: 12px;
         }
 
-        .distribution-bar { height:34px; border-radius:10px; display:flex; align-items:center; justify-content:flex-start; padding:0 12px; color:#fff; position:relative; overflow:visible }
+        .distribution-bar { height:34px; border-radius:10px; display:flex; align-items:center; justify-content:flex-start; padding:0 12px; color:#fff; position:relative; overflow:hidden }
         .distribution-bar::after { content:''; position:absolute; inset:0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent); animation: shimmer 3s infinite }
         .distribution-bar.success { background: linear-gradient(135deg, var(--success), var(--success-2)); box-shadow: 0 4px 10px rgba(16,185,129,.20) }
         .distribution-bar.warning { background: linear-gradient(135deg, var(--warning), var(--warning-2)); box-shadow: 0 4px 10px rgba(245,158,11,.20) }
         .distribution-bar.danger { background: linear-gradient(135deg, var(--danger), var(--danger-2)); box-shadow: 0 4px 10px rgba(239,68,68,.20) }
 
-        .distribution-count { color:#fff; font-size:12px; font-weight:700; position:relative; z-index:1; white-space:nowrap }
-        .distribution-bar.outside-label .distribution-count { position:absolute; left: calc(100% + 8px); color: var(--text-primary) }
+        .distribution-count { color:#fff; font-size:12px; font-weight:700; position:relative; z-index:1 }
 
         .distribution-percentage { font-size:13px; font-weight:800; color: var(--accent-3); min-width:40px; text-align:right }
 
@@ -354,13 +354,10 @@
             margin-bottom: 32px;
         }
 
-        /* Charts Grid for wide screens: place bar chart next to heatmap */
-        .charts-grid { display:grid; grid-template-columns: 1.3fr 1fr; gap:24px; margin-bottom:32px }
-
         /* New: Weekly Total Emails by Day (Vertical Bars) */
         .vbar-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
         .vbar-card { padding-bottom: 12px }
-        .vbar-svg { width: 100%; height: var(--chart-height); display: block; min-width: 560px }
+        .vbar-svg { width: 100%; height: 240px; display: block }
         .vbar-axis { font: 700 12px Inter, sans-serif; fill: var(--text-secondary) }
         .vbar-grid line { stroke: var(--border); stroke-width: 1 }
         .vbar-bar { fill: var(--emails) }
@@ -387,7 +384,6 @@
             .grid-4 {
                 grid-template-columns: repeat(2, 1fr);
             }
-            .charts-grid { grid-template-columns: 1fr }
         }
 
         @media (max-width: 768px) {
@@ -434,7 +430,7 @@
                 <div class="header-subtitle">Last 7 Days — Aug 16, 2025 – Aug 22, 2025</div>
             </div>
             <div class="header-meta">
-                <div>2025-08-23 02:59</div>
+                <div>2025-08-23 03:33</div>
             </div>
         </div>
     </div>
@@ -498,22 +494,21 @@
 
         <!-- Data Summary (moved below heatmap) -->
 
-        <div class="charts-grid">
-            <!-- Weekly Total Emails by Day: Vertical Bar Chart -->
-            <section class="chart-section">
-                <div class="card vbar-card" role="img" aria-label="Weekly total emails per day">
-                    <div class="vbar-title">Weekly Total Emails by Day</div>
-                    <div class="vbar-subtitle">Last 7 Days — Aug 16, 2025 – Aug 22, 2025</div>
+        <!-- Weekly Total Emails by Day: Vertical Bar Chart -->
+        <section class="chart-section">
+            <div class="card vbar-card" role="img" aria-label="Weekly total emails per day">
+                <div class="vbar-title">Weekly Total Emails by Day</div>
+                <div class="vbar-subtitle">Last 7 Days — Aug 16, 2025 – Aug 22, 2025</div>
 
+                
+                
+                <div class="vbar-wrap">
                     
                     
-                    <div class="vbar-wrap">
-                        
-                        
-                        
-                        
-                        
-                        <svg class="vbar-svg" viewBox="0 0 436 240" preserveAspectRatio="xMinYMin meet" aria-hidden="false" focusable="false">
+                    
+                    
+                    
+                    <svg class="vbar-svg" viewBox="0 0 436 240" preserveAspectRatio="xMinYMin meet" aria-hidden="false" focusable="false">
                         <!-- Optional horizontal grid lines at 0/25/50/75/100% -->
                         
                         <g class="vbar-grid">
@@ -637,26 +632,25 @@
                                 <text class="vbar-axis" x="398.0" y="226" text-anchor="middle">Sun</text>
                             </g>
                         
-                        </svg>
-                    </div>
-                    
+                    </svg>
                 </div>
-            </section>
-
-            <!-- Weekly Email Heatmap -->
-            <div class="card" id="weekly-heatmap" role="region" aria-label="Email volume heatmap">
-                <div class="heatmap-card-title">Weekly Email Volume Heatmap</div>
-                <div class="heatmap-subtitle">Business hours only (07:00–21:00). Hover cells for exact counts.</div>
-                <div class="heatmap-legend" id="heatmap-legend">
-                    <span class="legend-label">Email Volume:</span>
-                    <div class="intensity-scale" id="intensity-scale"></div>
-                </div>
-                <div class="heatmap heatmap-header heatmap-row" aria-hidden="true">
-                    <div class="heatmap-day"></div>
-                    <!-- Hour headers injected by script -->
-                </div>
-                <div class="heatmap" id="heatmap-grid" role="grid" aria-label="Weekly email volume by day and hour"></div>
+                
             </div>
+        </section>
+
+        <!-- Weekly Email Heatmap -->
+        <div class="card" id="weekly-heatmap" role="region" aria-label="Email volume heatmap">
+            <div class="heatmap-card-title">Weekly Email Volume Heatmap</div>
+            <div class="heatmap-subtitle">Business hours only (07:00–21:00). Hover cells for exact counts.</div>
+            <div class="heatmap-legend" id="heatmap-legend">
+                <span class="legend-label">Email Volume:</span>
+                <div class="intensity-scale" id="intensity-scale"></div>
+            </div>
+            <div class="heatmap heatmap-header heatmap-row" aria-hidden="true">
+                <div class="heatmap-day"></div>
+                <!-- Hour headers injected by script -->
+            </div>
+            <div class="heatmap" id="heatmap-grid" role="grid" aria-label="Weekly email volume by day and hour"></div>
         </div>
 
         <!-- Weekly 2-Hour Email Metrics -->
@@ -1094,7 +1088,7 @@
                 <strong>Response Time Target:</strong> 60.0 min | 
                 <strong>SLA Target:</strong> 85.0% | 
                 <strong>Business Hours:</strong> 07:00 to 21:00 Mon–Sun | 
-                <strong>Generated:</strong> 2025-08-23 02:59
+                <strong>Generated:</strong> 2025-08-23 03:33
             </div>
         </div>
     </div>
@@ -1293,20 +1287,6 @@
                     });
                 };
                 applyWidths('.distribution-bar[data-width]');
-
-                // Prevent clipping of distribution labels for narrow bars
-                const adjustDistributionLabels = () => {
-                    document.querySelectorAll('.distribution-bar').forEach(bar => {
-                        const label = bar.querySelector('.distribution-count');
-                        if (!label) return;
-                        const barRect = bar.getBoundingClientRect();
-                        // If bar width is less than label width + padding, move label outside
-                        const needsOutside = barRect.width < (label.scrollWidth + 20);
-                        bar.classList.toggle('outside-label', needsOutside);
-                    });
-                };
-                adjustDistributionLabels();
-                window.addEventListener('resize', adjustDistributionLabels);
             });
         } else {
             renderWeeklyHeatmap(weekData);
@@ -1322,19 +1302,6 @@
                 });
             };
             applyWidths('.distribution-bar[data-width]');
-
-            // Prevent clipping of distribution labels for narrow bars
-            const adjustDistributionLabels = () => {
-                document.querySelectorAll('.distribution-bar').forEach(bar => {
-                    const label = bar.querySelector('.distribution-count');
-                    if (!label) return;
-                    const barRect = bar.getBoundingClientRect();
-                    const needsOutside = barRect.width < (label.scrollWidth + 20);
-                    bar.classList.toggle('outside-label', needsOutside);
-                });
-            };
-            adjustDistributionLabels();
-            window.addEventListener('resize', adjustDistributionLabels);
         }
     })();
 </script>
