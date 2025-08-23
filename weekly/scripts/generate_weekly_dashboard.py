@@ -329,7 +329,7 @@ def compute_weekly_kpis(
                 if hour_int < start_hour_b or hour_int >= end_hour_b:
                     continue
                 replies = h.get('emails_replied') or h.get('replies')
-                rt = h.get('avg_response_time_minutes') or h.get('response_time_minutes')
+                rt = h.get('avg_response_time_minutes') or h.get('avg_response_time')
                 if isinstance(replies, (int, float)) and replies > 0 and isinstance(rt, (int, float)):
                     weighted_rt_numerator += float(rt) * float(replies)
                     weighted_rt_denominator += float(replies)
