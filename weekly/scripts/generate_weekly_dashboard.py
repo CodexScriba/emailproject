@@ -504,6 +504,83 @@ def compute_two_hour_metrics_week(
     two_hour_max_emails_week = max((b['emails'] for b in blocks), default=0)
     return blocks, int(two_hour_max_emails_week)
 
+def compute_weekly_response_time_distribution(
+    db: Dict[str, Any],
+    config: Dict[str, Any],
+    start_date: date,
+    end_date: date,
+    specific_dates: Optional[List[date]] = None,
+) -> List[Dict[str, Any]]:
+    """Aggregate response time distribution across the entire week.
+    
+    Computes weekly totals for each performance category:
+    - Lightning Fast: Under 30 minutes
+    - Fast Response: 30-60 minutes  
+    - Moderate: 60-120 minutes
+    - Slow: 120-180 minutes
+    - Very Slow: 180-300 minutes
+    - Critical: Over 300 minutes
+    
+    Returns list with count, percentage, and color for each category.
+    """
+    days_data: Dict[str, Any] = db.get('days', {}) or {}
+    
+    # Initialize distribution categories with same structure as daily dashboard
+    distribution = {
+        'Very Fast (< 30 min)': {'count': 0, 'color': 'success'},
+        'Fast (30-60 min)': {'count': 0, 'color': 'success'},
+        'Moderate (60-120 min)': {'count': 0, 'color': 'warning'},
+        'Slow (120-180 min)': {'count': 0, 'color': 'warning'},
+        'Very Slow (180-300 min)': {'count': 0, 'color': 'danger'},
+        'Critical (> 300 min)': {'count': 0, 'color': 'danger'}
+    }
+    
+    date_iterable: List[date] = specific_dates if specific_dates is not None else daterange(start_date, end_date)
+    
+    for d in date_iterable:
+        key = d.strftime('%Y-%m-%d')
+        day_obj: Optional[Dict[str, Any]] = days_data.get(key)
+        
+        if not day_obj:
+            continue
+            
+        hourly_data: List[Dict[str, Any]] = day_obj.get('hourly_data', []) or []
+        
+        # Process each hour's response time data
+        for hour_data in hourly_data:
+            response_time = hour_data.get('avg_response_time', None)
+            replied_count = hour_data.get('emails_replied', 0) or 0
+            
+            if response_time is not None and replied_count > 0:
+                # Categorize based on response time thresholds
+                if response_time < 30:
+                    distribution['Very Fast (< 30 min)']['count'] += replied_count
+                elif response_time < 60:
+                    distribution['Fast (30-60 min)']['count'] += replied_count
+                elif response_time < 120:
+                    distribution['Moderate (60-120 min)']['count'] += replied_count
+                elif response_time < 180:
+                    distribution['Slow (120-180 min)']['count'] += replied_count
+                elif response_time < 300:
+                    distribution['Very Slow (180-300 min)']['count'] += replied_count
+                else:
+                    distribution['Critical (> 300 min)']['count'] += replied_count
+    
+    # Convert to list format with percentages
+    result = []
+    total_count = sum(d['count'] for d in distribution.values())
+    
+    for category, data in distribution.items():
+        percentage = round((data['count'] / total_count) * 100) if total_count > 0 else 0
+        result.append({
+            'category': category,
+            'count': data['count'],
+            'percentage': percentage,
+            'color': data['color']
+        })
+    
+    return result
+
 def select_last_n_valid_dates(
     db: Dict[str, Any],
     config: Dict[str, Any],
@@ -672,6 +749,16 @@ def main():
     )
     context['two_hour_metrics_week'] = two_hour_metrics_week
     context['two_hour_max_emails_week'] = two_hour_max_emails_week
+
+    # Compute weekly response time distribution
+    weekly_response_time_distribution = compute_weekly_response_time_distribution(
+        db,
+        sla_config,
+        start_date,
+        end_date,
+        specific_dates=specific_dates,
+    )
+    context['weekly_response_time_distribution'] = weekly_response_time_distribution
 
     if args.validate_only:
         # Print KPIs and exit non-zero if required fields missing

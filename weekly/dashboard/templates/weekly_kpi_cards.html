@@ -293,6 +293,67 @@
         .heat-key { width: 16px; height: 12px; border-radius: 3px; border: 1px solid var(--border) }
         .heat-value { min-width: 24px; text-align: left }
 
+        /* Distribution Styles - copied from daily template for visual consistency */
+        .distribution-container {
+            padding: 20px 0;
+        }
+
+        .distribution-row { display:flex; align-items:center; margin-bottom:16px; gap:16px; transition: transform .2s ease }
+        .distribution-row:hover { transform: translateX(6px) }
+
+        .distribution-label {
+            flex: 0 0 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .distribution-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .distribution-range {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .distribution-bar-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .distribution-bar { height:34px; border-radius:10px; display:flex; align-items:center; justify-content:flex-start; padding:0 12px; color:#fff; position:relative; overflow:hidden }
+        .distribution-bar::after { content:''; position:absolute; inset:0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent); animation: shimmer 3s infinite }
+        .distribution-bar.success { background: linear-gradient(135deg, var(--success), var(--success-2)); box-shadow: 0 4px 10px rgba(16,185,129,.20) }
+        .distribution-bar.warning { background: linear-gradient(135deg, var(--warning), var(--warning-2)); box-shadow: 0 4px 10px rgba(245,158,11,.20) }
+        .distribution-bar.danger { background: linear-gradient(135deg, var(--danger), var(--danger-2)); box-shadow: 0 4px 10px rgba(239,68,68,.20) }
+
+        .distribution-count { color:#fff; font-size:12px; font-weight:700; position:relative; z-index:1 }
+
+        .distribution-percentage { font-size:13px; font-weight:800; color: var(--accent-3); min-width:40px; text-align:right }
+
+        /* Chart Section Styles */
+        .chart-section {
+            margin-bottom: 32px;
+        }
+
+        .chart-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .chart-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .grid-4 {
@@ -527,6 +588,51 @@
                 </div>
             </div>
         </section>
+
+        <!-- Weekly Response Time Distribution -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">Weekly Response Time Distribution</div>
+                <div class="chart-subtitle">Email response times categorized by performance across {{ data_days_count }} day{% if data_days_count != 1 %}s{% endif %}</div>
+                
+                <div class="distribution-container">
+                    {% for category in weekly_response_time_distribution %}
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            {% set cat = category.category %}
+                            {% if 'Very Fast' in cat %}
+                                <span class="distribution-name">⚡ Lightning Fast</span>
+                                <span class="distribution-range" style="color: var(--success-2);">Under 30 minutes</span>
+                            {% elif 'Fast' in cat and 'Very Fast' not in cat %}
+                                <span class="distribution-name">🚀 Fast Response</span>
+                                <span class="distribution-range" style="color: var(--success-2);">30-60 minutes</span>
+                            {% elif 'Moderate' in cat %}
+                                <span class="distribution-name">⏱️ Moderate</span>
+                                <span class="distribution-range" style="color: var(--warning-2);">60-120 minutes</span>
+                            {% elif 'Very Slow' in cat %}
+                                <span class="distribution-name">⚠️ Very Slow</span>
+                                <span class="distribution-range" style="color: var(--danger-2);">180-300 minutes</span>
+                            {% elif 'Slow' in cat and 'Very' not in cat %}
+                                <span class="distribution-name">🐢 Slow</span>
+                                <span class="distribution-range" style="color: var(--warning-2);">120-180 minutes</span>
+                            {% elif 'Critical' in cat %}
+                                <span class="distribution-name">🔴 Critical</span>
+                                <span class="distribution-range" style="color: var(--danger-2);">Over 300 minutes</span>
+                            {% else %}
+                                <span class="distribution-name">{{ category.category }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar {{ category.color }}" data-width="{{ category.percentage }}" title="{{ category.category }} • {{ category.count }} emails ({{ category.percentage }}%)">
+                                <span class="distribution-count">{{ category.count }} emails</span>
+                            </div>
+                            <span class="distribution-percentage">{{ category.percentage }}%</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
     </div>
 <script>
     (function(){
@@ -709,9 +815,35 @@
 
         // Initialize when DOM is ready
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => renderWeeklyHeatmap(weekData));
+            document.addEventListener('DOMContentLoaded', () => {
+                renderWeeklyHeatmap(weekData);
+                
+                // Apply widths from data-width attributes for distribution bars
+                const applyWidths = (selector) => {
+                    document.querySelectorAll(selector).forEach(el => {
+                        const wRaw = el.getAttribute('data-width');
+                        if (wRaw !== null) {
+                            const w = Math.max(0, Math.min(100, parseFloat(wRaw)));
+                            el.style.width = `${w}%`;
+                        }
+                    });
+                };
+                applyWidths('.distribution-bar[data-width]');
+            });
         } else {
             renderWeeklyHeatmap(weekData);
+            
+            // Apply widths from data-width attributes for distribution bars
+            const applyWidths = (selector) => {
+                document.querySelectorAll(selector).forEach(el => {
+                    const wRaw = el.getAttribute('data-width');
+                    if (wRaw !== null) {
+                        const w = Math.max(0, Math.min(100, parseFloat(wRaw)));
+                        el.style.width = `${w}%`;
+                    }
+                });
+            };
+            applyWidths('.distribution-bar[data-width]');
         }
     })();
 </script>
