@@ -1,0 +1,23 @@
+# Codex CLI config for the Spark agent profile
+# Copy or merge this into ~/.codex/config.toml
+
+# Use ChatGPT auth by default; override to "apikey" to force API key usage
+preferred_auth_method = "chatgpt"
+
+# Default operator settings (safe, version-controlled repos)
+approval_policy = "on-request"
+sandbox_mode    = "workspace-write"
+
+# Recommended for ZDR orgs; avoids storing responses
+disable_response_storage = true
+
+# Workspace-write sandbox: deny network by default
+[sandbox_workspace_write]
+network_access = false
+
+# Spark profile: run with `codex --profile spark`
+[profiles.spark]
+approval_policy = "on-request"
+sandbox_mode    = "workspace-write"
+
+# You may add other profiles as needed.
