@@ -352,6 +352,7 @@
         .vbar-grid line { stroke: var(--border); stroke-width: 1 }
         .vbar-bar { fill: var(--emails) }
         .vbar-bar:hover { filter: brightness(0.95) }
+        .vbar-value { font: 800 12px Inter, sans-serif; fill: var(--text-primary) }
         .vbar-subtitle { font-size: 12px; color: var(--text-muted); margin-bottom: 16px }
         .vbar-title { font-weight: 800; font-size: 16px; color: var(--text-primary); margin-bottom: 6px }
 
@@ -419,7 +420,7 @@
                 <div class="header-subtitle">Last 7 Days — Aug 16, 2025 – Aug 22, 2025</div>
             </div>
             <div class="header-meta">
-                <div>2025-08-23 02:27</div>
+                <div>2025-08-23 02:59</div>
             </div>
         </div>
     </div>
@@ -432,50 +433,50 @@
         <div class="grid grid-4">
             <!-- Total Emails Card -->
             <div class="card kpi-card">
-                <div class="kpi-value">310</div>
+                <div class="kpi-value">1278</div>
                 <div class="kpi-label">Total Emails</div>
-                <div class="kpi-subtitle">Avg: 103.3 per day</div>
+                <div class="kpi-subtitle">Avg: 182.6 per day</div>
                 <div class="kpi-change neutral">
                     <span class="status-indicator status-good"></span>
-                    From 3 day(s) of data
+                    From 7 day(s) of data
                 </div>
             </div>
             
             <!-- Avg Unread Count Card -->
-            <div class="card kpi-card danger">
-                <div class="kpi-value">32.2</div>
+            <div class="card kpi-card success">
+                <div class="kpi-value">26.3</div>
                 <div class="kpi-label">Avg Unread Count</div>
                 <div class="kpi-subtitle">≤30 unread emails threshold</div>
-                <div class="kpi-change negative">
-                    <span class="status-indicator status-danger"></span>
+                <div class="kpi-change positive">
+                    <span class="status-indicator status-good"></span>
                     
-                        Above threshold
+                        Within SLA target
                     
                 </div>
             </div>
             
             <!-- Average Response Time Card -->
-            <div class="card kpi-card danger">
-                <div class="kpi-value">147.3<span style="font-size: 16px; font-weight: 400;">min</span></div>
+            <div class="card kpi-card warning">
+                <div class="kpi-value">108.7<span style="font-size: 16px; font-weight: 400;">min</span></div>
                 <div class="kpi-label">Avg Response Time</div>
                 <div class="kpi-subtitle">Business hours calculation</div>
                 <div class="kpi-change negative">
-                    <span class="status-indicator status-danger"></span>
+                    <span class="status-indicator status-warning"></span>
                     
-                        Above target
+                        Near target
                     
                 </div>
             </div>
             
             <!-- SLA Compliance Card -->
             <div class="card kpi-card danger">
-                <div class="kpi-value">32.5%</div>
+                <div class="kpi-value">71.3%</div>
                 <div class="kpi-label">SLA Compliance</div>
                 <div class="kpi-subtitle">Target: ≥85.0%</div>
                 <div class="kpi-change negative">
                     <span class="status-indicator status-danger"></span>
                     
-                        52.5% below target
+                        13.7% below target
                     
                 </div>
             </div>
@@ -497,25 +498,25 @@
                     
                     
                     
-                    <svg class="vbar-svg" viewBox="0 0 76 240" preserveAspectRatio="xMinYMin meet" aria-hidden="false" focusable="false">
+                    <svg class="vbar-svg" viewBox="0 0 436 240" preserveAspectRatio="xMinYMin meet" aria-hidden="false" focusable="false">
                         <!-- Optional horizontal grid lines at 0/25/50/75/100% -->
                         
                         <g class="vbar-grid">
                             
                                 
-                                <line x1="0" y1="212.0" x2="76" y2="212.0"></line>
+                                <line x1="0" y1="212.0" x2="436" y2="212.0"></line>
                             
                                 
-                                <line x1="0" y1="167.0" x2="76" y2="167.0"></line>
+                                <line x1="0" y1="167.0" x2="436" y2="167.0"></line>
                             
                                 
-                                <line x1="0" y1="122.0" x2="76" y2="122.0"></line>
+                                <line x1="0" y1="122.0" x2="436" y2="122.0"></line>
                             
                                 
-                                <line x1="0" y1="77.0" x2="76" y2="77.0"></line>
+                                <line x1="0" y1="77.0" x2="436" y2="77.0"></line>
                             
                                 
-                                <line x1="0" y1="32.0" x2="76" y2="32.0"></line>
+                                <line x1="0" y1="32.0" x2="436" y2="32.0"></line>
                             
                         </g>
 
@@ -531,9 +532,94 @@
                             
                             <g>
                                 <rect class="vbar-bar" x="16" y="32.0" width="44" height="180.0" rx="6" ry="6">
+                                    <title>Mon • 272 emails</title>
+                                </rect>
+                                <text class="vbar-value" x="38.0" y="26.0" text-anchor="middle">272</text>
+                                <text class="vbar-axis" x="38.0" y="226" text-anchor="middle">Mon</text>
+                            </g>
+                        
+                            
+                            
+                            
+                            
+                            
+                            
+                            <g>
+                                <rect class="vbar-bar" x="76" y="45.0" width="44" height="167.0" rx="6" ry="6">
+                                    <title>Tue • 253 emails</title>
+                                </rect>
+                                <text class="vbar-value" x="98.0" y="39.0" text-anchor="middle">253</text>
+                                <text class="vbar-axis" x="98.0" y="226" text-anchor="middle">Tue</text>
+                            </g>
+                        
+                            
+                            
+                            
+                            
+                            
+                            
+                            <g>
+                                <rect class="vbar-bar" x="136" y="59.0" width="44" height="153.0" rx="6" ry="6">
+                                    <title>Wed • 232 emails</title>
+                                </rect>
+                                <text class="vbar-value" x="158.0" y="53.0" text-anchor="middle">232</text>
+                                <text class="vbar-axis" x="158.0" y="226" text-anchor="middle">Wed</text>
+                            </g>
+                        
+                            
+                            
+                            
+                            
+                            
+                            
+                            <g>
+                                <rect class="vbar-bar" x="196" y="44.0" width="44" height="168.0" rx="6" ry="6">
+                                    <title>Thu • 255 emails</title>
+                                </rect>
+                                <text class="vbar-value" x="218.0" y="38.0" text-anchor="middle">255</text>
+                                <text class="vbar-axis" x="218.0" y="226" text-anchor="middle">Thu</text>
+                            </g>
+                        
+                            
+                            
+                            
+                            
+                            
+                            
+                            <g>
+                                <rect class="vbar-bar" x="256" y="62.0" width="44" height="150.0" rx="6" ry="6">
+                                    <title>Fri • 228 emails</title>
+                                </rect>
+                                <text class="vbar-value" x="278.0" y="56.0" text-anchor="middle">228</text>
+                                <text class="vbar-axis" x="278.0" y="226" text-anchor="middle">Fri</text>
+                            </g>
+                        
+                            
+                            
+                            
+                            
+                            
+                            
+                            <g>
+                                <rect class="vbar-bar" x="316" y="206.0" width="44" height="6.0" rx="6" ry="6">
                                     <title>Sat • 10 emails</title>
                                 </rect>
-                                <text class="vbar-axis" x="38.0" y="226" text-anchor="middle">Sat</text>
+                                <text class="vbar-value" x="338.0" y="200.0" text-anchor="middle">10</text>
+                                <text class="vbar-axis" x="338.0" y="226" text-anchor="middle">Sat</text>
+                            </g>
+                        
+                            
+                            
+                            
+                            
+                            
+                            
+                            <g>
+                                <rect class="vbar-bar" x="376" y="194.0" width="44" height="18.0" rx="6" ry="6">
+                                    <title>Sun • 28 emails</title>
+                                </rect>
+                                <text class="vbar-value" x="398.0" y="188.0" text-anchor="middle">28</text>
+                                <text class="vbar-axis" x="398.0" y="226" text-anchor="middle">Sun</text>
                             </g>
                         
                     </svg>
@@ -561,7 +647,7 @@
         <section class="chart-section">
             <div class="card">
                 <div class="heatmap-card-title">Weekly 2-Hour Email Metrics</div>
-                <div class="heatmap-subtitle">Aggregated across 07:00 to 21:00 Mon–Sun (3 days)</div>
+                <div class="heatmap-subtitle">Aggregated across 07:00 to 21:00 Mon–Sun (7 days)</div>
 
                 <div class="a-table">
                     <div class="a-row header">
@@ -581,7 +667,7 @@
                     
                     
 
-                    <div class="a-row" title="07:00–08:59 • Emails: 1 • Avg Unread: 28.8 • Avg Response: N/A min • Median: N/A min">
+                    <div class="a-row" title="07:00–08:59 • Emails: 55 • Avg Unread: 18.3 • Avg Response: 89.6 min • Median: 66.1 min">
                         <div class="a-cell">
                             
                                 <div class="distribution-name">🌅 Early Morning</div>
@@ -589,23 +675,27 @@
                             <div class="distribution-range">07:00–08:59</div>
                         </div>
                         <div class="a-cell">
-                            <div class="microbar"><div class="fill emails" style="width: 50.0%"></div></div>
-                            <span class="weak">1</span>
+                            <div class="microbar"><div class="fill emails" style="width: 18.0%"></div></div>
+                            <span class="weak">55</span>
                         </div>
                         <div class="a-cell">
                             
                                 
-                                    <span class="badge success">28.8</span>
+                                    <span class="badge success">18.3</span>
                                 
-                                <div class="microbar"><div class="fill unread" style="width: 96.0%"></div></div>
+                                <div class="microbar"><div class="fill unread" style="width: 61.0%"></div></div>
                             
                         </div>
                         <div class="a-cell">
                             
-                            <div class="microbar"><div class="fill response" style="width: 0.0%"></div></div>
-                            <span class="weak">—</span>
+                                
+                                    <span class="badge warning">⏱️ Moderate</span>
+                                
+                            
+                            <div class="microbar"><div class="fill response" style="width: 100%"></div></div>
+                            <span class="weak">89.6 min</span>
                         </div>
-                        <div class="a-cell">—</div>
+                        <div class="a-cell">66.1 min</div>
                     </div>
                     
                     
@@ -620,7 +710,7 @@
                     
                     
 
-                    <div class="a-row" title="09:00–10:59 • Emails: 2 • Avg Unread: 31.2 • Avg Response: N/A min • Median: N/A min">
+                    <div class="a-row" title="09:00–10:59 • Emails: 208 • Avg Unread: 21.3 • Avg Response: 71.4 min • Median: 65.7 min">
                         <div class="a-cell">
                             
                                 <div class="distribution-name">☀️ Morning</div>
@@ -628,23 +718,27 @@
                             <div class="distribution-range">09:00–10:59</div>
                         </div>
                         <div class="a-cell">
-                            <div class="microbar"><div class="fill emails" style="width: 100.0%"></div></div>
-                            <span class="weak">2</span>
+                            <div class="microbar"><div class="fill emails" style="width: 69.0%"></div></div>
+                            <span class="weak">208</span>
                         </div>
                         <div class="a-cell">
                             
                                 
-                                    <span class="badge danger">31.2</span>
+                                    <span class="badge success">21.3</span>
                                 
-                                <div class="microbar"><div class="fill unread" style="width: 100%"></div></div>
+                                <div class="microbar"><div class="fill unread" style="width: 71.0%"></div></div>
                             
                         </div>
                         <div class="a-cell">
                             
-                            <div class="microbar"><div class="fill response" style="width: 0.0%"></div></div>
-                            <span class="weak">—</span>
+                                
+                                    <span class="badge warning">⏱️ Moderate</span>
+                                
+                            
+                            <div class="microbar"><div class="fill response" style="width: 100%"></div></div>
+                            <span class="weak">71.4 min</span>
                         </div>
-                        <div class="a-cell">—</div>
+                        <div class="a-cell">65.7 min</div>
                     </div>
                     
                     
@@ -659,7 +753,7 @@
                     
                     
 
-                    <div class="a-row" title="11:00–12:59 • Emails: 2 • Avg Unread: 33.3 • Avg Response: N/A min • Median: N/A min">
+                    <div class="a-row" title="11:00–12:59 • Emails: 303 • Avg Unread: 29.1 • Avg Response: 130.3 min • Median: 92.6 min">
                         <div class="a-cell">
                             
                                 <div class="distribution-name">☀️ Morning</div>
@@ -668,22 +762,26 @@
                         </div>
                         <div class="a-cell">
                             <div class="microbar"><div class="fill emails" style="width: 100.0%"></div></div>
-                            <span class="weak">2</span>
+                            <span class="weak">303</span>
                         </div>
                         <div class="a-cell">
                             
                                 
-                                    <span class="badge danger">33.3</span>
+                                    <span class="badge success">29.1</span>
                                 
-                                <div class="microbar"><div class="fill unread" style="width: 100%"></div></div>
+                                <div class="microbar"><div class="fill unread" style="width: 97.0%"></div></div>
                             
                         </div>
                         <div class="a-cell">
                             
-                            <div class="microbar"><div class="fill response" style="width: 0.0%"></div></div>
-                            <span class="weak">—</span>
+                                
+                                    <span class="badge warning">🐢 Slow</span>
+                                
+                            
+                            <div class="microbar"><div class="fill response" style="width: 100%"></div></div>
+                            <span class="weak">130.3 min</span>
                         </div>
-                        <div class="a-cell">—</div>
+                        <div class="a-cell">92.6 min</div>
                     </div>
                     
                     
@@ -698,7 +796,7 @@
                     
                     
 
-                    <div class="a-row" title="13:00–14:59 • Emails: 1 • Avg Unread: 34.3 • Avg Response: N/A min • Median: N/A min">
+                    <div class="a-row" title="13:00–14:59 • Emails: 238 • Avg Unread: 31.3 • Avg Response: 96.0 min • Median: 91.9 min">
                         <div class="a-cell">
                             
                                 <div class="distribution-name">🌤️ Afternoon</div>
@@ -706,23 +804,27 @@
                             <div class="distribution-range">13:00–14:59</div>
                         </div>
                         <div class="a-cell">
-                            <div class="microbar"><div class="fill emails" style="width: 50.0%"></div></div>
-                            <span class="weak">1</span>
+                            <div class="microbar"><div class="fill emails" style="width: 79.0%"></div></div>
+                            <span class="weak">238</span>
                         </div>
                         <div class="a-cell">
                             
                                 
-                                    <span class="badge danger">34.3</span>
+                                    <span class="badge danger">31.3</span>
                                 
                                 <div class="microbar"><div class="fill unread" style="width: 100%"></div></div>
                             
                         </div>
                         <div class="a-cell">
                             
-                            <div class="microbar"><div class="fill response" style="width: 0.0%"></div></div>
-                            <span class="weak">—</span>
+                                
+                                    <span class="badge warning">⏱️ Moderate</span>
+                                
+                            
+                            <div class="microbar"><div class="fill response" style="width: 100%"></div></div>
+                            <span class="weak">96.0 min</span>
                         </div>
-                        <div class="a-cell">—</div>
+                        <div class="a-cell">91.9 min</div>
                     </div>
                     
                     
@@ -737,7 +839,7 @@
                     
                     
 
-                    <div class="a-row" title="15:00–16:59 • Emails: 1 • Avg Unread: 23.8 • Avg Response: N/A min • Median: N/A min">
+                    <div class="a-row" title="15:00–16:59 • Emails: 257 • Avg Unread: 30.3 • Avg Response: 96.2 min • Median: 78.0 min">
                         <div class="a-cell">
                             
                                 <div class="distribution-name">🌤️ Afternoon</div>
@@ -745,23 +847,27 @@
                             <div class="distribution-range">15:00–16:59</div>
                         </div>
                         <div class="a-cell">
-                            <div class="microbar"><div class="fill emails" style="width: 50.0%"></div></div>
-                            <span class="weak">1</span>
+                            <div class="microbar"><div class="fill emails" style="width: 85.0%"></div></div>
+                            <span class="weak">257</span>
                         </div>
                         <div class="a-cell">
                             
                                 
-                                    <span class="badge success">23.8</span>
+                                    <span class="badge danger">30.3</span>
                                 
-                                <div class="microbar"><div class="fill unread" style="width: 79.0%"></div></div>
+                                <div class="microbar"><div class="fill unread" style="width: 100%"></div></div>
                             
                         </div>
                         <div class="a-cell">
                             
-                            <div class="microbar"><div class="fill response" style="width: 0.0%"></div></div>
-                            <span class="weak">—</span>
+                                
+                                    <span class="badge warning">⏱️ Moderate</span>
+                                
+                            
+                            <div class="microbar"><div class="fill response" style="width: 100%"></div></div>
+                            <span class="weak">96.2 min</span>
                         </div>
-                        <div class="a-cell">—</div>
+                        <div class="a-cell">78.0 min</div>
                     </div>
                     
                     
@@ -776,7 +882,7 @@
                     
                     
 
-                    <div class="a-row" title="17:00–18:59 • Emails: 0 • Avg Unread: 24.5 • Avg Response: N/A min • Median: N/A min">
+                    <div class="a-row" title="17:00–18:59 • Emails: 138 • Avg Unread: 29.0 • Avg Response: 150.9 min • Median: 124.7 min">
                         <div class="a-cell">
                             
                                 <div class="distribution-name">🌆 Evening</div>
@@ -784,23 +890,27 @@
                             <div class="distribution-range">17:00–18:59</div>
                         </div>
                         <div class="a-cell">
-                            <div class="microbar"><div class="fill emails" style="width: 0.0%"></div></div>
-                            <span class="weak">0</span>
+                            <div class="microbar"><div class="fill emails" style="width: 46.0%"></div></div>
+                            <span class="weak">138</span>
                         </div>
                         <div class="a-cell">
                             
                                 
-                                    <span class="badge success">24.5</span>
+                                    <span class="badge success">29.0</span>
                                 
-                                <div class="microbar"><div class="fill unread" style="width: 82.0%"></div></div>
+                                <div class="microbar"><div class="fill unread" style="width: 97.0%"></div></div>
                             
                         </div>
                         <div class="a-cell">
                             
-                            <div class="microbar"><div class="fill response" style="width: 0.0%"></div></div>
-                            <span class="weak">—</span>
+                                
+                                    <span class="badge warning">🐢 Slow</span>
+                                
+                            
+                            <div class="microbar"><div class="fill response" style="width: 100%"></div></div>
+                            <span class="weak">150.9 min</span>
                         </div>
-                        <div class="a-cell">—</div>
+                        <div class="a-cell">124.7 min</div>
                     </div>
                     
                     
@@ -815,7 +925,7 @@
                     
                     
 
-                    <div class="a-row" title="19:00–20:59 • Emails: 2 • Avg Unread: 28.8 • Avg Response: N/A min • Median: N/A min">
+                    <div class="a-row" title="19:00–20:59 • Emails: 30 • Avg Unread: 23.4 • Avg Response: 173.5 min • Median: 99.0 min">
                         <div class="a-cell">
                             
                                 <div class="distribution-name">🌆 Evening</div>
@@ -823,23 +933,27 @@
                             <div class="distribution-range">19:00–20:59</div>
                         </div>
                         <div class="a-cell">
-                            <div class="microbar"><div class="fill emails" style="width: 100.0%"></div></div>
-                            <span class="weak">2</span>
+                            <div class="microbar"><div class="fill emails" style="width: 10.0%"></div></div>
+                            <span class="weak">30</span>
                         </div>
                         <div class="a-cell">
                             
                                 
-                                    <span class="badge success">28.8</span>
+                                    <span class="badge success">23.4</span>
                                 
-                                <div class="microbar"><div class="fill unread" style="width: 96.0%"></div></div>
+                                <div class="microbar"><div class="fill unread" style="width: 78.0%"></div></div>
                             
                         </div>
                         <div class="a-cell">
                             
-                            <div class="microbar"><div class="fill response" style="width: 0.0%"></div></div>
-                            <span class="weak">—</span>
+                                
+                                    <span class="badge warning">🐢 Slow</span>
+                                
+                            
+                            <div class="microbar"><div class="fill response" style="width: 100%"></div></div>
+                            <span class="weak">173.5 min</span>
                         </div>
-                        <div class="a-cell">—</div>
+                        <div class="a-cell">99.0 min</div>
                     </div>
                     
                 </div>
@@ -850,7 +964,7 @@
         <section class="chart-section">
             <div class="card">
                 <div class="chart-title">Weekly Response Time Distribution</div>
-                <div class="chart-subtitle">Email response times categorized by performance across 3 days</div>
+                <div class="chart-subtitle">Email response times categorized by performance across 7 days</div>
                 
                 <div class="distribution-container">
                     
@@ -863,10 +977,10 @@
                             
                         </div>
                         <div class="distribution-bar-container">
-                            <div class="distribution-bar success" data-width="0" title="Very Fast (&lt; 30 min) • 0 emails (0%)">
-                                <span class="distribution-count">0 emails</span>
+                            <div class="distribution-bar success" data-width="2" title="Very Fast (&lt; 30 min) • 20 emails (2%)">
+                                <span class="distribution-count">20 emails</span>
                             </div>
-                            <span class="distribution-percentage">0%</span>
+                            <span class="distribution-percentage">2%</span>
                         </div>
                     </div>
                     
@@ -879,10 +993,10 @@
                             
                         </div>
                         <div class="distribution-bar-container">
-                            <div class="distribution-bar success" data-width="0" title="Fast (30-60 min) • 0 emails (0%)">
-                                <span class="distribution-count">0 emails</span>
+                            <div class="distribution-bar success" data-width="18" title="Fast (30-60 min) • 153 emails (18%)">
+                                <span class="distribution-count">153 emails</span>
                             </div>
-                            <span class="distribution-percentage">0%</span>
+                            <span class="distribution-percentage">18%</span>
                         </div>
                     </div>
                     
@@ -895,10 +1009,10 @@
                             
                         </div>
                         <div class="distribution-bar-container">
-                            <div class="distribution-bar warning" data-width="0" title="Moderate (60-120 min) • 0 emails (0%)">
-                                <span class="distribution-count">0 emails</span>
+                            <div class="distribution-bar warning" data-width="43" title="Moderate (60-120 min) • 368 emails (43%)">
+                                <span class="distribution-count">368 emails</span>
                             </div>
-                            <span class="distribution-percentage">0%</span>
+                            <span class="distribution-percentage">43%</span>
                         </div>
                     </div>
                     
@@ -911,10 +1025,10 @@
                             
                         </div>
                         <div class="distribution-bar-container">
-                            <div class="distribution-bar warning" data-width="0" title="Slow (120-180 min) • 0 emails (0%)">
-                                <span class="distribution-count">0 emails</span>
+                            <div class="distribution-bar warning" data-width="29" title="Slow (120-180 min) • 244 emails (29%)">
+                                <span class="distribution-count">244 emails</span>
                             </div>
-                            <span class="distribution-percentage">0%</span>
+                            <span class="distribution-percentage">29%</span>
                         </div>
                     </div>
                     
@@ -927,10 +1041,10 @@
                             
                         </div>
                         <div class="distribution-bar-container">
-                            <div class="distribution-bar danger" data-width="0" title="Very Slow (180-300 min) • 0 emails (0%)">
-                                <span class="distribution-count">0 emails</span>
+                            <div class="distribution-bar danger" data-width="3" title="Very Slow (180-300 min) • 29 emails (3%)">
+                                <span class="distribution-count">29 emails</span>
                             </div>
-                            <span class="distribution-percentage">0%</span>
+                            <span class="distribution-percentage">3%</span>
                         </div>
                     </div>
                     
@@ -943,10 +1057,10 @@
                             
                         </div>
                         <div class="distribution-bar-container">
-                            <div class="distribution-bar danger" data-width="0" title="Critical (&gt; 300 min) • 0 emails (0%)">
-                                <span class="distribution-count">0 emails</span>
+                            <div class="distribution-bar danger" data-width="4" title="Critical (&gt; 300 min) • 36 emails (4%)">
+                                <span class="distribution-count">36 emails</span>
                             </div>
-                            <span class="distribution-percentage">0%</span>
+                            <span class="distribution-percentage">4%</span>
                         </div>
                     </div>
                     
@@ -959,12 +1073,12 @@
             <div>
                 <strong>Data Source:</strong> Unified JSON database | 
                 <strong>Week:</strong> Last 7 Days — Aug 16, 2025 – Aug 22, 2025 | 
-                <strong>Data Days:</strong> 3 | 
+                <strong>Data Days:</strong> 7 | 
                 <strong>SLA Threshold:</strong> 30 unread emails | 
                 <strong>Response Time Target:</strong> 60.0 min | 
                 <strong>SLA Target:</strong> 85.0% | 
                 <strong>Business Hours:</strong> 07:00 to 21:00 Mon–Sun | 
-                <strong>Generated:</strong> 2025-08-23 02:27
+                <strong>Generated:</strong> 2025-08-23 02:59
             </div>
         </div>
     </div>
@@ -979,7 +1093,7 @@
 
         const weekData = (function(){
             try {
-                return {"2025-08-16": {"07": 0, "08": 1, "09": 1, "10": 1, "11": 1, "12": 1, "13": 0, "14": 1, "15": 1, "16": 0, "17": 0, "18": 0, "19": 2, "20": 0, "21": 0}, "2025-08-17": {"07": 0, "08": 0, "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0, "17": 0, "18": 0, "19": 0, "20": 0, "21": 0}, "2025-08-18": {"07": 0, "08": 0, "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0, "17": 0, "18": 0, "19": 0, "20": 0, "21": 0}, "2025-08-19": {"07": 0, "08": 0, "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0, "17": 0, "18": 0, "19": 0, "20": 0, "21": 0}, "2025-08-20": {"07": 0, "08": 0, "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0, "17": 0, "18": 0, "19": 0, "20": 0, "21": 0}, "2025-08-21": {"07": 0, "08": 0, "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0, "17": 0, "18": 0, "19": 0, "20": 0, "21": 0}, "2025-08-22": {"07": 0, "08": 0, "09": 0, "10": 0, "11": 0, "12": 0, "13": 0, "14": 0, "15": 0, "16": 0, "17": 0, "18": 0, "19": 0, "20": 0, "21": 0}};
+                return {"2025-08-16": {"07": 0, "08": 1, "09": 1, "10": 1, "11": 1, "12": 1, "13": 0, "14": 1, "15": 1, "16": 0, "17": 0, "18": 0, "19": 2, "20": 0, "21": 0}, "2025-08-17": {"07": 0, "08": 0, "09": 1, "10": 0, "11": 1, "12": 1, "13": 1, "14": 4, "15": 1, "16": 2, "17": 6, "18": 2, "19": 5, "20": 0, "21": 0}, "2025-08-18": {"07": 7, "08": 8, "09": 22, "10": 14, "11": 25, "12": 35, "13": 43, "14": 29, "15": 25, "16": 24, "17": 27, "18": 3, "19": 0, "20": 1, "21": 2}, "2025-08-19": {"07": 4, "08": 8, "09": 21, "10": 21, "11": 35, "12": 23, "13": 18, "14": 25, "15": 35, "16": 20, "17": 14, "18": 11, "19": 5, "20": 3, "21": 1}, "2025-08-20": {"07": 3, "08": 8, "09": 21, "10": 18, "11": 25, "12": 23, "13": 12, "14": 27, "15": 34, "16": 22, "17": 14, "18": 12, "19": 5, "20": 1, "21": 6}, "2025-08-21": {"07": 0, "08": 8, "09": 29, "10": 20, "11": 35, "12": 25, "13": 24, "14": 18, "15": 25, "16": 29, "17": 12, "18": 16, "19": 5, "20": 1, "21": 6}, "2025-08-22": {"07": 1, "08": 7, "09": 19, "10": 20, "11": 40, "12": 33, "13": 16, "14": 20, "15": 21, "16": 18, "17": 16, "18": 5, "19": 2, "20": 0, "21": 1}};
             } catch(e) { return {}; }
         })();
 
