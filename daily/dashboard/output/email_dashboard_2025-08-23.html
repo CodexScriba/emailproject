@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Dashboard - KPI Overview</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            /* Modern Color Palette - Extracted from modern_dashboard.html */
+            --primary: #0F172A;
+            --primary-light: #1E293B;
+            --accent: #3B82F6;
+            --accent-dark: #2563EB;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --text-primary: #0F172A;
+            --text-secondary: #64748B;
+            --muted: #64748B;
+            --text-muted: #94A3B8;
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8FAFC;
+            --bg-tertiary: #F1F5F9;
+            --border: #E2E8F0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --chart-height: 320px; /* Controls vertical plotting area; adjust per data */
+            /* GPT5 Pro Light additions */
+            --primary-2: #3B82F6;
+            --accent-2: #DBEAFE;
+            --accent-3: #93C5FD;
+            --emails: #0EA5E9;
+            --success-2: #10B981;
+            --warning-2: #F59E0B;
+            --danger-2: #EF4444;
+            --glow-accent: 0 0 28px rgba(99,102,241,0.28);
+            --glow-success: 0 0 28px rgba(16,185,129,0.22);
+            --glow-warning: 0 0 28px rgba(245,158,11,0.22);
+            --glow-danger: 0 0 28px rgba(239,68,68,0.22);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 32px 24px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #FFFFFF 0%, #EEF2FF 100%);
+            color: var(--text-primary);
+            margin: -32px -24px 40px -24px;
+            padding: 48px 28px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        .header::before { content:''; position:absolute; top:0; left:-100%; height:2px; width:200%; background: linear-gradient(90deg, transparent, var(--accent), var(--accent-2), transparent); opacity:.9; animation: scan 3s linear infinite }
+        @keyframes scan { to { left: 100%; } }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left h1 {
+            font-size: 34px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            margin: 0 0 6px 0;
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+        @keyframes titleGlow { 0%,100%{filter: brightness(1);} 50%{filter: brightness(1.15);} }
+
+        .brand-title {
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            text-shadow: none;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: #94A3B8;
+            font-weight: 400;
+        }
+
+        .header-meta {
+            text-align: right;
+            font-size: 13px;
+            color: #94A3B8;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        }
+
+        /* Cards */
+        .card {
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #F8FAFF 100%);
+            border: 1px solid #F1F5F9;
+            border-radius: 18px;
+            position: relative;
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+            backdrop-filter: saturate(140%) blur(6px);
+            animation: fadeIn .6s ease-out forwards; opacity: 0;
+        }
+        .card:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 12px 28px rgba(15,23,42,.08); border-color: var(--border) }
+        .card::before { content:''; position:absolute; left:0; right:0; top:0; height:1px; background: linear-gradient(90deg,transparent,var(--accent-2),transparent); opacity:0; transition: opacity .25s }
+        .card:hover::before { opacity: 1 }
+        @keyframes fadeIn { from{opacity:0; transform: translateY(18px)} to{opacity:1; transform:none} }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* KPI Cards */
+        .kpi-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::after { content:''; position:absolute; inset:-2px; border-radius:20px; background: linear-gradient(45deg, var(--accent), var(--accent-3)); filter: blur(18px); opacity:0; z-index:-1; transition: opacity .3s }
+        .kpi-card:hover::after { opacity:.45 }
+        .kpi-card.success::after { background: linear-gradient(45deg, var(--success-2), var(--success)) }
+        .kpi-card.warning::after { background: linear-gradient(45deg, var(--warning-2), var(--warning)) }
+        .kpi-card.danger::after { background: linear-gradient(45deg, var(--danger-2), var(--danger)) }
+
+        .kpi-icon { position:absolute; right:20px; top:20px; width:46px; height:46px; border-radius:12px; display:grid; place-items:center; font-size:22px; background: linear-gradient(135deg, rgba(79,70,229,.10), rgba(79,70,229,.06)) }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px 0 0 4px;
+        }
+
+        .kpi-card.success::before { background: var(--success); }
+        .kpi-card.warning::before { background: var(--warning); }
+        .kpi-card.danger::before { background: var(--danger); }
+
+        .kpi-value {
+            font-size: 40px;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg,#1E3A8A 0%,#3B82F6 100%);
+            -webkit-background-clip:text; background-clip:text; color: transparent;
+            animation: valueFloat 3s ease-in-out infinite;
+        }
+        @keyframes valueFloat { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+
+        .kpi-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .kpi-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            font-weight: 400;
+        }
+
+        .kpi-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 12px;
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .kpi-change.positive { 
+            color: var(--success); 
+            background: #10B98120; 
+        }
+        
+        .kpi-change.negative { 
+            color: var(--danger); 
+            background: #EF444420; 
+        }
+
+        .kpi-change.neutral { 
+            color: var(--text-secondary); 
+            background: var(--bg-tertiary); 
+        }
+
+        /* Status Indicators */
+        .status-indicator { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:8px; animation: statusPulse 2s infinite }
+        .status-good{ background: var(--success-2); box-shadow: var(--glow-success) }
+        .status-warning{ background: var(--warning-2); box-shadow: var(--glow-warning) }
+        .status-danger{  background: var(--danger-2);  box-shadow: var(--glow-danger) }
+        @keyframes statusPulse { 0%,100%{ box-shadow: 0 0 0 0 currentColor } 50%{ box-shadow: 0 0 0 6px transparent } }
+
+        /* Modern Line Chart */
+        .chart-section {
+            margin-top: 40px;
+        }
+
+        .chart-title { font-size:24px; font-weight:900; text-align:center; margin-bottom:10px; letter-spacing:-.01em; background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%); -webkit-background-clip:text; background-clip:text; color: transparent }
+
+        .chart-subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .chart-legend { display:flex; gap:24px; justify-content:center; margin-bottom:20px; flex-wrap:wrap }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .legend-line { width:28px; height:4px; border-radius:4px; position:relative }
+        .legend-line::after { content:''; position:absolute; right:-3px; top:50%; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; background:inherit; box-shadow: 0 0 12px currentColor }
+        .legend-emails{ background: var(--emails); color: var(--emails) }
+        .legend-unread{ background: var(--danger-2); color: var(--danger-2) }
+
+        .chart-container { background: linear-gradient(135deg, var(--bg-primary) 0%, #F8FAFF 100%); border:1px solid #F1F5F9; border-radius:18px; padding:26px; overflow:auto; position:relative }
+        .chart-container::before { content:''; position:absolute; left:0; right:0; top:0; height:100px; background: linear-gradient(180deg, rgba(99,102,241,0.08) 0%, transparent 100%); border-radius:18px 18px 0 0; pointer-events:none }
+
+        .line-chart-wrapper { position:relative; width:100%; min-width:860px; height:420px }
+
+        .line-chart-svg { width:100%; height:100%; overflow:visible }
+
+        .grid-line { stroke: #E5E7EB; stroke-width:1; stroke-dasharray: 4,4 }
+
+        .axis-line { stroke: #94A3B8; stroke-width:2; opacity:.7 }
+        .sla-line { stroke: #F59E0B; stroke-width:2; stroke-dasharray: 6,6; opacity:.95 }
+        .sla-label { fill: #F59E0B; font-weight: 900; font-size: 12px }
+        .area { opacity: .22; pointer-events: none }
+        .area-emails { fill: url(#emailsGrad) }
+        .area-unread { fill: url(#unreadGrad) }
+
+        .axis-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            fill: var(--text-primary);
+        }
+        .axis-label.sla-label { fill: #F59E0B; }
+
+        .y-axis-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            fill: var(--text-muted);
+        }
+
+        .line-emails { fill:none; stroke: var(--emails); stroke-width:5; stroke-linecap:round; stroke-linejoin:round; filter: drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 4px 12px rgba(14,165,233,.65)); animation: drawLine 2s ease-out }
+
+        .line-unread { fill:none; stroke: var(--danger-2); stroke-width:4; stroke-linecap:round; stroke-linejoin:round; filter: drop-shadow(0 4px 12px rgba(239,68,68,.45)); animation: drawLine 2s ease-out .5s both }
+        @keyframes drawLine { from{ stroke-dasharray:2000; stroke-dashoffset:2000 } to{ stroke-dasharray:2000; stroke-dashoffset:0 } }
+
+        .data-point { opacity:0; transition: transform .25s ease, filter .25s ease; animation: pointAppear .5s ease-out forwards }
+        circle.data-point:nth-of-type(1){animation-delay:.10s}
+        circle.data-point:nth-of-type(2){animation-delay:.20s}
+        circle.data-point:nth-of-type(3){animation-delay:.30s}
+        circle.data-point:nth-of-type(4){animation-delay:.40s}
+        circle.data-point:nth-of-type(5){animation-delay:.50s}
+        @keyframes pointAppear { to{ opacity:1; transform: scale(1) } }
+        .data-point:hover { transform: scale(1.75); filter: brightness(1.25) }
+
+        .point-emails { fill: var(--emails); stroke: var(--bg-secondary); stroke-width:3; filter: drop-shadow(0 0 1px rgba(255,255,255,.95)) drop-shadow(0 0 8px var(--emails)) }
+
+        .point-unread { fill: var(--danger-2); stroke: var(--bg-secondary); stroke-width:3; filter: drop-shadow(0 0 8px var(--danger-2)) }
+
+        .data-label { font: 700 11px Inter, sans-serif; text-anchor: middle; pointer-events: none }
+
+        .label-emails {
+            fill: var(--accent-dark);
+        }
+
+        .label-unread {
+            fill: var(--danger);
+        }
+
+        .label-background { fill: rgba(255,255,255,0.95); stroke: var(--border); stroke-width:1; rx:4; ry:4; filter: drop-shadow(0 1px 4px rgba(15,23,42,0.10)) }
+
+        .sla-indicator { font: 900 14px/1 Inter, sans-serif; text-anchor: middle; dominant-baseline: middle; animation: indicatorBounce 2s infinite }
+        @keyframes indicatorBounce { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-2px) } }
+        .sla-met { fill: var(--success-2); filter: drop-shadow(0 0 4px var(--success-2)) }
+        .sla-not-met { fill: var(--danger-2); filter: drop-shadow(0 0 4px var(--danger-2)) }
+
+        /* Response Time Components Styles */
+        .response-time-periods {
+            padding: 20px 0;
+        }
+
+        .period-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 16px;
+        }
+
+        .period-label {
+            flex: 0 0 180px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .period-bar-container {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            height: 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .period-bar {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            transition: width 0.3s ease;
+            min-width: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .period-bar::after { content:''; position:absolute; inset:0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent); animation: shimmer 3s infinite }
+        @keyframes shimmer { 0%{transform:translateX(-100%)} 100%{transform:translateX(100%)} }
+
+        .period-bar.success {
+            background: linear-gradient(135deg, var(--success), #059669);
+        }
+
+        .period-bar.warning {
+            background: linear-gradient(135deg, var(--warning), #D97706);
+        }
+
+        .period-bar.danger {
+            background: linear-gradient(135deg, var(--danger), #DC2626);
+        }
+
+        .period-bar.muted {
+            background: var(--text-muted);
+        }
+
+        .period-value {
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Distribution Styles */
+        .distribution-container {
+            padding: 20px 0;
+        }
+
+        .distribution-row { display:flex; align-items:center; margin-bottom:16px; gap:16px; transition: transform .2s ease }
+        .distribution-row:hover { transform: translateX(6px) }
+
+        .distribution-label {
+            flex: 0 0 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .distribution-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .distribution-range {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .distribution-bar-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .distribution-bar { height:34px; border-radius:10px; display:flex; align-items:center; justify-content:flex-start; padding:0 12px; color:#fff; position:relative; overflow:hidden }
+        .distribution-bar::after { content:''; position:absolute; inset:0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.28), transparent); animation: shimmer 3s infinite }
+        .distribution-bar.success { background: linear-gradient(135deg, var(--success), var(--success-2)); box-shadow: 0 4px 10px rgba(16,185,129,.20) }
+        .distribution-bar.warning { background: linear-gradient(135deg, var(--warning), var(--warning-2)); box-shadow: 0 4px 10px rgba(245,158,11,.20) }
+        .distribution-bar.danger { background: linear-gradient(135deg, var(--danger), var(--danger-2)); box-shadow: 0 4px 10px rgba(239,68,68,.20) }
+
+        .distribution-count { color:#fff; font-size:12px; font-weight:700; position:relative; z-index:1 }
+
+        .distribution-percentage { font-size:13px; font-weight:800; color: var(--accent-3); min-width:40px; text-align:right }
+
+        /* New Percentile Styles */
+        .percentile-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .percentile-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .percentile-label {
+            flex: 0 0 60px;
+            font-size: 13px;
+            font-weight: 900;
+            color: var(--emails);
+            text-align: center;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 6px 8px;
+            background: #EEF2FF;
+        }
+
+        .percentile-bar-container {
+            flex: 1;
+            background-color: var(--bg-tertiary);
+            border-radius: 8px;
+            height: 28px;
+            overflow: hidden;
+        }
+
+        .percentile-bar { height:34px; border-radius:10px; display:flex; align-items:center; justify-content:flex-end; color:#fff; font-weight:900; padding:0 12px }
+
+        .percentile-bar.success { background: linear-gradient(90deg, #10B981, #059669); }
+        .percentile-bar.warning { background: linear-gradient(90deg, #F59E0B, #D97706); }
+        .percentile-bar.danger { background: linear-gradient(90deg, #EF4444, #DC2626); }
+
+        .quartile-section { margin-top:22px }
+
+        .quartile-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .quartile-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:16px; margin-top:22px }
+
+        .quartile-item{ border:1px solid var(--border); border-radius:12px; background:#F8FAFF; padding:14px; text-align:center; position:relative; overflow:hidden; transition: transform .2s ease }
+        .quartile-item::before{ content:''; position:absolute; left:-50%; top:-50%; width:200%; height:200%; background: radial-gradient(circle, rgba(99,102,241,.14) 0%, transparent 70%); animation: orbSpin 10s linear infinite }
+        .quartile-item:hover{ transform: translateY(-3px) }
+        @keyframes orbSpin { from{ transform: rotate(0deg) } to{ transform: rotate(360deg) } }
+
+        .quartile-label { font-size:12px; font-weight:800; color: var(--text-secondary) }
+
+        .quartile-value { font-size:22px; font-weight:900; color: var(--emails) }
+
+        .quartile-percentage { font-size:11px; color: var(--emails) }
+
+        /* Summary styling */
+        .summary{ margin:28px 0 40px; border:1px solid var(--border); border-radius:14px; background: linear-gradient(135deg, rgba(99,102,241,.08), rgba(168,85,247,.06)); padding:16px; text-align:center; color: var(--text-secondary); position:relative; overflow:hidden; font-size: 12px }
+        .summary::after{ content:''; position:absolute; left:-100%; top:0; width:200%; height:1px; background: linear-gradient(90deg,transparent, var(--accent-2), transparent); animation: scan 4s linear infinite }
+
+        /* Two-Hour Metrics Table — Design A (pixel-exact) */
+        .a-table { display:flex; flex-direction:column; gap:10px; margin-top: 16px }
+        .a-row { display:grid; grid-template-columns: 1.2fr .7fr .9fr .9fr .9fr .9fr; gap:12px; align-items:center; padding:12px 14px; border:1px solid var(--border); border-radius:12px; background:#fff }
+        .a-row.header { background:#f1f5f9; font-weight:800; color: var(--muted); text-transform:uppercase; font-size:12px }
+        .a-cell { font-size:13px; font-weight:600 }
+
+        .badge { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; font-weight:800; font-size:12px }
+        .badge.success { color: var(--success); background: #10B98120 }
+        .badge.warning { color: var(--warning); background: #F59E0B20 }
+        .badge.danger { color: var(--danger); background: #EF444420 }
+
+        .microbar { height:8px; background:#e5e7eb; border-radius:999px; width:100%; position:relative; overflow:hidden }
+        .microbar .fill { height:100%; border-radius:999px }
+        .microbar .fill.emails { background: linear-gradient(90deg, var(--emails), #0284c7) }
+        .microbar .fill.response { background: linear-gradient(90deg, #3b82f6, #2563eb) }
+        .weak { color: var(--muted); font-weight:600 }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+            
+            .header {
+                margin: -16px -16px 32px -16px;
+                padding: 24px 16px;
+            }
+            
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 16px;
+            }
+            
+            .header-meta {
+                text-align: center;
+            }
+            
+            .kpi-value {
+                font-size: 28px;
+            }
+            
+            .chart-legend {
+                flex-direction: column;
+                gap: 12px;
+                align-items: center;
+            }
+            
+            .chart-container {
+                padding: 16px;
+                overflow-x: auto;
+            }
+            
+            .chart-grid {
+                min-width: 600px;
+                gap: 8px;
+            }
+            
+            .y-axis {
+                left: -30px;
+            }
+            
+            .bar {
+                width: 18px;
+            }
+            
+            .bar-group {
+                gap: 2px;
+            }
+            
+            .hour-label {
+                font-size: 10px;
+                margin-top: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1 class="brand-title">Email Performance Dashboard</h1>
+                <div class="header-subtitle">Key metrics and SLA compliance overview</div>
+            </div>
+            <div class="header-meta">
+                <div>August 23, 2025</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- KPI Cards Section -->
+        <div class="grid grid-4">
+            <!-- Total Emails Card -->
+            <div class="card kpi-card">
+                <div class="kpi-value">13</div>
+                <div class="kpi-label">Total Emails</div>
+                <div class="kpi-subtitle">Emails received today</div>
+                <div class="kpi-change neutral">
+                    <span class="status-indicator status-good"></span>
+                    Single day sample
+                </div>
+            </div>
+            
+            <!-- Avg Unread Count Card -->
+            <div class="card kpi-card success">
+                <div class="kpi-value">22.3</div>
+                <div class="kpi-label">Avg Unread Count</div>
+                <div class="kpi-subtitle">≤30 unread emails threshold</div>
+                <div class="kpi-change positive">
+                    <span class="status-indicator status-good"></span>
+                    Within SLA target
+                </div>
+            </div>
+            
+            <!-- Average Response Time Card -->
+            <div class="card kpi-card danger">
+                <div class="kpi-value">1054.0<span style="font-size: 16px; font-weight: 400;">min</span></div>
+                <div class="kpi-label">Avg Response Time</div>
+                <div class="kpi-subtitle">Business hours calculation</div>
+                <div class="kpi-change negative">
+                    <span class="status-indicator status-danger"></span>
+                    Median: 1054.0 min
+                </div>
+            </div>
+            
+            <!-- SLA Compliance Card -->
+            <div class="card kpi-card success">
+                <div class="kpi-value">100.0%</div>
+                <div class="kpi-label">SLA Compliance</div>
+                <div class="kpi-subtitle">Target: ≥85%</div>
+                <div class="kpi-change positive">
+                    <span class="status-indicator status-good"></span>
+                    +15.0% above target
+                </div>
+            </div>
+        </div>
+
+        <!-- Hourly Email Distribution Chart -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">Hourly Email Distribution</div>
+                <div class="chart-subtitle">Email volume vs unread count during 7 AM – 9 PM — August 23, 2025</div>
+                
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-line legend-emails"></div>
+                        <span>Emails Received</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-line legend-unread"></div>
+                        <span>Unread Count</span>
+                    </div>
+                </div>
+
+                <!-- Business Hours: 7 AM – 9 PM -->
+                <div class="chart-container">
+                    <div class="line-chart-wrapper">
+                        <svg class="line-chart-svg" viewBox="0 0 900 400" preserveAspectRatio="xMidYMid meet">
+                            <!-- Grid Lines -->
+                            <defs>
+                                <pattern id="grid" width="100" height="40" patternUnits="userSpaceOnUse">
+                                    <path d="M 100 0 L 0 0 0 40" fill="none" class="grid-line"/>
+                                </pattern>
+                                <linearGradient id="emailsGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" style="stop-color: var(--emails); stop-opacity: 0.35" />
+                                    <stop offset="100%" style="stop-color: var(--emails); stop-opacity: 0" />
+                                </linearGradient>
+                                <linearGradient id="unreadGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" style="stop-color: var(--danger-2); stop-opacity: 0.28" />
+                                    <stop offset="100%" style="stop-color: var(--danger-2); stop-opacity: 0" />
+                                </linearGradient>
+                            </defs>
+                            
+                            <!-- Y-axis grid lines (dynamic) -->
+                            
+                            
+                            
+                            
+                            <line x1="80" y1="340" x2="850" y2="340" class="grid-line"/>
+                            
+                            <line x1="80" y1="284" x2="850" y2="284" class="grid-line"/>
+                            
+                            <line x1="80" y1="228" x2="850" y2="228" class="grid-line"/>
+                            
+                            <line x1="80" y1="172" x2="850" y2="172" class="grid-line"/>
+                            
+                            <line x1="80" y1="116" x2="850" y2="116" class="grid-line"/>
+                            
+                            <line x1="80" y1="60" x2="850" y2="60" class="grid-line"/>
+                            
+                            
+                            
+                            <!-- Area fills -->
+                            <path class="area area-emails" d="M 80,331 C 89.17,327.83 116.67,313.67 135,312 C 153.33,310.33 171.67,316.33 190,321 C 208.33,325.67 226.67,340.0 245,340 C 263.33,340.0 281.67,321.0 300,321 C 318.33,321.0 336.67,338.33 355,340 C 373.33,341.67 391.67,331.0 410,331 C 428.33,331.0 446.67,340.0 465,340 C 483.33,340.0 501.67,331.0 520,331 C 538.33,331.0 556.67,338.5 575,340 C 593.33,341.5 611.67,340.0 630,340 C 648.33,340.0 666.67,341.5 685,340 C 703.33,338.5 721.67,331.0 740,331 C 758.33,331.0 776.67,338.5 795,340 C 813.33,341.5 840.83,340.0 850,340 L 850,340 L 80,340 Z"/>
+                            <path class="area area-unread" d="M 80,200 C 89.17,198.5 116.67,197.17 135,191 C 153.33,184.83 171.67,170.83 190,163 C 208.33,155.17 226.67,147.17 245,144 C 263.33,140.83 281.67,147.17 300,144 C 318.33,140.83 336.67,128.17 355,125 C 373.33,121.83 391.67,126.5 410,125 C 428.33,123.5 446.67,117.5 465,116 C 483.33,114.5 501.67,117.5 520,116 C 538.33,114.5 556.67,108.5 575,107 C 593.33,105.5 611.67,107.0 630,107 C 648.33,107.0 666.67,107.0 685,107 C 703.33,107.0 721.67,108.67 740,107 C 758.33,105.33 776.67,98.67 795,97 C 813.33,95.33 840.83,97.0 850,97 L 850,340 L 80,340 Z"/>
+
+                            <!-- SLA threshold line -->
+                            <line x1="80" y1="60" x2="850" y2="60" class="sla-line"/>
+                            <rect x="816" y="44" width="28" height="12" class="label-background"/>
+                            <text x="830" y="54" class="axis-label sla-label">SLA</text>
+
+                            <!-- Y-axis labels -->
+                            
+                            <text x="70" y="345" class="y-axis-label">0</text>
+                            
+                            <text x="70" y="289" class="y-axis-label">6</text>
+                            
+                            <text x="70" y="233" class="y-axis-label">12</text>
+                            
+                            <text x="70" y="177" class="y-axis-label">18</text>
+                            
+                            <text x="70" y="121" class="y-axis-label">24</text>
+                            
+                            <text x="70" y="65" class="y-axis-label">30</text>
+                            
+                            
+                            <!-- X-axis line -->
+                            <line x1="80" y1="340" x2="850" y2="340" class="axis-line"/>
+                            
+                            <!-- Y-axis line -->
+                            <line x1="80" y1="60" x2="80" y2="340" class="axis-line"/>
+                            
+                            <!-- Email Line -->
+                            <path id="emails-line" class="line-emails" d="M 80,331 C 89.17,327.83 116.67,313.67 135,312 C 153.33,310.33 171.67,316.33 190,321 C 208.33,325.67 226.67,340.0 245,340 C 263.33,340.0 281.67,321.0 300,321 C 318.33,321.0 336.67,338.33 355,340 C 373.33,341.67 391.67,331.0 410,331 C 428.33,331.0 446.67,340.0 465,340 C 483.33,340.0 501.67,331.0 520,331 C 538.33,331.0 556.67,338.5 575,340 C 593.33,341.5 611.67,340.0 630,340 C 648.33,340.0 666.67,341.5 685,340 C 703.33,338.5 721.67,331.0 740,331 C 758.33,331.0 776.67,338.5 795,340 C 813.33,341.5 840.83,340.0 850,340"/>
+                            
+                            <!-- Unread Line -->
+                            <path id="unread-line" class="line-unread" d="M 80,200 C 89.17,198.5 116.67,197.17 135,191 C 153.33,184.83 171.67,170.83 190,163 C 208.33,155.17 226.67,147.17 245,144 C 263.33,140.83 281.67,147.17 300,144 C 318.33,140.83 336.67,128.17 355,125 C 373.33,121.83 391.67,126.5 410,125 C 428.33,123.5 446.67,117.5 465,116 C 483.33,114.5 501.67,117.5 520,116 C 538.33,114.5 556.67,108.5 575,107 C 593.33,105.5 611.67,107.0 630,107 C 648.33,107.0 666.67,107.0 685,107 C 703.33,107.0 721.67,108.67 740,107 C 758.33,105.33 776.67,98.67 795,97 C 813.33,95.33 840.83,97.0 850,97"/>
+                            
+                            <!-- Email Data Points and Labels -->
+                            <g id="email-points">
+                                
+                                <circle cx="80" cy="331" r="5" class="data-point point-emails" title="Emails: 1 at 7:00">
+                                    <title>Emails: 1 at 7:00</title>
+                                </circle>
+                                <rect x="68" y="315" width="24" height="12" class="label-background"/>
+                                <text x="80" y="311" class="data-label label-emails">1</text>
+                                
+                                <circle cx="135" cy="312" r="5" class="data-point point-emails" title="Emails: 3 at 8:00">
+                                    <title>Emails: 3 at 8:00</title>
+                                </circle>
+                                <rect x="123" y="296" width="24" height="12" class="label-background"/>
+                                <text x="135" y="292" class="data-label label-emails">3</text>
+                                
+                                <circle cx="190" cy="321" r="5" class="data-point point-emails" title="Emails: 2 at 9:00">
+                                    <title>Emails: 2 at 9:00</title>
+                                </circle>
+                                <rect x="178" y="305" width="24" height="12" class="label-background"/>
+                                <text x="190" y="301" class="data-label label-emails">2</text>
+                                
+                                <circle cx="245" cy="340" r="5" class="data-point point-emails" title="Emails: 0 at 10:00">
+                                    <title>Emails: 0 at 10:00</title>
+                                </circle>
+                                <rect x="233" y="324" width="24" height="12" class="label-background"/>
+                                <text x="245" y="320" class="data-label label-emails">0</text>
+                                
+                                <circle cx="300" cy="321" r="5" class="data-point point-emails" title="Emails: 2 at 11:00">
+                                    <title>Emails: 2 at 11:00</title>
+                                </circle>
+                                <rect x="288" y="305" width="24" height="12" class="label-background"/>
+                                <text x="300" y="301" class="data-label label-emails">2</text>
+                                
+                                <circle cx="355" cy="340" r="5" class="data-point point-emails" title="Emails: 0 at 12:00">
+                                    <title>Emails: 0 at 12:00</title>
+                                </circle>
+                                <rect x="343" y="324" width="24" height="12" class="label-background"/>
+                                <text x="355" y="320" class="data-label label-emails">0</text>
+                                
+                                <circle cx="410" cy="331" r="5" class="data-point point-emails" title="Emails: 1 at 13:00">
+                                    <title>Emails: 1 at 13:00</title>
+                                </circle>
+                                <rect x="398" y="315" width="24" height="12" class="label-background"/>
+                                <text x="410" y="311" class="data-label label-emails">1</text>
+                                
+                                <circle cx="465" cy="340" r="5" class="data-point point-emails" title="Emails: 0 at 14:00">
+                                    <title>Emails: 0 at 14:00</title>
+                                </circle>
+                                <rect x="453" y="324" width="24" height="12" class="label-background"/>
+                                <text x="465" y="320" class="data-label label-emails">0</text>
+                                
+                                <circle cx="520" cy="331" r="5" class="data-point point-emails" title="Emails: 1 at 15:00">
+                                    <title>Emails: 1 at 15:00</title>
+                                </circle>
+                                <rect x="508" y="315" width="24" height="12" class="label-background"/>
+                                <text x="520" y="311" class="data-label label-emails">1</text>
+                                
+                                <circle cx="575" cy="340" r="5" class="data-point point-emails" title="Emails: 0 at 16:00">
+                                    <title>Emails: 0 at 16:00</title>
+                                </circle>
+                                <rect x="563" y="324" width="24" height="12" class="label-background"/>
+                                <text x="575" y="320" class="data-label label-emails">0</text>
+                                
+                                <circle cx="630" cy="340" r="5" class="data-point point-emails" title="Emails: 0 at 17:00">
+                                    <title>Emails: 0 at 17:00</title>
+                                </circle>
+                                <rect x="618" y="324" width="24" height="12" class="label-background"/>
+                                <text x="630" y="320" class="data-label label-emails">0</text>
+                                
+                                <circle cx="685" cy="340" r="5" class="data-point point-emails" title="Emails: 0 at 18:00">
+                                    <title>Emails: 0 at 18:00</title>
+                                </circle>
+                                <rect x="673" y="324" width="24" height="12" class="label-background"/>
+                                <text x="685" y="320" class="data-label label-emails">0</text>
+                                
+                                <circle cx="740" cy="331" r="5" class="data-point point-emails" title="Emails: 1 at 19:00">
+                                    <title>Emails: 1 at 19:00</title>
+                                </circle>
+                                <rect x="728" y="315" width="24" height="12" class="label-background"/>
+                                <text x="740" y="311" class="data-label label-emails">1</text>
+                                
+                                <circle cx="795" cy="340" r="5" class="data-point point-emails" title="Emails: 0 at 20:00">
+                                    <title>Emails: 0 at 20:00</title>
+                                </circle>
+                                <rect x="783" y="324" width="24" height="12" class="label-background"/>
+                                <text x="795" y="320" class="data-label label-emails">0</text>
+                                
+                                <circle cx="850" cy="340" r="5" class="data-point point-emails" title="Emails: 0 at 21:00">
+                                    <title>Emails: 0 at 21:00</title>
+                                </circle>
+                                <rect x="838" y="324" width="24" height="12" class="label-background"/>
+                                <text x="850" y="320" class="data-label label-emails">0</text>
+                                
+                            </g>
+                            
+                            <!-- Unread Data Points and Labels -->
+                            <g id="unread-points">
+                                
+                                <circle cx="80" cy="200" r="5" class="data-point point-unread" title="Unread: 15 at 7:00">
+                                    <title>Unread: 15 at 7:00</title>
+                                </circle>
+                                <rect x="68" y="184" width="24" height="12" class="label-background"/>
+                                <text x="80" y="180" class="data-label label-unread">15</text>
+                                
+                                <circle cx="135" cy="191" r="5" class="data-point point-unread" title="Unread: 16 at 8:00">
+                                    <title>Unread: 16 at 8:00</title>
+                                </circle>
+                                <rect x="123" y="175" width="24" height="12" class="label-background"/>
+                                <text x="135" y="171" class="data-label label-unread">16</text>
+                                
+                                <circle cx="190" cy="163" r="5" class="data-point point-unread" title="Unread: 19 at 9:00">
+                                    <title>Unread: 19 at 9:00</title>
+                                </circle>
+                                <rect x="178" y="147" width="24" height="12" class="label-background"/>
+                                <text x="190" y="143" class="data-label label-unread">19</text>
+                                
+                                <circle cx="245" cy="144" r="5" class="data-point point-unread" title="Unread: 21 at 10:00">
+                                    <title>Unread: 21 at 10:00</title>
+                                </circle>
+                                <rect x="233" y="128" width="24" height="12" class="label-background"/>
+                                <text x="245" y="124" class="data-label label-unread">21</text>
+                                
+                                <circle cx="300" cy="144" r="5" class="data-point point-unread" title="Unread: 21 at 11:00">
+                                    <title>Unread: 21 at 11:00</title>
+                                </circle>
+                                <rect x="288" y="128" width="24" height="12" class="label-background"/>
+                                <text x="300" y="124" class="data-label label-unread">21</text>
+                                
+                                <circle cx="355" cy="125" r="5" class="data-point point-unread" title="Unread: 23 at 12:00">
+                                    <title>Unread: 23 at 12:00</title>
+                                </circle>
+                                <rect x="343" y="109" width="24" height="12" class="label-background"/>
+                                <text x="355" y="105" class="data-label label-unread">23</text>
+                                
+                                <circle cx="410" cy="125" r="5" class="data-point point-unread" title="Unread: 23 at 13:00">
+                                    <title>Unread: 23 at 13:00</title>
+                                </circle>
+                                <rect x="398" y="109" width="24" height="12" class="label-background"/>
+                                <text x="410" y="105" class="data-label label-unread">23</text>
+                                
+                                <circle cx="465" cy="116" r="5" class="data-point point-unread" title="Unread: 24 at 14:00">
+                                    <title>Unread: 24 at 14:00</title>
+                                </circle>
+                                <rect x="453" y="100" width="24" height="12" class="label-background"/>
+                                <text x="465" y="96" class="data-label label-unread">24</text>
+                                
+                                <circle cx="520" cy="116" r="5" class="data-point point-unread" title="Unread: 24 at 15:00">
+                                    <title>Unread: 24 at 15:00</title>
+                                </circle>
+                                <rect x="508" y="100" width="24" height="12" class="label-background"/>
+                                <text x="520" y="96" class="data-label label-unread">24</text>
+                                
+                                <circle cx="575" cy="107" r="5" class="data-point point-unread" title="Unread: 25 at 16:00">
+                                    <title>Unread: 25 at 16:00</title>
+                                </circle>
+                                <rect x="563" y="91" width="24" height="12" class="label-background"/>
+                                <text x="575" y="87" class="data-label label-unread">25</text>
+                                
+                                <circle cx="630" cy="107" r="5" class="data-point point-unread" title="Unread: 25 at 17:00">
+                                    <title>Unread: 25 at 17:00</title>
+                                </circle>
+                                <rect x="618" y="91" width="24" height="12" class="label-background"/>
+                                <text x="630" y="87" class="data-label label-unread">25</text>
+                                
+                                <circle cx="685" cy="107" r="5" class="data-point point-unread" title="Unread: 25 at 18:00">
+                                    <title>Unread: 25 at 18:00</title>
+                                </circle>
+                                <rect x="673" y="91" width="24" height="12" class="label-background"/>
+                                <text x="685" y="87" class="data-label label-unread">25</text>
+                                
+                                <circle cx="740" cy="107" r="5" class="data-point point-unread" title="Unread: 25 at 19:00">
+                                    <title>Unread: 25 at 19:00</title>
+                                </circle>
+                                <rect x="728" y="91" width="24" height="12" class="label-background"/>
+                                <text x="740" y="87" class="data-label label-unread">25</text>
+                                
+                                <circle cx="795" cy="97" r="5" class="data-point point-unread" title="Unread: 26 at 20:00">
+                                    <title>Unread: 26 at 20:00</title>
+                                </circle>
+                                <rect x="783" y="81" width="24" height="12" class="label-background"/>
+                                <text x="795" y="77" class="data-label label-unread">26</text>
+                                
+                                <circle cx="850" cy="97" r="5" class="data-point point-unread" title="Unread: 26 at 21:00">
+                                    <title>Unread: 26 at 21:00</title>
+                                </circle>
+                                <rect x="838" y="81" width="24" height="12" class="label-background"/>
+                                <text x="850" y="77" class="data-label label-unread">26</text>
+                                
+                            </g>
+                            
+                            <!-- X-axis labels (Hours) -->
+                            
+                            <text x="80" y="355" class="axis-label">7 AM</text>
+                            
+                            <text x="135" y="355" class="axis-label">8 AM</text>
+                            
+                            <text x="190" y="355" class="axis-label">9 AM</text>
+                            
+                            <text x="245" y="355" class="axis-label">10 AM</text>
+                            
+                            <text x="300" y="355" class="axis-label">11 AM</text>
+                            
+                            <text x="355" y="355" class="axis-label">12 PM</text>
+                            
+                            <text x="410" y="355" class="axis-label">1 PM</text>
+                            
+                            <text x="465" y="355" class="axis-label">2 PM</text>
+                            
+                            <text x="520" y="355" class="axis-label">3 PM</text>
+                            
+                            <text x="575" y="355" class="axis-label">4 PM</text>
+                            
+                            <text x="630" y="355" class="axis-label">5 PM</text>
+                            
+                            <text x="685" y="355" class="axis-label">6 PM</text>
+                            
+                            <text x="740" y="355" class="axis-label">7 PM</text>
+                            
+                            <text x="795" y="355" class="axis-label">8 PM</text>
+                            
+                            <text x="850" y="355" class="axis-label">9 PM</text>
+                            
+                            
+                            <!-- SLA Status Indicators -->
+                            
+                            
+                            
+                            <text x="80" y="368" class="sla-indicator sla-met" title="7 AM • SLA met">
+                                <title>7 AM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="135" y="368" class="sla-indicator sla-met" title="8 AM • SLA met">
+                                <title>8 AM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="190" y="368" class="sla-indicator sla-met" title="9 AM • SLA met">
+                                <title>9 AM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="245" y="368" class="sla-indicator sla-met" title="10 AM • SLA met">
+                                <title>10 AM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="300" y="368" class="sla-indicator sla-met" title="11 AM • SLA met">
+                                <title>11 AM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="355" y="368" class="sla-indicator sla-met" title="12 PM • SLA met">
+                                <title>12 PM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="410" y="368" class="sla-indicator sla-met" title="1 PM • SLA met">
+                                <title>1 PM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="465" y="368" class="sla-indicator sla-met" title="2 PM • SLA met">
+                                <title>2 PM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="520" y="368" class="sla-indicator sla-met" title="3 PM • SLA met">
+                                <title>3 PM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="575" y="368" class="sla-indicator sla-met" title="4 PM • SLA met">
+                                <title>4 PM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="630" y="368" class="sla-indicator sla-met" title="5 PM • SLA met">
+                                <title>5 PM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="685" y="368" class="sla-indicator sla-met" title="6 PM • SLA met">
+                                <title>6 PM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="740" y="368" class="sla-indicator sla-met" title="7 PM • SLA met">
+                                <title>7 PM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="795" y="368" class="sla-indicator sla-met" title="8 PM • SLA met">
+                                <title>8 PM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                            
+                            
+                            <text x="850" y="368" class="sla-indicator sla-met" title="9 PM • SLA met">
+                                <title>9 PM • SLA met</title>
+                                ✓
+                            </text>
+                            
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2-Hour Email Metrics moved to bottom -->
+
+        <!-- Response Time by Hour -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">Response Time by Hour</div>
+                <div class="chart-subtitle">Average response time grouped by business hour periods</div>
+                
+                <div class="response-time-periods">
+                    
+                    <div class="period-row">
+                        <div class="period-label">
+                            🌅 Early Morning (6-9 AM)
+                            
+                        </div>
+                        <div class="period-bar-container">
+                            <div class="period-bar danger" data-width="703.0" title="Early Morning (6-9 AM) • Avg: 1054.0 min">
+                                <span class="period-value">1054.0 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="period-row">
+                        <div class="period-label">
+                            ☀️ Morning (9 AM-1 PM)
+                            
+                        </div>
+                        <div class="period-bar-container">
+                            <div class="period-bar muted" data-width="0.0" title="Morning (9 AM-1 PM) • Avg: 0 min">
+                                <span class="period-value">0 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="period-row">
+                        <div class="period-label">
+                            🌤️ Afternoon (1-5 PM)
+                            
+                        </div>
+                        <div class="period-bar-container">
+                            <div class="period-bar muted" data-width="0.0" title="Afternoon (1-5 PM) • Avg: 0 min">
+                                <span class="period-value">0 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="period-row">
+                        <div class="period-label">
+                            🌆 Evening (5-9 PM)
+                            
+                        </div>
+                        <div class="period-bar-container">
+                            <div class="period-bar muted" data-width="0.0" title="Evening (5-9 PM) • Avg: 0 min">
+                                <span class="period-value">0 min</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Response Time Distribution -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">Response Time Distribution</div>
+                <div class="chart-subtitle">Email response times categorized by performance</div>
+                
+                <div class="distribution-container">
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            
+                            
+                                <span class="distribution-name">⚡ Lightning Fast</span>
+                                <span class="distribution-range" style="color: var(--success-2);">Under 30 minutes</span>
+                            
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar success" data-width="0" title="Very Fast (< 30 min) • 0 emails (0%)">
+                                <span class="distribution-count">0 emails</span>
+                            </div>
+                            <span class="distribution-percentage">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            
+                            
+                                <span class="distribution-name">🚀 Fast Response</span>
+                                <span class="distribution-range" style="color: var(--success-2);">30-60 minutes</span>
+                            
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar success" data-width="0" title="Fast (30-60 min) • 0 emails (0%)">
+                                <span class="distribution-count">0 emails</span>
+                            </div>
+                            <span class="distribution-percentage">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            
+                            
+                                <span class="distribution-name">⏱️ Moderate</span>
+                                <span class="distribution-range" style="color: var(--warning-2);">60-120 minutes</span>
+                            
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar warning" data-width="0" title="Moderate (60-120 min) • 0 emails (0%)">
+                                <span class="distribution-count">0 emails</span>
+                            </div>
+                            <span class="distribution-percentage">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            
+                            
+                                <span class="distribution-name">🐢 Slow</span>
+                                <span class="distribution-range" style="color: var(--warning-2);">120-180 minutes</span>
+                            
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar warning" data-width="0" title="Slow (120-180 min) • 0 emails (0%)">
+                                <span class="distribution-count">0 emails</span>
+                            </div>
+                            <span class="distribution-percentage">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            
+                            
+                                <span class="distribution-name">⚠️ Very Slow</span>
+                                <span class="distribution-range" style="color: var(--danger-2);">180-300 minutes</span>
+                            
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar danger" data-width="0" title="Very Slow (180-300 min) • 0 emails (0%)">
+                                <span class="distribution-count">0 emails</span>
+                            </div>
+                            <span class="distribution-percentage">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="distribution-row">
+                        <div class="distribution-label">
+                            
+                            
+                                <span class="distribution-name">🔴 Critical</span>
+                                <span class="distribution-range" style="color: var(--danger-2);">Over 300 minutes</span>
+                            
+                        </div>
+                        <div class="distribution-bar-container">
+                            <div class="distribution-bar danger" data-width="100" title="Critical (> 300 min) • 1 emails (100%)">
+                                <span class="distribution-count">1 emails</span>
+                            </div>
+                            <span class="distribution-percentage">100%</span>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Response Time Percentiles -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">Response Time Percentiles</div>
+                <div class="chart-subtitle">Redesigned statistical distribution of response times</div>
+
+                <div class="percentile-grid">
+                    
+                    <div class="percentile-row">
+                        <div class="percentile-label">P25</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar danger" data-width="100" title="P25 • 1054.0 min">1054.0 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="percentile-row">
+                        <div class="percentile-label">P50</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar danger" data-width="100" title="P50 • 1054.0 min">1054.0 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="percentile-row">
+                        <div class="percentile-label">P75</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar danger" data-width="100" title="P75 • 1054.0 min">1054.0 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="percentile-row">
+                        <div class="percentile-label">P90</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar danger" data-width="100" title="P90 • 1054.0 min">1054.0 min</div>
+                        </div>
+                    </div>
+                    
+                    <div class="percentile-row">
+                        <div class="percentile-label">P95</div>
+                        <div class="percentile-bar-container">
+                            <div class="percentile-bar danger" data-width="100" title="P95 • 1054.0 min">1054.0 min</div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div class="quartile-section">
+                    <div class="quartile-title">Quartile Distribution</div>
+                    <div class="quartile-grid">
+                        
+                        <div class="quartile-item" title="Q1 (0-25%) • 100% of emails">
+                            <div class="quartile-label">Q1 (0-25%)</div>
+                            <div class="quartile-value">1</div>
+                            <div class="quartile-percentage">100% of emails</div>
+                        </div>
+                        
+                        <div class="quartile-item" title="Q2 (25-50%) • 0% of emails">
+                            <div class="quartile-label">Q2 (25-50%)</div>
+                            <div class="quartile-value">0</div>
+                            <div class="quartile-percentage">0% of emails</div>
+                        </div>
+                        
+                        <div class="quartile-item" title="Q3 (50-75%) • 0% of emails">
+                            <div class="quartile-label">Q3 (50-75%)</div>
+                            <div class="quartile-value">0</div>
+                            <div class="quartile-percentage">0% of emails</div>
+                        </div>
+                        
+                        <div class="quartile-item" title="Q4 (75-100%) • 0% of emails">
+                            <div class="quartile-label">Q4 (75-100%)</div>
+                            <div class="quartile-value">0</div>
+                            <div class="quartile-percentage">0% of emails</div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2-Hour Email Metrics (Bottom) -->
+        <section class="chart-section">
+            <div class="card">
+                <div class="chart-title">2-Hour Email Metrics</div>
+                <div class="chart-subtitle">Aggregated metrics across 2-hour blocks (7 AM – 9 PM)</div>
+
+                <div class="a-table">
+                    <div class="a-row header">
+                        <div>Block</div><div>Emails</div><div>Avg Unread</div><div>SLA</div><div>Avg Response</div><div>Median Time</div>
+                    </div>
+
+                    
+                    <div class="a-row" title="7 AM – 9 AM • Emails: 4 • Avg Unread: 15.5 • SLA: Met • Avg Response: 1054.0 min • Median: 1054.0 min">
+                        <div class="a-cell">
+                            
+                            
+                                <div class="distribution-name">🌅 Early Morning</div>
+                            
+                            <div class="distribution-range">7 AM – 9 AM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="100.0"></div></div> <span class="weak">4</span></div>
+                        <div class="a-cell">15.5</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
+                            
+                        </div>
+                        <div class="a-cell">
+                            
+                            
+                                
+                                    <span class="badge danger">🔴 Critical</span>
+                                
+                            
+                            <div class="microbar"><div class="fill response" data-width="1757.0"></div></div>
+                            <span class="weak">1054.0 min</span>
+                        </div>
+                        <div class="a-cell">1054.0 min</div>
+                    </div>
+                    
+                    <div class="a-row" title="9 AM – 11 AM • Emails: 2 • Avg Unread: 20.0 • SLA: Met • Avg Response: N/A min • Median: N/A min">
+                        <div class="a-cell">
+                            
+                            
+                                <div class="distribution-name">☀️ Morning</div>
+                            
+                            <div class="distribution-range">9 AM – 11 AM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="50.0"></div></div> <span class="weak">2</span></div>
+                        <div class="a-cell">20.0</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
+                            
+                        </div>
+                        <div class="a-cell">
+                            
+                            
+                            <div class="microbar"><div class="fill response" data-width="0.0"></div></div>
+                            <span class="weak">—</span>
+                        </div>
+                        <div class="a-cell">—</div>
+                    </div>
+                    
+                    <div class="a-row" title="11 AM – 1 PM • Emails: 2 • Avg Unread: 22.0 • SLA: Met • Avg Response: N/A min • Median: N/A min">
+                        <div class="a-cell">
+                            
+                            
+                                <div class="distribution-name">☀️ Morning</div>
+                            
+                            <div class="distribution-range">11 AM – 1 PM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="50.0"></div></div> <span class="weak">2</span></div>
+                        <div class="a-cell">22.0</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
+                            
+                        </div>
+                        <div class="a-cell">
+                            
+                            
+                            <div class="microbar"><div class="fill response" data-width="0.0"></div></div>
+                            <span class="weak">—</span>
+                        </div>
+                        <div class="a-cell">—</div>
+                    </div>
+                    
+                    <div class="a-row" title="1 PM – 3 PM • Emails: 1 • Avg Unread: 23.5 • SLA: Met • Avg Response: N/A min • Median: N/A min">
+                        <div class="a-cell">
+                            
+                            
+                                <div class="distribution-name">🌤️ Afternoon</div>
+                            
+                            <div class="distribution-range">1 PM – 3 PM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="25.0"></div></div> <span class="weak">1</span></div>
+                        <div class="a-cell">23.5</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
+                            
+                        </div>
+                        <div class="a-cell">
+                            
+                            
+                            <div class="microbar"><div class="fill response" data-width="0.0"></div></div>
+                            <span class="weak">—</span>
+                        </div>
+                        <div class="a-cell">—</div>
+                    </div>
+                    
+                    <div class="a-row" title="3 PM – 5 PM • Emails: 1 • Avg Unread: 24.5 • SLA: Met • Avg Response: N/A min • Median: N/A min">
+                        <div class="a-cell">
+                            
+                            
+                                <div class="distribution-name">🌤️ Afternoon</div>
+                            
+                            <div class="distribution-range">3 PM – 5 PM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="25.0"></div></div> <span class="weak">1</span></div>
+                        <div class="a-cell">24.5</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
+                            
+                        </div>
+                        <div class="a-cell">
+                            
+                            
+                            <div class="microbar"><div class="fill response" data-width="0.0"></div></div>
+                            <span class="weak">—</span>
+                        </div>
+                        <div class="a-cell">—</div>
+                    </div>
+                    
+                    <div class="a-row" title="5 PM – 7 PM • Emails: 0 • Avg Unread: 25.0 • SLA: Met • Avg Response: N/A min • Median: N/A min">
+                        <div class="a-cell">
+                            
+                            
+                                <div class="distribution-name">🌆 Evening</div>
+                            
+                            <div class="distribution-range">5 PM – 7 PM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="0.0"></div></div> <span class="weak">0</span></div>
+                        <div class="a-cell">25.0</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
+                            
+                        </div>
+                        <div class="a-cell">
+                            
+                            
+                            <div class="microbar"><div class="fill response" data-width="0.0"></div></div>
+                            <span class="weak">—</span>
+                        </div>
+                        <div class="a-cell">—</div>
+                    </div>
+                    
+                    <div class="a-row" title="7 PM – 9 PM • Emails: 1 • Avg Unread: 25.5 • SLA: Met • Avg Response: N/A min • Median: N/A min">
+                        <div class="a-cell">
+                            
+                            
+                                <div class="distribution-name">🌆 Evening</div>
+                            
+                            <div class="distribution-range">7 PM – 9 PM</div>
+                        </div>
+                        <div class="a-cell"><div class="microbar"><div class="fill emails" data-width="25.0"></div></div> <span class="weak">1</span></div>
+                        <div class="a-cell">25.5</div>
+                        <div class="a-cell">
+                            
+                                <span class="badge success">Met</span>
+                            
+                        </div>
+                        <div class="a-cell">
+                            
+                            
+                            <div class="microbar"><div class="fill response" data-width="0.0"></div></div>
+                            <span class="weak">—</span>
+                        </div>
+                        <div class="a-cell">—</div>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Summary -->
+        <div class="card summary">
+            <div>
+                <strong>Data Source:</strong> Unified JSON database | 
+                <strong>Email Data:</strong> August 23, 2025 (13 emails) | 
+                <strong>SLA Threshold:</strong> 30 unread emails | 
+                <strong>Business Hours:</strong> 7 AM to 9 PM
+            </div>
+        </div>
+    </div>
+    <script>
+        // Enhanced interactivity for line chart data points
+        document.addEventListener('DOMContentLoaded', function () {
+            const dataPoints = document.querySelectorAll('.data-point');
+            
+            dataPoints.forEach(point => {
+                point.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.5)';
+                });
+                
+                point.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Apply widths from data-width attributes to avoid inline Jinja in styles
+            const applyWidths = (selector) => {
+                document.querySelectorAll(selector).forEach(el => {
+                    const wRaw = el.getAttribute('data-width');
+                    if (wRaw !== null) {
+                        const w = Math.max(0, Math.min(100, parseFloat(wRaw)));
+                        el.style.width = `${w}%`;
+                    }
+                });
+            };
+
+            applyWidths('.period-bar[data-width]');
+            applyWidths('.distribution-bar[data-width]');
+            applyWidths('.percentile-bar[data-width]');
+            applyWidths('.microbar .fill[data-width]');
+        });
+    </script>
+</body>
+</html>

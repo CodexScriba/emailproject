@@ -134,6 +134,61 @@ The system calculates response times only during configured business hours:
 - **Weekend handling**: Configurable business days (default: all 7 days)
 - **Accurate metrics**: No artificial date boundaries affecting calculations
 
+## Instructions: Daily Dashboard Generation by Date
+
+Use these steps to quickly ingest new data and generate one or more daily dashboards for specific dates.
+
+### 1) Place input CSVs
+- Put files in `data/ingest/`:
+  - `Complete_List_Raw.csv` (email events)
+  - `UnreadCount.csv` (SLA unread counts)
+
+### 2) Run ingestion
+- From project root:
+```bash
+./update_database.sh
+# or
+python3 daily/scripts/ingest_and_update.py
+```
+Notes:
+- Input files are automatically backed up and then moved to `data/backup/` after a successful run.
+- The unified DB is saved at `database/email_database.json`.
+
+### 3) Confirm target dates exist
+```bash
+python3 daily/scripts/generate_dashboard.py --list-dates | cat
+# Optional: filter a specific day
+python3 daily/scripts/generate_dashboard.py --list-dates | grep YYYY-MM-DD | cat
+```
+If your expected date is not present, check the CSV contents and re-run ingestion.
+
+### 4) Generate dashboard for a specific date
+```bash
+python3 daily/scripts/generate_dashboard.py --date YYYY-MM-DD | cat
+```
+Outputs:
+- Per-day HTML: `daily/dashboard/output/email_dashboard_YYYY-MM-DD.html`
+- Convenience alias: `daily/dashboard/output/latest.html` (overwritten on each run)
+
+### 5) Example: generate for two consecutive days
+```bash
+# Example for Aug 23 and Aug 24 (adjust the year as present in DB)
+python3 daily/scripts/generate_dashboard.py --date 2025-08-23 | cat
+python3 daily/scripts/generate_dashboard.py --date 2025-08-24 | cat
+```
+
+### Troubleshooting
+- "Date not found in database":
+  - Run `--list-dates` to see what dates are available.
+  - Ensure `Complete_List_Raw.csv` and `UnreadCount.csv` cover the target day and re-run ingestion.
+  - Remember ingestion moves processed files to `data/backup/`. If needed, restore or provide fresh CSVs and re-run.
+- Low/zero email totals for a day:
+  - Indicates missing or unmatched email events for that date; re-check `Complete_List_Raw.csv` contents.
+- SLA data missing:
+  - Ensure `UnreadCount.csv` includes the date and the hour column (`Hour` or `Hour of the Day`).
+
+Tip: For faster requests, include the exact commands above with your desired dates.
+
 ## Recent Bug Fixes and Improvements
 
 ### Date Correction Feature (August 2024)

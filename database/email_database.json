@@ -1,13 +1,13 @@
 {
   "metadata": {
-    "last_updated": "2025-08-23T02:59:25.740159",
-    "total_days_processed": 190,
+    "last_updated": "2025-08-25T00:25:54.603747",
+    "total_days_processed": 174,
     "data_sources": [
       "Complete_List_Raw.csv",
       "UnreadCount.csv"
     ],
-    "earliest_date": "2025-05-18",
-    "latest_date": "2025-08-18"
+    "earliest_date": "2024-05-18",
+    "latest_date": "2025-08-24"
   },
   "days": {
     "2025-05-18": {
@@ -222,8 +222,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 42.86,
-        "avg_unread_count": 33.43,
+        "sla_compliance_rate": 33.3,
+        "avg_unread_count": 34.2,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -429,8 +429,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 13.33,
-        "avg_unread_count": 39.73,
+        "sla_compliance_rate": 7.1,
+        "avg_unread_count": 40.5,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -636,8 +636,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 69.23,
-        "avg_unread_count": 30.46,
+        "sla_compliance_rate": 69.2,
+        "avg_unread_count": 30.5,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -843,8 +843,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 12.5,
-        "avg_unread_count": 47.06,
+        "sla_compliance_rate": 7.1,
+        "avg_unread_count": 49.9,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -1050,8 +1050,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 40.0,
-        "avg_unread_count": 39.2,
+        "sla_compliance_rate": 35.7,
+        "avg_unread_count": 41.0,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -1258,7 +1258,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 11.93,
+        "avg_unread_count": 11.3,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -1465,7 +1465,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 16.36,
+        "avg_unread_count": 17.0,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -1672,7 +1672,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 15.0,
+        "avg_unread_count": 14.1,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -1878,8 +1878,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 46.67,
-        "avg_unread_count": 32.67,
+        "sla_compliance_rate": 42.9,
+        "avg_unread_count": 34.5,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -2085,8 +2085,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 60.0,
-        "avg_unread_count": 26.93,
+        "sla_compliance_rate": 57.1,
+        "avg_unread_count": 28.1,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -2292,8 +2292,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 93.33,
-        "avg_unread_count": 14.4,
+        "sla_compliance_rate": 92.9,
+        "avg_unread_count": 14.3,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -2500,7 +2500,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 16.4,
+        "avg_unread_count": 16.1,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -2707,7 +2707,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 10.4,
+        "avg_unread_count": 10.7,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -2914,7 +2914,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 9.0,
+        "avg_unread_count": 9.3,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -3121,7 +3121,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 10.4,
+        "avg_unread_count": 10.6,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -3328,7 +3328,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 10.67,
+        "avg_unread_count": 10.9,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -3534,8 +3534,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 80.0,
-        "avg_unread_count": 18.47,
+        "sla_compliance_rate": 78.6,
+        "avg_unread_count": 19.2,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -3741,8 +3741,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 85.71,
-        "avg_unread_count": 14.43,
+        "sla_compliance_rate": 84.6,
+        "avg_unread_count": 14.7,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -3949,7 +3949,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 10.73,
+        "avg_unread_count": 10.9,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -4156,7 +4156,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 8.43,
+        "avg_unread_count": 8.5,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -4363,7 +4363,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 7.5,
+        "avg_unread_count": 6.1,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -4569,8 +4569,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 50.0,
-        "avg_unread_count": 31.31,
+        "sla_compliance_rate": 46.7,
+        "avg_unread_count": 32.5,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -4776,8 +4776,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 78.57,
-        "avg_unread_count": 19.71,
+        "sla_compliance_rate": 76.9,
+        "avg_unread_count": 20.7,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -4983,8 +4983,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 80.0,
-        "avg_unread_count": 18.93,
+        "sla_compliance_rate": 78.6,
+        "avg_unread_count": 19.6,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -5190,8 +5190,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 80.0,
-        "avg_unread_count": 21.07,
+        "sla_compliance_rate": 78.6,
+        "avg_unread_count": 21.4,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -5397,8 +5397,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 60.0,
-        "avg_unread_count": 26.4,
+        "sla_compliance_rate": 57.1,
+        "avg_unread_count": 26.9,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -5605,7 +5605,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 13.5,
+        "avg_unread_count": 13.1,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -5812,7 +5812,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 14.69,
+        "avg_unread_count": 14.3,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -6018,8 +6018,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 62.5,
-        "avg_unread_count": 27.44,
+        "sla_compliance_rate": 60.0,
+        "avg_unread_count": 27.9,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -6225,8 +6225,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 69.23,
-        "avg_unread_count": 28.23,
+        "sla_compliance_rate": 69.2,
+        "avg_unread_count": 28.2,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -6432,8 +6432,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 35.29,
-        "avg_unread_count": 31.47,
+        "sla_compliance_rate": 33.3,
+        "avg_unread_count": 32.4,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -6639,8 +6639,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 66.67,
-        "avg_unread_count": 25.83,
+        "sla_compliance_rate": 66.7,
+        "avg_unread_count": 25.8,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -6847,7 +6847,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 50.0,
-        "avg_unread_count": 30.38,
+        "avg_unread_count": 31.2,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -7054,7 +7054,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 8.47,
+        "avg_unread_count": 7.9,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -7261,7 +7261,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 10.46,
+        "avg_unread_count": 10.5,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -7467,8 +7467,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 43.75,
-        "avg_unread_count": 28.62,
+        "sla_compliance_rate": 42.9,
+        "avg_unread_count": 29.0,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -7674,8 +7674,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 60.0,
-        "avg_unread_count": 30.27,
+        "sla_compliance_rate": 57.1,
+        "avg_unread_count": 30.9,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -7881,8 +7881,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 73.33,
-        "avg_unread_count": 23.27,
+        "sla_compliance_rate": 71.4,
+        "avg_unread_count": 23.8,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -8088,8 +8088,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 69.23,
-        "avg_unread_count": 23.23,
+        "sla_compliance_rate": 69.2,
+        "avg_unread_count": 23.2,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -8295,8 +8295,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 52.94,
-        "avg_unread_count": 34.29,
+        "sla_compliance_rate": 53.3,
+        "avg_unread_count": 34.1,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -8502,8 +8502,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 86.67,
-        "avg_unread_count": 18.13,
+        "sla_compliance_rate": 85.7,
+        "avg_unread_count": 18.4,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -8710,7 +8710,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 12.62,
+        "avg_unread_count": 12.6,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -8916,8 +8916,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 40.0,
-        "avg_unread_count": 37.13,
+        "sla_compliance_rate": 38.5,
+        "avg_unread_count": 36.5,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -9123,8 +9123,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 7.14,
-        "avg_unread_count": 48.07,
+        "sla_compliance_rate": 7.1,
+        "avg_unread_count": 48.1,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -9330,8 +9330,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 33.33,
-        "avg_unread_count": 42.2,
+        "sla_compliance_rate": 35.7,
+        "avg_unread_count": 42.8,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -9537,8 +9537,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 11.76,
-        "avg_unread_count": 48.65,
+        "sla_compliance_rate": 6.7,
+        "avg_unread_count": 51.9,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -9744,8 +9744,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 73.33,
-        "avg_unread_count": 26.6,
+        "sla_compliance_rate": 71.4,
+        "avg_unread_count": 27.6,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -9952,7 +9952,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 10.29,
+        "avg_unread_count": 10.1,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -10159,7 +10159,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 12.92,
+        "avg_unread_count": 12.9,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -10365,8 +10365,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 33.33,
-        "avg_unread_count": 40.53,
+        "sla_compliance_rate": 35.7,
+        "avg_unread_count": 40.4,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -10572,8 +10572,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 26.67,
-        "avg_unread_count": 48.2,
+        "sla_compliance_rate": 21.4,
+        "avg_unread_count": 50.6,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -10779,8 +10779,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 21.43,
-        "avg_unread_count": 38.07,
+        "sla_compliance_rate": 15.4,
+        "avg_unread_count": 40.2,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -10986,8 +10986,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 73.33,
-        "avg_unread_count": 25.07,
+        "sla_compliance_rate": 71.4,
+        "avg_unread_count": 25.2,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -11193,8 +11193,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 6.67,
-        "avg_unread_count": 43.93,
+        "sla_compliance_rate": 7.1,
+        "avg_unread_count": 44.4,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -11400,8 +11400,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 93.33,
-        "avg_unread_count": 21.67,
+        "sla_compliance_rate": 92.9,
+        "avg_unread_count": 21.6,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -11607,8 +11607,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 86.67,
-        "avg_unread_count": 17.47,
+        "sla_compliance_rate": 85.7,
+        "avg_unread_count": 17.4,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -11814,8 +11814,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 40.0,
-        "avg_unread_count": 41.0,
+        "sla_compliance_rate": 42.9,
+        "avg_unread_count": 41.4,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -12021,8 +12021,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 6.67,
-        "avg_unread_count": 46.33,
+        "sla_compliance_rate": 7.1,
+        "avg_unread_count": 46.6,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -12228,8 +12228,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 21.43,
-        "avg_unread_count": 45.21,
+        "sla_compliance_rate": 15.4,
+        "avg_unread_count": 47.7,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -12435,8 +12435,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 66.67,
-        "avg_unread_count": 28.4,
+        "sla_compliance_rate": 64.3,
+        "avg_unread_count": 28.5,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -12640,206 +12640,209 @@
     "2025-07-18": {
       "date": "2025-07-18",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
-        "sla_compliance_rate": 6.67,
-        "avg_unread_count": 39.73,
-        "total_emails": null,
-        "reply_rate_percent": null,
+        "sla_compliance_rate": 7.1,
+        "avg_unread_count": 39.9,
+        "total_emails": 2,
+        "reply_rate_percent": 0.0,
         "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "median_response_time_minutes": null,
+        "replied_count": 0,
+        "completed_count": 0,
+        "pending_count": 2
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 7,
           "unread_count": 35,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 8,
           "unread_count": 25,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 9,
           "unread_count": 33,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 10,
           "unread_count": 37,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 2,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 11,
           "unread_count": 35,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 12,
           "unread_count": 35,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 13,
           "unread_count": 38,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 14,
           "unread_count": 40,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 43,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 54,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 47,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 49,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 44,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 44,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 37,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -12849,8 +12852,8 @@
       "has_sla_data": true,
       "has_email_data": false,
       "daily_summary": {
-        "sla_compliance_rate": 86.67,
-        "avg_unread_count": 20.07,
+        "sla_compliance_rate": 85.7,
+        "avg_unread_count": 20.2,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -13057,7 +13060,7 @@
       "has_email_data": false,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 15.73,
+        "avg_unread_count": 15.6,
         "total_emails": null,
         "reply_rate_percent": null,
         "avg_response_time_minutes": null,
@@ -13261,206 +13264,209 @@
     "2025-07-21": {
       "date": "2025-07-21",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
-        "sla_compliance_rate": 40.0,
-        "avg_unread_count": 33.73,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "sla_compliance_rate": 35.7,
+        "avg_unread_count": 34.1,
+        "total_emails": 4,
+        "reply_rate_percent": 100.0,
+        "avg_response_time_minutes": 362.5,
+        "median_response_time_minutes": 362.5,
+        "replied_count": 4,
+        "completed_count": 0,
+        "pending_count": 0
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 7,
           "unread_count": 16,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 8,
           "unread_count": 7,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 9,
           "unread_count": 17,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 10,
           "unread_count": 19,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 11,
           "unread_count": 27,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 12,
           "unread_count": 33,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 13,
           "unread_count": 43,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 14,
           "unread_count": 38,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 50,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 46,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 41,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 61,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 4,
+          "emails_replied": 4,
+          "avg_response_time": 362.5
         },
         {
           "hour": 19,
           "unread_count": 48,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 32,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 28,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": 25,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -13468,206 +13474,209 @@
     "2025-07-22": {
       "date": "2025-07-22",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
         "sla_compliance_rate": 0.0,
-        "avg_unread_count": 42.53,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "avg_unread_count": 42.8,
+        "total_emails": 166,
+        "reply_rate_percent": 64.5,
+        "avg_response_time_minutes": 109.4,
+        "median_response_time_minutes": 81.0,
+        "replied_count": 107,
+        "completed_count": 14,
+        "pending_count": 45
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 2,
+          "emails_replied": 2,
+          "avg_response_time": 39.0
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 15,
+          "emails_replied": 15,
+          "avg_response_time": 122.3
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 4,
+          "emails_replied": 1,
+          "avg_response_time": 2.2
         },
         {
           "hour": 7,
           "unread_count": 42,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 11,
+          "emails_replied": 10,
+          "avg_response_time": 122.5
         },
         {
           "hour": 8,
           "unread_count": 34,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 41,
+          "emails_replied": 39,
+          "avg_response_time": 72.6
         },
         {
           "hour": 9,
           "unread_count": 36,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 32,
+          "emails_replied": 12,
+          "avg_response_time": 211.8
         },
         {
           "hour": 10,
           "unread_count": 34,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 42,
+          "emails_replied": 16,
+          "avg_response_time": 81.4
         },
         {
           "hour": 11,
           "unread_count": 38,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 18,
+          "emails_replied": 12,
+          "avg_response_time": 132.3
         },
         {
           "hour": 12,
           "unread_count": 34,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 13,
           "unread_count": 51,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 14,
           "unread_count": 49,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 38,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 32,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 52,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 64,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 52,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 43,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 39,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -13675,206 +13684,209 @@
     "2025-07-23": {
       "date": "2025-07-23",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
-        "sla_compliance_rate": 13.33,
-        "avg_unread_count": 40.93,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "sla_compliance_rate": 14.3,
+        "avg_unread_count": 41.0,
+        "total_emails": 100,
+        "reply_rate_percent": 54.0,
+        "avg_response_time_minutes": 218.5,
+        "median_response_time_minutes": 66.0,
+        "replied_count": 54,
+        "completed_count": 11,
+        "pending_count": 35
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 5,
+          "emails_replied": 1,
+          "avg_response_time": 175.0
         },
         {
           "hour": 7,
           "unread_count": 44,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 4,
+          "emails_replied": 0,
+          "avg_response_time": 1130.0
         },
         {
           "hour": 8,
           "unread_count": 30,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 11,
+          "emails_replied": 7,
+          "avg_response_time": 404.1
         },
         {
           "hour": 9,
           "unread_count": 30,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 21,
+          "emails_replied": 16,
+          "avg_response_time": 144.0
         },
         {
           "hour": 10,
           "unread_count": 34,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 26,
+          "emails_replied": 18,
+          "avg_response_time": 203.5
         },
         {
           "hour": 11,
           "unread_count": 35,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 24,
+          "emails_replied": 11,
+          "avg_response_time": 59.3
         },
         {
           "hour": 12,
           "unread_count": 46,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 7,
+          "emails_replied": 1,
+          "avg_response_time": 6.0
         },
         {
           "hour": 13,
           "unread_count": 61,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 14,
           "unread_count": 48,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 32,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 32,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 45,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 51,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 42,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 44,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 40,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -13882,206 +13894,209 @@
     "2025-07-24": {
       "date": "2025-07-24",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
-        "sla_compliance_rate": 26.67,
-        "avg_unread_count": 44.27,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "sla_compliance_rate": 21.4,
+        "avg_unread_count": 45.6,
+        "total_emails": 100,
+        "reply_rate_percent": 64.0,
+        "avg_response_time_minutes": 743.7,
+        "median_response_time_minutes": 97.0,
+        "replied_count": 64,
+        "completed_count": 8,
+        "pending_count": 28
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 7,
           "unread_count": 42,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 5,
+          "emails_replied": 1,
+          "avg_response_time": 3313.5
         },
         {
           "hour": 8,
           "unread_count": 28,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 14,
+          "emails_replied": 9,
+          "avg_response_time": 142.2
         },
         {
           "hour": 9,
           "unread_count": 32,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 15,
+          "emails_replied": 12,
+          "avg_response_time": 196.2
         },
         {
           "hour": 10,
           "unread_count": 28,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 24,
+          "emails_replied": 20,
+          "avg_response_time": 1851.2
         },
         {
           "hour": 11,
           "unread_count": 36,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 23,
+          "emails_replied": 12,
+          "avg_response_time": 232.1
         },
         {
           "hour": 12,
           "unread_count": 41,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 19,
+          "emails_replied": 10,
+          "avg_response_time": 192.9
         },
         {
           "hour": 13,
           "unread_count": 51,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 14,
           "unread_count": 43,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 44,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 56,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 81,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 74,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 53,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 30,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 25,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -14089,206 +14104,209 @@
     "2025-07-25": {
       "date": "2025-07-25",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
-        "sla_compliance_rate": 46.67,
-        "avg_unread_count": 27.53,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "sla_compliance_rate": 42.9,
+        "avg_unread_count": 28.1,
+        "total_emails": 98,
+        "reply_rate_percent": 70.4,
+        "avg_response_time_minutes": 1053.7,
+        "median_response_time_minutes": 41.0,
+        "replied_count": 69,
+        "completed_count": 2,
+        "pending_count": 27
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 7,
           "unread_count": 24,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 3,
+          "emails_replied": 3,
+          "avg_response_time": 18.7
         },
         {
           "hour": 8,
           "unread_count": 15,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 14,
+          "emails_replied": 12,
+          "avg_response_time": 28.2
         },
         {
           "hour": 9,
           "unread_count": 11,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 12,
+          "emails_replied": 6,
+          "avg_response_time": 50.1
         },
         {
           "hour": 10,
           "unread_count": 9,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 24,
+          "emails_replied": 17,
+          "avg_response_time": 4045.5
         },
         {
           "hour": 11,
           "unread_count": 22,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 38,
+          "emails_replied": 26,
+          "avg_response_time": 102.7
         },
         {
           "hour": 12,
           "unread_count": 45,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 6,
+          "emails_replied": 5,
+          "avg_response_time": 504.6
         },
         {
           "hour": 13,
           "unread_count": 43,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 14,
           "unread_count": 31,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 33,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 38,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 34,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 35,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 32,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 21,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 20,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -14296,206 +14314,209 @@
     "2025-07-26": {
       "date": "2025-07-26",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
-        "sla_compliance_rate": 86.67,
-        "avg_unread_count": 27.13,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "sla_compliance_rate": 92.9,
+        "avg_unread_count": 26.5,
+        "total_emails": 18,
+        "reply_rate_percent": 27.8,
+        "avg_response_time_minutes": 630.9,
+        "median_response_time_minutes": 520.0,
+        "replied_count": 5,
+        "completed_count": 4,
+        "pending_count": 9
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 1710.0
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 7,
           "unread_count": 21,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 8,
           "unread_count": 21,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 9,
           "unread_count": 22,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 10,
           "unread_count": 23,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 2,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 11,
           "unread_count": 25,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 807.0
         },
         {
           "hour": 12,
           "unread_count": 26,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 13,
           "unread_count": 26,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 2,
+          "emails_replied": 1,
+          "avg_response_time": 619.0
         },
         {
           "hour": 14,
           "unread_count": 28,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 28,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 28,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 520.0
         },
         {
           "hour": 17,
           "unread_count": 29,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 29,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 29,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 7,
+          "emails_replied": 0,
+          "avg_response_time": 282.2
         },
         {
           "hour": 20,
           "unread_count": 36,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 36,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 893.0
         },
         {
           "hour": 22,
           "unread_count": 37,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -14503,206 +14524,209 @@
     "2025-07-27": {
       "date": "2025-07-27",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
-        "sla_compliance_rate": 80.0,
-        "avg_unread_count": 19.87,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "sla_compliance_rate": 78.6,
+        "avg_unread_count": 19.9,
+        "total_emails": 17,
+        "reply_rate_percent": 17.6,
+        "avg_response_time_minutes": 167.0,
+        "median_response_time_minutes": 89.0,
+        "replied_count": 3,
+        "completed_count": 0,
+        "pending_count": 14
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 7,
           "unread_count": 39,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 2,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 8,
           "unread_count": 41,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 89.0
         },
         {
           "hour": 9,
           "unread_count": 42,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 10,
           "unread_count": 25,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 5,
+          "emails_replied": 1,
+          "avg_response_time": 49.0
         },
         {
           "hour": 11,
           "unread_count": 14,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 12,
           "unread_count": 12,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 13,
           "unread_count": 12,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 14,
           "unread_count": 12,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 12,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 363.0
         },
         {
           "hour": 16,
           "unread_count": 13,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 13,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 13,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 2,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 15,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 16,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 3,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 19,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -14710,206 +14734,209 @@
     "2025-07-28": {
       "date": "2025-07-28",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
-        "sla_compliance_rate": 53.33,
-        "avg_unread_count": 29.27,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "sla_compliance_rate": 50.0,
+        "avg_unread_count": 29.7,
+        "total_emails": 100,
+        "reply_rate_percent": 72.0,
+        "avg_response_time_minutes": 171.1,
+        "median_response_time_minutes": 46.0,
+        "replied_count": 72,
+        "completed_count": 3,
+        "pending_count": 25
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 2,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 18.0
         },
         {
           "hour": 7,
           "unread_count": 23,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 3,
+          "emails_replied": 3,
+          "avg_response_time": 298.7
         },
         {
           "hour": 8,
           "unread_count": 7,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 9,
+          "emails_replied": 5,
+          "avg_response_time": 14.8
         },
         {
           "hour": 9,
           "unread_count": 7,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 21,
+          "emails_replied": 20,
+          "avg_response_time": 219.1
         },
         {
           "hour": 10,
           "unread_count": 14,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 24,
+          "emails_replied": 16,
+          "avg_response_time": 299.4
         },
         {
           "hour": 11,
           "unread_count": 30,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 23,
+          "emails_replied": 17,
+          "avg_response_time": 80.4
         },
         {
           "hour": 12,
           "unread_count": 41,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 17,
+          "emails_replied": 10,
+          "avg_response_time": 91.1
         },
         {
           "hour": 13,
           "unread_count": 32,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 14,
           "unread_count": 51,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 34,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 24,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 45,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 48,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 34,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 26,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 23,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": 24,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -14917,206 +14944,209 @@
     "2025-07-29": {
       "date": "2025-07-29",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
-        "sla_compliance_rate": 60.0,
-        "avg_unread_count": 27.87,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "sla_compliance_rate": 57.1,
+        "avg_unread_count": 28.2,
+        "total_emails": 100,
+        "reply_rate_percent": 77.0,
+        "avg_response_time_minutes": 397.9,
+        "median_response_time_minutes": 67.0,
+        "replied_count": 77,
+        "completed_count": 0,
+        "pending_count": 23
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 2,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 7,
           "unread_count": 24,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 1128.0
         },
         {
           "hour": 8,
           "unread_count": 15,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 9,
+          "emails_replied": 7,
+          "avg_response_time": 67.7
         },
         {
           "hour": 9,
           "unread_count": 12,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 22,
+          "emails_replied": 19,
+          "avg_response_time": 149.4
         },
         {
           "hour": 10,
           "unread_count": 25,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 27,
+          "emails_replied": 21,
+          "avg_response_time": 435.8
         },
         {
           "hour": 11,
           "unread_count": 24,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 28,
+          "emails_replied": 19,
+          "avg_response_time": 320.5
         },
         {
           "hour": 12,
           "unread_count": 22,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 11,
+          "emails_replied": 10,
+          "avg_response_time": 1095.3
         },
         {
           "hour": 13,
           "unread_count": 32,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 14,
           "unread_count": 34,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 41,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 38,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 47,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 36,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 17,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 28,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 23,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -15124,206 +15154,209 @@
     "2025-07-30": {
       "date": "2025-07-30",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
-        "sla_compliance_rate": 73.33,
-        "avg_unread_count": 29.53,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "sla_compliance_rate": 71.4,
+        "avg_unread_count": 30.5,
+        "total_emails": 100,
+        "reply_rate_percent": 47.0,
+        "avg_response_time_minutes": 177.4,
+        "median_response_time_minutes": 73.0,
+        "replied_count": 47,
+        "completed_count": 0,
+        "pending_count": 53
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 295.0
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 2,
+          "emails_replied": 1,
+          "avg_response_time": 25.0
         },
         {
           "hour": 7,
           "unread_count": 30,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 8,
           "unread_count": 22,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 8,
+          "emails_replied": 5,
+          "avg_response_time": 751.0
         },
         {
           "hour": 9,
           "unread_count": 18,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 25,
+          "emails_replied": 10,
+          "avg_response_time": 105.3
         },
         {
           "hour": 10,
           "unread_count": 29,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 34,
+          "emails_replied": 9,
+          "avg_response_time": 139.4
         },
         {
           "hour": 11,
           "unread_count": 53,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 11,
+          "emails_replied": 8,
+          "avg_response_time": 103.6
         },
         {
           "hour": 12,
           "unread_count": 30,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 16,
+          "emails_replied": 13,
+          "avg_response_time": 86.6
         },
         {
           "hour": 13,
           "unread_count": 33,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 14,
           "unread_count": 30,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 15,
           "unread_count": 28,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 37,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 49,
           "sla_met": false,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 23,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 27,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 18,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 16,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -15331,206 +15364,209 @@
     "2025-07-31": {
       "date": "2025-07-31",
       "has_sla_data": true,
-      "has_email_data": false,
+      "has_email_data": true,
       "daily_summary": {
         "sla_compliance_rate": 100.0,
-        "avg_unread_count": 18.07,
-        "total_emails": null,
-        "reply_rate_percent": null,
-        "avg_response_time_minutes": null,
-        "median_response_time_minutes": null
+        "avg_unread_count": 18.5,
+        "total_emails": 101,
+        "reply_rate_percent": 65.3,
+        "avg_response_time_minutes": 79.1,
+        "median_response_time_minutes": 28.0,
+        "replied_count": 66,
+        "completed_count": 3,
+        "pending_count": 32
       },
       "hourly_data": [
         {
           "hour": 0,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 397.0
         },
         {
           "hour": 1,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 2,
+          "emails_replied": 2,
+          "avg_response_time": 24.0
         },
         {
           "hour": 2,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 3,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 4,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 5,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 6,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 5,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 7,
           "unread_count": 18,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 2,
+          "emails_replied": 2,
+          "avg_response_time": 167.0
         },
         {
           "hour": 8,
           "unread_count": 12,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 7,
+          "emails_replied": 5,
+          "avg_response_time": 105.2
         },
         {
           "hour": 9,
           "unread_count": 15,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 13,
+          "emails_replied": 3,
+          "avg_response_time": 10.2
         },
         {
           "hour": 10,
           "unread_count": 16,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 14,
+          "emails_replied": 7,
+          "avg_response_time": 44.9
         },
         {
           "hour": 11,
           "unread_count": 19,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 14,
+          "emails_replied": 12,
+          "avg_response_time": 109.0
         },
         {
           "hour": 12,
           "unread_count": 23,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 17,
+          "emails_replied": 13,
+          "avg_response_time": 77.1
         },
         {
           "hour": 13,
           "unread_count": 27,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 14,
+          "emails_replied": 13,
+          "avg_response_time": 46.1
         },
         {
           "hour": 14,
           "unread_count": 10,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
-          "avg_response_time": null
+          "emails_received": 11,
+          "emails_replied": 8,
+          "avg_response_time": 96.0
         },
         {
           "hour": 15,
           "unread_count": 16,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 16,
           "unread_count": 25,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 17,
           "unread_count": 22,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 18,
           "unread_count": 20,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 19,
           "unread_count": 23,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 20,
           "unread_count": 13,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 21,
           "unread_count": 12,
           "sla_met": true,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 22,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 0,
+          "emails_replied": 0,
           "avg_response_time": null
         },
         {
           "hour": 23,
           "unread_count": null,
           "sla_met": null,
-          "emails_received": null,
-          "emails_replied": null,
+          "emails_received": 1,
+          "emails_replied": 0,
           "avg_response_time": null
         }
       ]
@@ -28929,12 +28965,12 @@
         "sla_compliance_rate": 78.6,
         "avg_unread_count": 22.7,
         "total_emails": 228,
-        "replied_count": 149,
+        "replied_count": 153,
         "completed_count": 22,
-        "pending_count": 57,
-        "reply_rate_percent": 65.4,
-        "avg_response_time_minutes": 59.9,
-        "median_response_time_minutes": 37.0
+        "pending_count": 53,
+        "reply_rate_percent": 67.1,
+        "avg_response_time_minutes": 89.6,
+        "median_response_time_minutes": 39.0
       },
       "hourly_data": [
         {
@@ -29056,8 +29092,8 @@
           "unread_count": 22,
           "sla_met": true,
           "emails_received": 18,
-          "emails_replied": 11,
-          "avg_response_time": 50.8
+          "emails_replied": 14,
+          "avg_response_time": 338.0
         },
         {
           "hour": 17,
@@ -29078,8 +29114,8 @@
         {
           "hour": 19,
           "emails_received": 2,
-          "emails_replied": 0,
-          "avg_response_time": null,
+          "emails_replied": 1,
+          "avg_response_time": 1256.0,
           "unread_count": 20,
           "sla_met": true
         },
@@ -29102,6 +29138,390 @@
         {
           "hour": 22,
           "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 23,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        }
+      ]
+    },
+    "2025-08-23": {
+      "date": "2025-08-23",
+      "has_email_data": true,
+      "has_sla_data": true,
+      "daily_summary": {
+        "total_emails": 13,
+        "replied_count": 1,
+        "completed_count": 0,
+        "pending_count": 12,
+        "reply_rate_percent": 7.7,
+        "avg_response_time_minutes": 1054.0,
+        "median_response_time_minutes": 1054.0,
+        "sla_compliance_rate": 100.0,
+        "avg_unread_count": 22.3
+      },
+      "hourly_data": [
+        {
+          "hour": 0,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 1,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 2,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 3,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 4,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 5,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 6,
+          "emails_received": 1,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 7,
+          "emails_received": 1,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 15,
+          "sla_met": true
+        },
+        {
+          "hour": 8,
+          "emails_received": 3,
+          "emails_replied": 1,
+          "avg_response_time": 1054.0,
+          "unread_count": 16,
+          "sla_met": true
+        },
+        {
+          "hour": 9,
+          "emails_received": 2,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 19,
+          "sla_met": true
+        },
+        {
+          "hour": 10,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 21,
+          "sla_met": true
+        },
+        {
+          "hour": 11,
+          "emails_received": 2,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 21,
+          "sla_met": true
+        },
+        {
+          "hour": 12,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 23,
+          "sla_met": true
+        },
+        {
+          "hour": 13,
+          "emails_received": 1,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 23,
+          "sla_met": true
+        },
+        {
+          "hour": 14,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 24,
+          "sla_met": true
+        },
+        {
+          "hour": 15,
+          "emails_received": 1,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 24,
+          "sla_met": true
+        },
+        {
+          "hour": 16,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 25,
+          "sla_met": true
+        },
+        {
+          "hour": 17,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 25,
+          "sla_met": true
+        },
+        {
+          "hour": 18,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 25,
+          "sla_met": true
+        },
+        {
+          "hour": 19,
+          "emails_received": 1,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 25,
+          "sla_met": true
+        },
+        {
+          "hour": 20,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 26,
+          "sla_met": true
+        },
+        {
+          "hour": 21,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 26,
+          "sla_met": true
+        },
+        {
+          "hour": 22,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 23,
+          "emails_received": 1,
+          "emails_replied": 0,
+          "avg_response_time": null
+        }
+      ]
+    },
+    "2025-08-24": {
+      "date": "2025-08-24",
+      "has_email_data": true,
+      "has_sla_data": true,
+      "daily_summary": {
+        "total_emails": 26,
+        "replied_count": 6,
+        "completed_count": 0,
+        "pending_count": 20,
+        "reply_rate_percent": 23.1,
+        "avg_response_time_minutes": 116.8,
+        "median_response_time_minutes": 139.5,
+        "sla_compliance_rate": 78.6,
+        "avg_unread_count": 17.6
+      },
+      "hourly_data": [
+        {
+          "hour": 0,
+          "emails_received": 1,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 1,
+          "emails_received": 1,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 2,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 3,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 4,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 5,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 6,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null
+        },
+        {
+          "hour": 7,
+          "emails_received": 2,
+          "emails_replied": 1,
+          "avg_response_time": 227.0,
+          "unread_count": 30,
+          "sla_met": true
+        },
+        {
+          "hour": 8,
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 169.0,
+          "unread_count": 32,
+          "sla_met": false
+        },
+        {
+          "hour": 9,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 33,
+          "sla_met": false
+        },
+        {
+          "hour": 10,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 33,
+          "sla_met": false
+        },
+        {
+          "hour": 11,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 21,
+          "sla_met": true
+        },
+        {
+          "hour": 12,
+          "emails_received": 2,
+          "emails_replied": 1,
+          "avg_response_time": 168.0,
+          "unread_count": 15,
+          "sla_met": true
+        },
+        {
+          "hour": 13,
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 111.0,
+          "unread_count": 9,
+          "sla_met": true
+        },
+        {
+          "hour": 14,
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 20.0,
+          "unread_count": 10,
+          "sla_met": true
+        },
+        {
+          "hour": 15,
+          "emails_received": 1,
+          "emails_replied": 1,
+          "avg_response_time": 6.0,
+          "unread_count": 11,
+          "sla_met": true
+        },
+        {
+          "hour": 16,
+          "emails_received": 0,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 9,
+          "sla_met": true
+        },
+        {
+          "hour": 17,
+          "emails_received": 1,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 9,
+          "sla_met": true
+        },
+        {
+          "hour": 18,
+          "emails_received": 1,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 10,
+          "sla_met": true
+        },
+        {
+          "hour": 19,
+          "emails_received": 3,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 11,
+          "sla_met": true
+        },
+        {
+          "hour": 20,
+          "emails_received": 4,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 14,
+          "sla_met": true
+        },
+        {
+          "hour": 21,
+          "emails_received": 4,
+          "emails_replied": 0,
+          "avg_response_time": null,
+          "unread_count": 18,
+          "sla_met": true
+        },
+        {
+          "hour": 22,
+          "emails_received": 3,
           "emails_replied": 0,
           "avg_response_time": null
         },
